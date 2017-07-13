@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+	http://www.springframework.org/schema/p http://www.springframework.org/schema/p/spring-p-4.1.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+	http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.deady.action" />
+	
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">		
+		<property name="interceptors">
+			<list>
+				<!-- 检查浏览器的版本  不支持ie6 -->
+                <bean class="com.deady.mvc.interceptor.CheckBrowserInterceptor" />
+                <!-- 控制系统版本 -->
+                <bean class="com.deady.mvc.interceptor.RequestPropertiesSettingInterceptor" />
+                <!-- 用http请求中的referer 来判断请求来源 -->
+                <bean class="com.deady.mvc.interceptor.HttpSecurityInterceptor" />
+                <!-- 将请求和响应进行编码转换 -->
+                <bean class="com.deady.mvc.interceptor.EncodeInterceptor" />
+                <!-- token校验 -->
+                <bean class="com.deady.mvc.interceptor.TokenInterceptor" />
+                <!-- 验证码拦截器 -->
+                <bean class="com.deady.mvc.interceptor.VerifyCodeInterceptor" />
+                <!-- 发生错误后,页面内容是否还原的拦截器 -->
+                <bean class="com.deady.mvc.interceptor.RestoreWhenErrorInterceptor" />
+                <!-- 检测用户是否有登录状态 -->
+                <bean class="com.deady.mvc.interceptor.CheckAuthInterceptor" />
+                <!-- 设置一些初始值  暂时用不到 -->
+                <!--  <bean class="com.deady.mvc.interceptor.MessageSettingInterceptor" />-->
+			</list>
+		</property>
+	</bean>
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <!-- 加入cache控制开始 -->
+        <property name="useCacheControlHeader" value="true" />
+        <property name="useCacheControlNoStore" value="true" /><!-- 防止firefox缓存 -->
+        <property name="cacheSeconds" value="0" />
+        <property name="useExpiresHeader" value="true" />
+        <!-- 加入cache控制结束 -->
+        
+        <!-- synchronizeOnSession设置为true时，访问session是线程安全的，但是，如果一个访问卡住了，那么，当前用户的其它请求就会卡住，看需要再设置了 -->
+		<property name="synchronizeOnSession" value="false" />        
+		<property name="messageConverters">
+			<list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="writeAcceptCharset" value="false" />
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/html;charset=UTF-8</value>
+						</list>
+					</property>
+					<property name="objectMapper">
+						<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+							<property name="dateFormat">
+								<bean class="java.text.SimpleDateFormat">
+									<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+								</bean>
+							</property>
+						</bean>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="com.deady.mvc.exception.ExceptionResolver" />
+	
+	<bean id="freemarkerConfigurer"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/views/" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">10</prop>
+				<prop key="template_exception_handler">com.deady.mvc.exception.DeadyTemplateExceptionHandler</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="number_format">0</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+				<prop key="whitespace_stripping">true</prop>
+				<prop key="url_escaping_charset">UTF-8</prop>
+				<prop key="output_encoding">UTF-8</prop>
+				<!-- prop key="auto_import">common/spring.ftl as spring</prop-->
+				<prop key="auto_include">common/config.ftl,common/functions.ftl,common/macros.ftl</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="freemarkerViewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="suffix" value=".ftl" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="allowRequestOverride" value="false" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="allowSessionOverride" value="false" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+        <property name="attributesMap">
+            <map>
+                <entry key="jodaTime">
+                    <bean class="org.joda.time.DateTime" /> 
+                </entry>
+            </map>
+        </property>
+	</bean>
+
+	<mvc:resources mapping="/image/**" location="/image/" cache-period="2592000"/>
+	<mvc:resources mapping="/css/**" location="/css/" cache-period="2592000"/>
+	<mvc:resources mapping="/js/**" location="/js/" cache-period="2592000"/>
+    <mvc:resources mapping="/files/**" location="/files/"/>
+    <mvc:resources mapping="/**/*.html" location="/"/>
+    <mvc:resources mapping="/*.txt" location="/files/"/>
+</beans>

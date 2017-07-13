@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  
+  <!-- Spring的配置文件 -->
+	<context-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <!-- 指定路径和文件名 -->
+	    <param-value>classpath:spring-*.xml</param-value>
+	</context-param>  
+	<!-- 下面的配置会去上面这里寻找配置文件  并进行加载 -->
+	<listener>  
+	    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>  
+	</listener>  
+  	<!-- 如果不初始化servlet mvc-*.xml 将不会被发现 -->
+	<servlet>
+	  <servlet-name>mvc</servlet-name>
+	  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	  <init-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <!-- mvc文件中存放的是 注解中的自动加载，定时器的自动加载等内容 -->
+	    <param-value>classpath:mvc-*.xml</param-value>
+	  </init-param>
+	  <load-on-startup>1</load-on-startup>
+	</servlet>
+  <servlet-mapping>
+    <servlet-name>mvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+  
+	<error-page>
+		<error-code>404</error-code>
+		<location>/404</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/views/errors/500.jsp</location>
+	</error-page>
+  
+</web-app>
