@@ -19,4 +19,11 @@ public class LoginAction {
 			throws Exception {
 		return new ModelAndView("/login/login");
 	}
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@DeadyAction(checkReferer = true, checkLogin = false)
+	public Object redirectLogin(HttpServletRequest req, HttpServletResponse res)
+			throws Exception {
+		return new ModelAndView("redirect:/login");
+	}
 }

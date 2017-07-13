@@ -16,6 +16,7 @@
     </#if>
 </#function>
 
+
 <#function img imgUrl>  
     <#return url(imgUrl,false)/>
 </#function>
