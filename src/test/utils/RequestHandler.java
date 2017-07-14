@@ -1,6 +1,5 @@
 package test.utils;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -10,12 +9,14 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.shunpay.message.annotation.MessageField;
 import net.shunpay.message.util.MessageContextUtil;
 
 import org.apache.log4j.Logger;
 import org.easymock.EasyMock;
 import org.springframework.util.StringUtils;
+
+import com.deady.entity.BasicEntityField;
+import com.deady.entity.operator.Operator;
 
 public class RequestHandler {
 
@@ -56,15 +57,15 @@ public class RequestHandler {
 				Field[] tempF = o.getClass().getDeclaredFields();
 				for (int i = 0; i < tempF.length; i++) {
 					// 属性名
-					if (null == tempF[i].getAnnotation(MessageField.class)) {
+					if (null == tempF[i].getAnnotation(BasicEntityField.class)) {
 						continue;
 					}
 					String basicFieldName = tempF[i].getName();
 					tempF[i].setAccessible(true);
 					String testValue = (String) tempF[i].get(o);
 					if (StringUtils.isEmpty(testValue)) {
-						testValue = tempF[i].getAnnotation(MessageField.class)
-								.testValue();
+						testValue = tempF[i].getAnnotation(
+								BasicEntityField.class).testValue();
 					}
 
 					if (allFieldNames.contains(basicFieldName)) {
@@ -79,7 +80,7 @@ public class RequestHandler {
 
 			RequestHandler.getSession(req, session);
 			EasyMock.replay(req);
-			// initSession(req);
+			initSession(req);
 			EasyMock.replay(req.getSession());
 			MessageContextUtil.setRequest(req);
 		} catch (Exception e) {
@@ -95,33 +96,31 @@ public class RequestHandler {
 	 * @param session
 	 * @throws Exception
 	 */
-	// private static void initSession(HttpServletRequest request)
-	// throws Exception {
-	// RETURN211010 ret = new RETURN211010();
-	// Field[] f = ret.getClass().getDeclaredFields();
-	// for (int i = 0; i < f.length; i++) {
-	// // 属性名
-	// String basicFieldName = f[i].getName();
-	// String testValue = f[i].getAnnotation(MessageField.class)
-	// .testValue();
-	//
-	// basicFieldName = basicFieldName.substring(0, 1).toUpperCase()
-	// + basicFieldName.substring(1);
-	// Method writeMethod = getWriteMethod(ret.getClass(), "set"
-	// + basicFieldName);
-	// if (null != writeMethod) {
-	// writeMethod.invoke(ret, testValue);
-	// }
-	// }
-	// SessionHandler.setAttribute(request.getSession(),
-	// "agentExtendInfoCompleted", ret.getServerPort());
-	// SessionHandler.setAttribute(request.getSession(), "_RETURN211010", ret);
-	// AgentTestUtil.saveAgentInfo(request, ret);
-	// // session.setAttribute("agentExtendInfoCompleted",
-	// // ret.getServerPort());
-	// // session.setAttribute("_RETURN211010", ret);
-	// // AgentTestUtil.saveAgentInfo(request, ret);
-	// }
+	private static void initSession(HttpServletRequest request)
+			throws Exception {
+		Operator ret = new Operator();
+		Field[] f = ret.getClass().getDeclaredFields();
+		for (int i = 0; i < f.length; i++) {
+			// 属性名
+			String basicFieldName = f[i].getName();
+			if (!f[i].isAnnotationPresent(BasicEntityField.class)) {
+				continue;
+			}
+			String testValue = f[i].getAnnotation(BasicEntityField.class)
+					.testValue();
+
+			basicFieldName = basicFieldName.substring(0, 1).toUpperCase()
+					+ basicFieldName.substring(1);
+			Method writeMethod = getWriteMethod(ret.getClass(), "set"
+					+ basicFieldName);
+			if (null != writeMethod) {
+				writeMethod.invoke(ret, testValue);
+			}
+		}
+		SessionHandler
+				.setAttribute(request.getSession(), "DEADY_OPERATOR", ret);
+
+	}
 
 	/**
 	 * 获取类的public方法

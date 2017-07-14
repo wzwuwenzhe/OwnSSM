@@ -10,6 +10,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.deady.annotation.DeadyAction;
 import com.deady.mvc.exception.LoginException;
+import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.agent.AgentUtil;
 
 /**
@@ -26,7 +27,8 @@ public class CheckAuthInterceptor extends HandlerInterceptorAdapter {
 		DeadyAction interceptor = method.getAnnotation(DeadyAction.class);
 		if (interceptor != null) {
 			if (interceptor.checkLogin()) {
-				boolean isLogin = AgentUtil.isAgentLogined(request);
+				boolean isLogin = OperatorSessionInfo
+						.isOperatorLogined(request);
 				if (!isLogin) {
 					throw new LoginException(request);
 				}

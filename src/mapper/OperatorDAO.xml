@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deady.dao.OperatorDAO">
+    <insert id="insertOperator">
+        INSERT  INTO operator (id,store_id, name,
+		phone,user_type,login_name,  pwd)
+        VALUES (#{id},#{storeId}, #{name},
+		#{phone},#{userType},#{loginName}, #{pwd})
+    </insert>
+    
+    <select id="getOperatorByLoginName" resultType="Operator" parameterType="string">
+        <!-- 具体的sql -->
+        SELECT
+            id,store_id, name,
+		phone,user_type,login_name,  pwd
+        FROM
+            operator
+        WHERE
+            login_name = #{loginName}
+    </select>
+
+</mapper>

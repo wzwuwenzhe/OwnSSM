@@ -14,8 +14,8 @@ import com.deady.annotation.DeadyAction;
 public class StoreRegisterAction {
 
 	@RequestMapping(value = "/storeRegister", method = RequestMethod.GET)
-	@DeadyAction(checkLogin = false)
-	public Object loginView(HttpServletRequest req, HttpServletResponse res)
+	@DeadyAction(checkLogin = true)
+	public Object storeRegister(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		return new ModelAndView("/register/store_register");
 	}

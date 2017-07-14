@@ -1,20 +1,27 @@
 package com.deady.utils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import net.shunpay.message.annotation.MessageField;
 import net.shunpay.message.pojo.Message;
+import net.shunpay.message.util.FieldUtil;
 import net.shunpay.message.util.MessageContextUtil;
 import net.shunpay.message.util.PagerUtil;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cnblogs.zxub.utils2.configuration.ConfigUtil;
 import com.deady.common.FormResponse;
+import com.deady.entity.BasicEntityField;
 import com.deady.mvc.exception.AlertException;
 
 /**
@@ -23,10 +30,10 @@ import com.deady.mvc.exception.AlertException;
  */
 public class ActionUtil {
 
-	public static final PropertiesConfiguration errorMessages = ConfigUtil
-			.getProperties("error.message");
+	private static final Logger logger = Logger.getLogger(ActionUtil.class);
+
 	private static PropertiesConfiguration config = ConfigUtil
-			.getProperties("sl");
+			.getProperties("deady");
 
 	public static ModelAndView alert(String message) throws AlertException {
 		throw new AlertException(message);
@@ -45,10 +52,6 @@ public class ActionUtil {
 			env.put("_url", nextUrl);
 		}
 		return new ModelAndView("info", env);
-	}
-
-	public static String getErrorMessage(String key) {
-		return errorMessages.getString(key, "不存在指定键值，获取消息失败！");
 	}
 
 	public static FormResponse getPagerDatas(
@@ -159,6 +162,34 @@ public class ActionUtil {
 			return returnClass.newInstance();
 		}
 		return (T) fResponse.getData();
+	}
+
+	/**
+	 * 根据实体中的属性 以及request中的参数来对实体进行赋值
+	 * 
+	 * @param request
+	 * @param obj
+	 */
+	public static void assObjByRequest(HttpServletRequest request, Object obj) {
+		if (request == null) {
+			return;
+		}
+		Field[] fields = obj.getClass().getDeclaredFields();
+		for (Field field : fields) {
+			if (field.isAnnotationPresent(BasicEntityField.class)) {
+				String fieldName = field.getName();
+				String value = request.getParameter(fieldName);
+				if (!StringUtils.isEmpty(value)) {
+					try {
+						FieldUtil.setFieldValue(obj, field, value);
+					} catch (Exception e) {
+						logger.error("将Request中值赋给消息对象时发生错误，fieldName: "
+								+ fieldName, e);
+					}
+				}
+			}
+		}
+
 	}
 
 }
