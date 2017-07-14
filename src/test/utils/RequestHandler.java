@@ -10,12 +10,13 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import net.shunpay.message.annotation.MessageField;
 import net.shunpay.message.util.MessageContextUtil;
 
 import org.apache.log4j.Logger;
 import org.easymock.EasyMock;
 import org.springframework.util.StringUtils;
+
+import com.deady.entity.BasicEntityField;
 
 public class RequestHandler {
 
@@ -56,15 +57,15 @@ public class RequestHandler {
 				Field[] tempF = o.getClass().getDeclaredFields();
 				for (int i = 0; i < tempF.length; i++) {
 					// 属性名
-					if (null == tempF[i].getAnnotation(MessageField.class)) {
+					if (null == tempF[i].getAnnotation(BasicEntityField.class)) {
 						continue;
 					}
 					String basicFieldName = tempF[i].getName();
 					tempF[i].setAccessible(true);
 					String testValue = (String) tempF[i].get(o);
 					if (StringUtils.isEmpty(testValue)) {
-						testValue = tempF[i].getAnnotation(MessageField.class)
-								.testValue();
+						testValue = tempF[i].getAnnotation(
+								BasicEntityField.class).testValue();
 					}
 
 					if (allFieldNames.contains(basicFieldName)) {
@@ -102,7 +103,7 @@ public class RequestHandler {
 	// for (int i = 0; i < f.length; i++) {
 	// // 属性名
 	// String basicFieldName = f[i].getName();
-	// String testValue = f[i].getAnnotation(MessageField.class)
+	// String testValue = f[i].getAnnotation(BasicEntityField.class)
 	// .testValue();
 	//
 	// basicFieldName = basicFieldName.substring(0, 1).toUpperCase()

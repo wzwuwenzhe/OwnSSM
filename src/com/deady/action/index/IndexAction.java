@@ -14,7 +14,7 @@ import com.deady.annotation.DeadyAction;
 public class IndexAction {
 
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	@DeadyAction(checkLogin = false)
+	@DeadyAction(createToken = true)
 	public Object loginView(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		return new ModelAndView("/index/index");
