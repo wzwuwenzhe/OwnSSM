@@ -25,6 +25,7 @@
 	Double : /(^[1-9]\d{0,7}(\.[0-9]{0,2})?$)|(^0(\.\d{0,2})?$)/,
 	//只能输入数字，字母和中文
 	Text :  /^[A-Za-z0-9\u0391-\uFFE5]+$/,
+	MoreText:/^[A-Za-z0-9\u0391-\uFFE5\P]+$/,
 	English : /^[A-Za-z]+$/,
 	Chinese :  /^[\u0391-\uFFE5]+$/,
 	NoChinese :  /^^[\u0391-\uFFE5]+$/,

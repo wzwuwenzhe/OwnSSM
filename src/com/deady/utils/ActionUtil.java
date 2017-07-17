@@ -1,5 +1,6 @@
 package com.deady.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,10 @@ public class ActionUtil {
 
 	public static ModelAndView alert(String message) throws AlertException {
 		throw new AlertException(message);
+	}
+
+	public static String getImgUploadPath() {
+		return config.getString("store.img.upload.path");
 	}
 
 	public static boolean isTestMode() {
@@ -169,8 +174,10 @@ public class ActionUtil {
 	 * 
 	 * @param request
 	 * @param obj
+	 * @throws UnsupportedEncodingException
 	 */
-	public static void assObjByRequest(HttpServletRequest request, Object obj) {
+	public static void assObjByRequest(HttpServletRequest request, Object obj)
+			throws UnsupportedEncodingException {
 		if (request == null) {
 			return;
 		}
@@ -178,7 +185,11 @@ public class ActionUtil {
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(BasicEntityField.class)) {
 				String fieldName = field.getName();
+				String encode = request.getCharacterEncoding();
 				String value = request.getParameter(fieldName);
+				if (!encode.toUpperCase().equals("UTF-8")) {
+					value = new String(value.getBytes(), "utf-8");
+				}
 				if (!StringUtils.isEmpty(value)) {
 					try {
 						FieldUtil.setFieldValue(obj, field, value);

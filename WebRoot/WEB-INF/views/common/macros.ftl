@@ -132,18 +132,29 @@
 </div>
 </#macro>
 
-<#macro form  action class h2 id="_form" onsubmit="return $form.submit(this);">
-	<form id="${id}" action="${url("${action}")}" onsubmit="${onsubmit}" method="post" class="${class}" data-animate-effect="fadeIn">
+<#macro form  action class h2 id="_form" onsubmit="return $form.submit(this);" enctype="">
+	<form id="${id}" <#if enctype!="">enctype="${enctype}"</#if> action="${url("${action}")}" onsubmit="${onsubmit}" method="post" class="${class}" data-animate-effect="fadeIn">
 		<h2>${h2}</h2>
 		<input type="hidden" name="_token" value="${_token}"/>
 		<#nested>
 	</form>
 </#macro>
 
-<#macro form_group id value type name dataType msg>
+<#macro uploadImg id desc >
+	<div class="uploadImgDiv">
+		<input id="${id}" type="checkbox"  onclick="showUpload(this)" />
+		<label for="${id}">${desc}</label>
+		<input type="hidden" name="${id}" id="${id}FilePath" />
+		<label style="display:none"><img src="${url("/image/complete.png")}"/></label>
+		<input type="file" id="${id}File" name="file" style="display:none" onchange="uploadFile(this)"/>
+	</div>
+</#macro>
+
+<#macro form_group id value type name dataType msg  onkeyup="">
 	<div class="form-group">
 		<label for="${id}" class="sr-only">${value}</label>
-		<input type="${type}" dataType=${dataType} name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${value}" autocomplete="off">
+		<input type="${type}" <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
+		dataType=${dataType} name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${value}" autocomplete="off">
 	</div>
 </#macro>
 
