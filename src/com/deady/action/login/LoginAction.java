@@ -1,8 +1,8 @@
 package com.deady.action.login;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,6 @@ import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
 import com.deady.entity.operator.Operator;
 import com.deady.service.OperatorService;
-import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
 
 @Controller
@@ -29,6 +28,22 @@ public class LoginAction {
 	@DeadyAction(checkLogin = false, createToken = true)
 	public Object loginView(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
+		Cookie[] cookies = req.getCookies();
+		boolean flag = false;
+		for (Cookie cookie : cookies) {
+			if (cookie.getName().equals(OperatorSessionInfo.COOKIE_USER_NAME)) {
+				req.setAttribute("username", cookie.getValue());
+				continue;
+			}
+			if (cookie.getName().equals(OperatorSessionInfo.COOKIE_USER_PWD)) {
+				req.setAttribute("password", cookie.getValue());
+				flag = true;
+				continue;
+			}
+		}
+		if (flag) {
+			req.setAttribute("remember", "1");
+		}
 		return new ModelAndView("/login/login");
 	}
 
@@ -65,6 +80,8 @@ public class LoginAction {
 		// 把用户信息存到Session中
 		OperatorSessionInfo.save(req, OperatorSessionInfo.OPERATOR_SESSION_ID,
 				op);
+		// 如果选择记住就将用户名和密码存到Cookie中否则就删掉
+		OperatorSessionInfo.saveCookie(req, res);
 		response.setSuccess(true);
 		return response;
 	}

@@ -1,5 +1,5 @@
 <#assign companyName="吴先森下单系统"/>
-
+<#assign userType='${userType}'/>
 
 <#macro htmlHeader4Main title="${companyName}">
 <@cleanHeader4Main title=title>
@@ -133,28 +133,33 @@
 </#macro>
 
 <#macro form  action class h2 id="_form" onsubmit="return $form.submit(this);" enctype="">
-	<form id="${id}" <#if enctype!="">enctype="${enctype}"</#if> action="${url("${action}")}" onsubmit="${onsubmit}" method="post" class="${class}" data-animate-effect="fadeIn">
+	<form id="${id}" accept-charset="UTF-8" <#if enctype!="">enctype="${enctype}"</#if> action="${url("${action}")}" onsubmit="${onsubmit}" method="post" class="${class}" data-animate-effect="fadeIn">
 		<h2>${h2}</h2>
 		<input type="hidden" name="_token" value="${_token}"/>
 		<#nested>
 	</form>
 </#macro>
 
-<#macro uploadImg id desc >
+<#macro uploadImg id desc value="">
 	<div class="uploadImgDiv">
-		<input id="${id}" type="checkbox"  onclick="showUpload(this)" />
+		<input id="${id}" type="checkbox" <#if value!="">checked="checked"</#if> onclick="showUpload(this)" />
 		<label for="${id}">${desc}</label>
-		<input type="hidden" name="${id}" id="${id}FilePath" />
-		<label style="display:none"><img src="${url("/image/complete.png")}"/></label>
+		<input type="hidden" name="${id}" id="${id}FilePath"  <#if value!="">value="${value}"</#if> />
+		<label class="uploadSuccess" style="display:none"><img src="${url("/image/complete.png")}"/></label>
 		<input type="file" id="${id}File" name="file" style="display:none" onchange="uploadFile(this)"/>
+		<div class="viewImg">
+			<#if value!="">
+				<img src="${value}?_stmp=${.now?string("yyyyMMddHHmmss")}" onclick="$(this).parent().prev().click();"/>
+			</#if>
+		</div>
 	</div>
 </#macro>
 
-<#macro form_group id value type name dataType msg  onkeyup="">
+<#macro form_group id desc type name dataType msg  onkeyup="" value="">
 	<div class="form-group">
-		<label for="${id}" class="sr-only">${value}</label>
-		<input type="${type}" <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
-		dataType=${dataType} name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${value}" autocomplete="off">
+		<label for="${id}" class="sr-only">${desc}</label>
+		<input type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
+		dataType="${dataType}" name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${desc}" autocomplete="off">
 	</div>
 </#macro>
 
@@ -183,6 +188,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">    
     <title>${title}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="${title}" />
     <meta name="description" content="${title}" />
 <#nested>

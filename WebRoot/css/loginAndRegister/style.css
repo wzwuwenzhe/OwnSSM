@@ -177,3 +177,9 @@ input, textarea {
 }
 
 /*# sourceMappingURL=style.css.map */
+.viewImg{
+	margin-top:5px;
+}
+.btn.btn-primary.back{
+	margin-left:50px;
+}

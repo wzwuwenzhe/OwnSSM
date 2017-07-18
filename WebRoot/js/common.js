@@ -423,7 +423,7 @@ var $form={
 			loading.show();
 			//密码加密
 			var pwd = $("#password").val();
-			if(pwd){
+			if(pwd && pwd.length!=32){
 				var hash = md5(pwd);
 				$("#password").val(hash);
 			}

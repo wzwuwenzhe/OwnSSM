@@ -28,6 +28,8 @@ public class Store implements Serializable {
 	private String wxPayImg;// 微信付款二维码路径
 	@BasicEntityField(length = 100, testValue = "c:/temp/ImgUpload/05719999/1003.png")
 	private String zfbPayImg;// 支付宝付款二维码路径
+	@BasicEntityField(length = 1, testValue = "1")
+	private String status;// 店铺状态(1:开通,0关闭)
 
 	public String getId() {
 		return id;
@@ -107,6 +109,14 @@ public class Store implements Serializable {
 
 	public void setZfbPayImg(String zfbPayImg) {
 		this.zfbPayImg = zfbPayImg;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.deady.annotation.DeadyAction;
+import com.deady.entity.operator.Operator;
 import com.deady.mvc.exception.LoginException;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.agent.AgentUtil;
@@ -31,6 +32,9 @@ public class CheckAuthInterceptor extends HandlerInterceptorAdapter {
 						.isOperatorLogined(request);
 				if (!isLogin) {
 					throw new LoginException(request);
+				} else {
+					Operator op = OperatorSessionInfo.getOperator(request);
+					request.setAttribute("userType", op.getUserType());
 				}
 				return true;
 			}

@@ -1,6 +1,8 @@
 package com.deady.utils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -14,6 +16,8 @@ public class OperatorSessionInfo {
 
 	public static final PropertiesConfiguration cacheConfig = ConfigUtil
 			.getProperties("memcache");
+	public static final String COOKIE_USER_NAME = "DEADY_NAME";
+	public static final String COOKIE_USER_PWD = "DEADY_PWD";
 
 	public static void save(HttpServletRequest request, String key,
 			Object object) {
@@ -21,6 +25,33 @@ public class OperatorSessionInfo {
 		session.setMaxInactiveInterval(60 * cacheConfig
 				.getInt("memcache.sessionTimeOut"));
 		session.setAttribute(key, object);
+	}
+
+	public static void saveCookie(HttpServletRequest request,
+			HttpServletResponse response) {
+		if (request.getParameter("remember").equals("1")) {// 记住我
+			Cookie nameCookie = new Cookie(COOKIE_USER_NAME,
+					request.getParameter("username"));
+			// 设置Cookie的有效期为3天
+			nameCookie.setMaxAge(60 * 60 * 24 * cacheConfig
+					.getInt("memcache.cookieTimeOut"));
+			Cookie pwdCookie = new Cookie(COOKIE_USER_PWD,
+					request.getParameter("password"));
+			pwdCookie.setMaxAge(60 * 60 * 24 * cacheConfig
+					.getInt("memcache.cookieTimeOut"));
+			response.addCookie(nameCookie);
+			response.addCookie(pwdCookie);
+		} else {// 删除cookie
+			Cookie[] cookies = request.getCookies();
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(COOKIE_USER_NAME)
+						|| cookie.getName().equals(COOKIE_USER_PWD)) {
+					cookie.setMaxAge(0);
+					response.addCookie(cookie);
+				}
+			}
+		}
+
 	}
 
 	public static Operator getOperator(HttpServletRequest request) {
