@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deady.dao.ItemDAO">
+		<insert id="insertItems" parameterType="java.util.List">
+		   insert into item (id,order_id,name,size,unit_price,amount,price) values
+		   <foreach collection="list" item="item" index="index"
+		       separator=",">
+		       (#{item.id},
+		       #{item.orderId},
+		       #{item.name} ,
+		       #{item.size} ,
+		       #{item.unitPrice} ,
+		       #{item.amount} ,
+		       #{item.price}   )
+		   </foreach>
+		</insert>
+		
+		<insert id ="insertItem" parameterType="com.deady.entity.bill.Item">
+			insert into item (id,order_id,store_id,name,size,unit_price,amount,price) values
+			(#{id},
+		       #{orderId},
+		       #{storeId},
+		       #{name} ,
+		       #{size} ,
+		       #{unitPrice} ,
+		       #{amount} ,
+		       #{price})
+		</insert>
+</mapper>

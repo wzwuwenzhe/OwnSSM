@@ -3,13 +3,13 @@ package com.deady.utils;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.shunpay.message.annotation.MessageField;
 import net.shunpay.message.pojo.Message;
 import net.shunpay.message.util.FieldUtil;
 import net.shunpay.message.util.MessageContextUtil;

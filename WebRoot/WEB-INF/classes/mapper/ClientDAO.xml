@@ -5,8 +5,16 @@
 <mapper namespace="com.deady.dao.ClientDAO">
     <insert id="insertClient">
         INSERT  INTO client (id,store_id, name,phone)
-        VALUES (#{id},#{storeId}, #{cusName},#{cusPhone})
+        VALUES (#{id},#{storeId}, #{name},#{phone})
     </insert>
     
+    <select id="findClientListByStoreId" resultType="Client">
+        SELECT
+            *
+        FROM
+            client
+        WHERE 
+            store_id = #{storeId}
+    </select>
 
 </mapper>

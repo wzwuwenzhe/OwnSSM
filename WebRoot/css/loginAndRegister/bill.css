@@ -1,0 +1,18 @@
+.billtable
+  {
+  border-collapse:collapse;
+   width:100%;
+  }
+
+.billtable,.billtable th, .billtable  td
+  {
+  border: 1px solid black;
+  }
+.billtable td
+  {
+  text-align:center;
+  }
+.billtable thead
+{
+	background-color:#33cccc;
+}

@@ -26,7 +26,9 @@
 	//只能输入数字，字母和中文
 	Text :  /^[A-Za-z0-9\u0391-\uFFE5]+$/,
 	MoreText:/^[A-Za-z0-9\u0391-\uFFE5\P]+$/,
+	MoreTextCaBeEmpty:/^[(A-Za-z0-9\u0391-\uFFE5)\P]?$/,
 	English : /^[A-Za-z]+$/,
+	EnglishAndNumber :/^[A-Za-z0-9]+$/,
 	Chinese :  /^[\u0391-\uFFE5]+$/,
 	NoChinese :  /^^[\u0391-\uFFE5]+$/,
 	Username : /^[a-z]\w{3,}$/i,

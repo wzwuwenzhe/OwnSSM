@@ -15,28 +15,12 @@ public class Client implements Serializable {
 	private static final long serialVersionUID = -9021680819625798133L;
 
 	@BasicEntityField(length = 20, testValue = "王二麻子")
-	private String cusName; // 客户名称
+	private String name; // 客户名称
 	@BasicEntityField(length = 13, testValue = "18868808242")
-	private String cusPhone;// 客户电话
+	private String phone;// 客户电话
 
 	private String id;// 客户id
 	private String storeId;// 店铺Id
-
-	public String getCusName() {
-		return cusName;
-	}
-
-	public void setCusName(String cusName) {
-		this.cusName = cusName;
-	}
-
-	public String getCusPhone() {
-		return cusPhone;
-	}
-
-	public void setCusPhone(String cusPhone) {
-		this.cusPhone = cusPhone;
-	}
 
 	public String getStoreId() {
 		return storeId;
@@ -52,6 +36,22 @@ public class Client implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 }
