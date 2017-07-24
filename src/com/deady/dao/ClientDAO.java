@@ -13,4 +13,6 @@ public interface ClientDAO {
 
 	List<Client> findClientListByStoreId(String storeId);
 
+	Client findClientById(String cusId);
+
 }

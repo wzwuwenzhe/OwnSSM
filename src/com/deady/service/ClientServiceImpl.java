@@ -25,4 +25,9 @@ public class ClientServiceImpl implements ClientService {
 		return clientDAO.findClientListByStoreId(storeId);
 	}
 
+	@Override
+	public Client getClientById(String cusId) {
+		return clientDAO.findClientById(cusId);
+	}
+
 }

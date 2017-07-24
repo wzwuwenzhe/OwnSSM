@@ -6,4 +6,6 @@ public interface OrderDAO {
 
 	void insertOrder(Order order);
 
+	Order findOrderById(String orderId);
+
 }

@@ -16,5 +16,10 @@
         WHERE 
             store_id = #{storeId}
     </select>
+    
+    <select id="findClientById" resultType="Client">
+    	SELECT * FROM client
+    	WHERE id=#{cusId}
+    </select>
 
 </mapper>

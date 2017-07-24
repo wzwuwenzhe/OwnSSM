@@ -9,4 +9,6 @@ public interface ClientService {
 	int addClient(Client c);
 
 	List<Client> getClientListByStoreId(String storeId);
+
+	Client getClientById(String cusId);
 }

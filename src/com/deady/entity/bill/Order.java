@@ -14,21 +14,21 @@ public class Order implements Serializable {
 
 	private static final long serialVersionUID = -8301945175397999355L;
 	@BasicEntityField(length = 20, testValue = "20170719165012XXXXXX")
-	private String id;// 订单号
+	protected String id;// 订单号
 	@BasicEntityField(length = 32, testValue = "3629b32d820d44b9ba5b43704018988e")
-	private String cusId;// 客户id
+	protected String cusId;// 客户id
 	@BasicEntityField(length = 32, testValue = "ec409db7f6aa41feab30d134afaeecb0")
-	private String operatorId;// 操作员id
+	protected String operatorId;// 操作员id
 	@BasicEntityField(length = 8, testValue = "05719999")
-	private String storeId;// 店铺id
+	protected String storeId;// 店铺id
 	@BasicEntityField(length = 20, testValue = "1234.5")
-	private String smallCount;// 小计
+	protected String smallCount;// 小计
 	@BasicEntityField(length = 20, testValue = "0")
-	private String discount;// 折扣金额
+	protected String discount;// 折扣金额
 	@BasicEntityField(length = 20, testValue = "1234.5")
-	private String totalAmount;// 应付总金额
+	protected String totalAmount;// 应付总金额
 	@BasicEntityField(length = 100, testValue = "我是一个备注")
-	private String remark;// 备注
+	protected String remark;// 备注
 
 	public String getId() {
 		return id;
