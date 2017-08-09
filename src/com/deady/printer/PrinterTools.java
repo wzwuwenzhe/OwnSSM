@@ -5,7 +5,13 @@ import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PrinterTools {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(PrinterTools.class);
 
 	public static Vector<Byte> convertEscposToBinary(String escpos) {
 		int value = -1;
@@ -16,16 +22,16 @@ public class PrinterTools {
 		st.slashSlashComments(false);
 		st.slashStarComments(false);
 		st.whitespaceChars(0, 32);
-		st.wordChars(33, 255);
-		st.quoteChar(34);
-		st.quoteChar(39);
-		st.eolIsSignificant(true);
+		st.wordChars(32, 255);
+		st.quoteChar(34);// 双引号
+		st.quoteChar(39);// 单引号
+		st.eolIsSignificant(false);
 
-		Vector<Byte> binaryData = new Vector<Byte>(100, 50);
+		Vector<Byte> binaryData = new Vector<Byte>(100, 50);// 100为初始容量 50为增量容量
 		try {
-			while (st.nextToken() != -1) {
+			while (st.nextToken() != StreamTokenizer.TT_EOF) {// 只要没有读到字符的末尾
 				switch (st.ttype) {
-				case -3:
+				case StreamTokenizer.TT_WORD:// 识别到文字
 					String s = st.sval;
 					value = -1;
 
@@ -102,25 +108,37 @@ public class PrinterTools {
 						value = Deady.ASCII_CONTROL_CODE.US.getASCIIValue();
 					}
 
-					if (value == -1)
+					if (value == -1) {
 						continue;
+					}
 					Byte b = new Byte((byte) value);
 					binaryData.add(b);
 
 					break;
-				case 34:
-				case 39:
+				case StreamTokenizer.TT_NUMBER:
 					String s2 = st.sval;
 
 					for (int i = 0; i < s2.length(); i++) {
 						byte b2 = s2.getBytes()[i];
 						binaryData.add(new Byte(b2));
 					}
+					break;
+				default:
+					String s3 = st.sval;
+
+					for (int i = 0; i < s3.length(); i++) {
+						byte b2 = s3.getBytes()[i];
+						binaryData.add(new Byte(b2));
+					}
+					break;
 				}
 			}
 
 		} catch (NumberFormatException localNumberFormatException) {
+			logger.error(localNumberFormatException.getMessage(),
+					localNumberFormatException);
 		} catch (IOException localIOException) {
+			logger.error(localIOException.getMessage(), localIOException);
 		}
 
 		return binaryData;
@@ -167,4 +185,43 @@ public class PrinterTools {
 		}
 		return false;
 	}
+
+	public static Vector<Byte> convertStringToBinary(String command) {
+		Vector<Byte> v = new Vector<Byte>();
+
+		if (command.lastIndexOf("'LF'") != -1) {// 打印并换行
+			command = command.substring(0, command.lastIndexOf(" 'LF'"));
+			for (byte b : command.getBytes()) {
+				v.add(new Byte(b));
+			}
+			v.add(new Byte((byte) Deady.ASCII_CONTROL_CODE.LF.getASCIIValue()));
+		} else if (command.indexOf("'ESC @'") != -1) {// 打印机初始化
+			v.add(new Byte((byte) Deady.ASCII_CONTROL_CODE.ESC.getASCIIValue()));
+			v.add(new Byte((byte) Deady.ASCII_CONTROL_CODE.AT.getASCIIValue()));
+		} else if (command.indexOf("'ESC a'") != -1) {// 选择对齐方式
+			v.add(new Byte((byte) Deady.ASCII_CONTROL_CODE.ESC.getASCIIValue()));
+			v.add(new Byte((byte) 97));
+			command = command.substring(
+					command.indexOf("'ESC a'") + "'ESC a '".length(),
+					command.length());
+			for (byte b : command.getBytes()) {
+				v.add(new Byte(b));
+			}
+		} else if (command.indexOf("'GS V'") != -1) {
+			v.add(new Byte((byte) Deady.ASCII_CONTROL_CODE.GS.getASCIIValue()));
+			v.add(new Byte((byte) 86));
+			v.add(new Byte((byte) 66));
+			v.add(new Byte((byte) 1));
+		} else if (command.indexOf("'FS p'") != -1) {
+			v.add(new Byte((byte) Deady.ASCII_CONTROL_CODE.FS.getASCIIValue()));
+			v.add(new Byte((byte) 112));
+			v.add(new Byte((byte) 1));
+			v.add(new Byte((byte) 0));
+		}
+		return v;
+	}
+
+	// TODO 存储flash位图的方法
+	// TODO 读取位图方法
+
 }

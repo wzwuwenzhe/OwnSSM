@@ -10,8 +10,8 @@ public class DeviceParameters {
 
 	public DeviceParameters() {
 		this.PortName = "";
-		this.PortNumber = 9100;
-		this.IPAddress = "192.168.31.101";
+		this.PortNumber = 26691;
+		this.IPAddress = "centos7.deady.tech";
 		this.DeviceID = '\000';
 		this.DeviceName = "";
 	}

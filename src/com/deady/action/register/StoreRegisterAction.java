@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.coobird.thumbnailator.Thumbnails;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.cnblogs.zxub.utils2.configuration.ConfigUtil;
 import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
 import com.deady.entity.operator.Operator;
@@ -87,6 +89,7 @@ public class StoreRegisterAction {
 		try {
 			Store store = validateStore(req, res, response);
 			storeService.modifyStore(store);
+			storeService.uploadPic4Printer(store);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMessage(e.getMessage());

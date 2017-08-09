@@ -6,7 +6,6 @@ CREATE TABLE `store_order` (
   `store_id` char(8) NOT NULL COMMENT '店铺ID',
   `small_count` varchar(20) NOT NULL COMMENT '小计',
   `discount` varchar(20) not null default '0' COMMENT '折扣',
-  `amount` varchar(10) NOT NULL COMMENT '数量',
   `total_amount` varchar(20) NOT NULL COMMENT '应付金额',
   `remark` varchar(100) null COMMENT '备注',
   `creation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间' ,

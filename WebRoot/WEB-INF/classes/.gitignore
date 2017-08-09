@@ -1,2 +1,7 @@
-/test
+/android
 /com
+/deady.properties
+/jdbc.properties
+/logback.xml
+/mapper
+/test

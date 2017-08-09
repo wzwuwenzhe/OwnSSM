@@ -25,6 +25,8 @@ import com.deady.entity.bill.Order;
 import com.deady.entity.client.Client;
 import com.deady.entity.operator.Operator;
 import com.deady.entity.store.Store;
+import com.deady.printer.Device;
+import com.deady.printer.DeviceParameters;
 import com.deady.service.ClientService;
 import com.deady.service.ItemService;
 import com.deady.service.OrderService;
@@ -32,16 +34,11 @@ import com.deady.service.StoreService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.printer.ORDERSIDE;
-import com.deady.utils.printer.Printer;
-import com.epson.EpsonCom.EpsonCom.ALIGNMENT;
-import com.epson.EpsonCom.EpsonCom.BITDEPTH;
-import com.epson.EpsonCom.EpsonCom.IMAGEFORMAT;
-import com.epson.EpsonCom.EpsonCom.IMAGEPROCESSING;
-import com.epson.EpsonCom.EpsonCom.PAPERSIDE;
-import com.epson.EpsonCom.EpsonCom.PRINTDIRECTION;
 
 @Controller
 public class BillingAction {
+
+	private static final String SUFFIX = " ";
 
 	@Autowired
 	private ClientService clientService;
@@ -127,91 +124,174 @@ public class BillingAction {
 		OrderDto dto = orderService.getOrderDtoById(orderId);
 		Store store = storeService.getStoreById(op.getStoreId());
 		Client client = clientService.getClientById(dto.getCusId());
-		Printer p = null;
+		Device device = null;
 		try {
-			p = new Printer("192.168.31.101", 9100);
-			p.selectPrintDirection(PRINTDIRECTION.LEFTTORIGHT);
+			device = new Device();
+			DeviceParameters params = new DeviceParameters();
+			device.setDeviceParameters(params);
+			device.openDevice();
+			Date currentTime = new Date();
 			// 打印店铺联
-			printStoreSide(p, store, op, client, dto, ORDERSIDE.STORE_SIDE);
-			// 打印客户联
-			printStoreSide(p, store, op, client, dto, ORDERSIDE.CUSTOMER_SIDE);
+			printOrder(device, store, op, client, dto, ORDERSIDE.STORE_SIDE,
+					currentTime);
+			device.printString("");
+			device.printString("");
+			// // 打印客户联
+			printOrder(device, store, op, client, dto, ORDERSIDE.CUSTOMER_SIDE,
+					currentTime);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
 			// 关闭设备 释放内存
-			p.closeDevice();
+			device.closeDevice();
 		}
 
 	}
 
-	private void printStoreSide(Printer p, Store store, Operator op,
-			Client client, OrderDto dto, ORDERSIDE storeSide) {
+	private void printOrder(Device device, Store store, Operator op,
+			Client client, OrderDto dto, ORDERSIDE storeSide, Date currentTime) {
 
 		// TODO logo
-		// p.selectAlignment(ALIGNMENT.CENTER);// 居中
-		// p.setImageParameters(BITDEPTH.GRAYSCALE, IMAGEPROCESSING.SHARPENING,
+		// device.selectAlignment(ALIGNMENT.CENTER);// 居中
+		// device.setImageParameters(BITDEPTH.GRAYSCALE,
+		// IMAGEPROCESSING.SHARPENING,
 		// 0);
-		// p.scanCheck(true, 200);
-		// byte[] receivedBytes = p.getImageDataBytes();
-		// p.ejectCheck();
-		// p.selectImageFormat(IMAGEFORMAT.JPEG_HIGH);
+		// device.scanCheck(true, 200);
+		// byte[] receivedBytes = device.getImageDataBytes();
+		// device.ejectCheck();
+		// device.selectImageFormat(IMAGEFORMAT.JPEG_HIGH);
 
-		p.selectSlipPaper(PAPERSIDE.FRONT);// 空一行
-		p.selectAlignment(ALIGNMENT.RIGHT);// 右对齐
+		device.selectAlignType(2);// 右对齐
 		switch (storeSide.getSide()) {
 		case 1:
-			p.print("店铺联");
+			device.printString("店铺联");
 			break;
 		case 2:
-			p.print("客户联");
+			device.printString("客户联");
 			break;
 		default:
 			throw new RuntimeException("未知票联");
 		}
-		p.selectAlignment(ALIGNMENT.LEFT);// 左对齐
-		p.print("店名:" + store.getName());
-		p.print("地址:" + store.getAddress());
-		p.print("电话:" + store.getTelePhone());
-		p.print("手机:" + store.getMobilePhone());
-		p.print("-----------------------------------------------");
-		p.selectSlipPaper(PAPERSIDE.FRONT);// 空一行
-		p.print("交易号:" + store.getMobilePhone());
-		p.print("收款员:" + op.getId());
-		Date currentTime = new Date();
+		device.selectAlignType(0);// 左对齐
+		device.printString("店名:" + store.getName());
+		device.printString("地址:" + store.getAddress());
+		device.printString("电话:" + store.getTelePhone());
+		device.printString("手机:" + store.getMobilePhone());
+		device.printString("------------------------------------------------");
+		device.printString("交易号:" + dto.getId());
+		device.printString("收款员:" + op.getId());
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString = formatter.format(currentTime);
-		p.print("日期:" + dateString);
-		p.print("客户名称:" + client.getName() + "    客户电话:" + client.getPhone());
-		p.print("===============================================");
-		p.print("商品名称    尺寸    单价    数量    金额");
+		device.printString("日期:" + dateString);
+		device.printString("客户名称:" + client.getName() + "    客户电话:"
+				+ client.getPhone());
+		device.printString("================================================");
+		String title = paddingWithSuffix(16, "商品名称", SUFFIX)
+				+ paddingWithSuffix(6, "尺寸", SUFFIX)
+				+ paddingWithSuffix(10, "单价(元)", SUFFIX)
+				+ paddingWithSuffix(6, "数量", SUFFIX)
+				+ paddingWithSuffix(10, "金额(元)", SUFFIX);
+		device.printString(title);
 		List<Item> itemList = dto.getItemList();
 		for (Item item : itemList) {
-			p.print(item.getName() + "  " + item.getSize() + "  "
-					+ item.getUnitPrice() + "  " + item.getAmount() + "  "
-					+ item.getPrice());
+			device.printString(paddingWithSuffix(16, item.getName(), SUFFIX)
+					+ paddingWithSuffix(6, item.getSize(), SUFFIX)
+					+ paddingWithSuffix(10, item.getUnitPrice(), SUFFIX)
+					+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
+					+ paddingWithSuffix(10, item.getPrice(), SUFFIX));
 		}
-		p.print("-----------------------------------------------");
-		p.print("小计:" + dto.getSmallCount() + "元");
-		p.print("折扣金额:" + dto.getDiscount() + "元");
-		p.print("应付金额:" + dto.getTotalAmount() + "元");
-		p.print("备注:" + dto.getRemark());
+		device.printString("------------------------------------------------");
+		device.selectAlignType(2);// 右对齐
+		device.printString("小计:" + dto.getSmallCount() + "元");
+		device.printString("折扣金额:" + dto.getDiscount() + "元");
+		device.printString("应付金额:" + dto.getTotalAmount() + "元");
+		device.printString("备注:"
+				+ (StringUtils.isEmpty(dto.getRemark()) ? "" : dto.getRemark()));
 		switch (storeSide.getSide()) {
 		case 1:
 
 			break;
 		case 2:
 			// 打印店铺信息
-			p.print("温馨提示:" + dto.getRemark());
-			p.selectAlignment(ALIGNMENT.CENTER);
-			p.print("微信付款      支付宝付款      微信加好友");
+			device.printString("温馨提示:" + store.getReminder());
+			String qrcode = paddingWithSuffix(16, "微信付款", SUFFIX)
+					+ paddingWithSuffix(16, "支付宝付款", SUFFIX)
+					+ paddingWithSuffix(16, "微信加好友", SUFFIX);
+			device.printString(qrcode);
 			// TODO 打印二维码
 			break;
 		default:
 			throw new RuntimeException("未知票联");
 		}
 		// 裁剪纸张
-		p.cutPaper();
+		device.cutPaper();
 
+	}
+
+	/**
+	 * 获取字符串的长度，如果有中文，则每个中文字符计为2位
+	 * 
+	 * @param validateStr
+	 *            指定的字符串
+	 * @return 字符串的长度
+	 */
+	public static int getChineseLength(String validateStr) {
+		int valueLength = 0;
+		String chinese = "[\u0391-\uFFE5]";
+		/* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+		for (int i = 0; i < validateStr.length(); i++) {
+			/* 获取一个字符 */
+			String temp = validateStr.substring(i, i + 1);
+			/* 判断是否为中文字符 */
+			if (temp.matches(chinese)) {
+				/* 中文字符长度为2 */
+				valueLength += 2;
+			} else {
+				/* 其他字符长度为1 */
+				valueLength += 1;
+			}
+		}
+		return valueLength;
+	}
+
+	/**
+	 * 
+	 * @param length
+	 *            限定字符串长度
+	 * @param text
+	 *            输入的字符
+	 * @param suffix
+	 *            如果长度不足,用suffix来补足,如果超了就截取指定长度
+	 * @return
+	 */
+	private String paddingWithSuffix(int length, String text, String suffix) {
+		// 获取text的按照Byte计算的实际长度 一个中文两个字符 英文数字一个字符
+		int realLength = getChineseLength(text);
+		StringBuffer sb = new StringBuffer(text);
+		if (realLength < length) {
+			for (int i = 0; i < (length - realLength); i++) {
+				sb.append(SUFFIX);
+			}
+		} else if (realLength > length) {// 太长就截掉
+			StringBuffer tempSb = new StringBuffer();
+			String chinese = "[\u0391-\uFFE5]";
+			int valueLength = 0;
+			for (int i = 0; i < text.length(); i++) {
+				String temp = text.substring(i, i + 1);
+				if (temp.matches(chinese)) {
+					valueLength += 2;
+				} else {
+					valueLength += 1;
+				}
+				if (valueLength <= length) {
+					tempSb.append(temp);
+				} else {
+					break;
+				}
+			}
+			return paddingWithSuffix(length, tempSb.toString(), suffix);
+		}
+		return sb.toString();
 	}
 
 }

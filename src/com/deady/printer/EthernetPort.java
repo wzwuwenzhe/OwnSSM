@@ -18,19 +18,31 @@ import org.slf4j.LoggerFactory;
 
 public class EthernetPort extends Port {
 
+	// 日志
 	private static final Logger logger = LoggerFactory
 			.getLogger(EthernetPort.class);
+	// ip地址
 	InetAddress m_IPAddress;
+	// socket
 	Socket m_Socket = null;
+	// 线程
 	Thread m_Thread;
+	// 输出流
 	OutputStream m_OutStream;
+	// 输入流
 	InputStream m_InStream;
+	// 异常
 	Exception m_Exception = null;
+	// 当前线程是否在运行
 	boolean m_EthernetThreadRunning = false;
+	// 连接关闭标志
 	Boolean m_CloseFlag = Boolean.valueOf(false);
+	// 需要发送报文标识
 	Boolean m_SendFlag = Boolean.valueOf(false);
+	// 发送的数据
 	byte[] m_SendData;
 	int m_bytesAvailable = 0;
+	// 接收到的数据
 	byte[] m_receiveData;
 	Vector<Byte> m_receiveBuffer;
 
@@ -58,11 +70,9 @@ public class EthernetPort extends Port {
 				try {
 					logger.info("EthernetPort   IP address: "
 							+ EthernetPort.this.m_deviceParameters.IPAddress);
-					logger.info(
-							"EthernetPort",
-							"Port number: "
-									+ Integer
-											.toString(EthernetPort.this.m_deviceParameters.PortNumber));
+					logger.info("EthernetPort  Port number: "
+							+ Integer
+									.toString(EthernetPort.this.m_deviceParameters.PortNumber));
 					EthernetPort.this.m_IPAddress = Inet4Address
 							.getByName(EthernetPort.this.m_deviceParameters.IPAddress);
 					SocketAddress remoteAddr = new InetSocketAddress(
@@ -77,9 +87,8 @@ public class EthernetPort extends Port {
 							.getInputStream();
 					logger.info("EthernetPort   Streams created");
 				} catch (Exception e) {
-					logger.error("EthernetPort",
-							"Exception occured creating sockets and streams: "
-									+ e.getMessage());
+					logger.error("EthernetPort Exception occured creating sockets and streams: "
+							+ e.getMessage());
 					EthernetPort.this.m_Exception = e;
 				}
 
@@ -90,27 +99,25 @@ public class EthernetPort extends Port {
 					while (!EthernetPort.this.m_CloseFlag.booleanValue()) {
 						try {
 							if (EthernetPort.this.m_SendFlag.booleanValue()) {
-								logger.info("EthernetPort  Sending data: "
-										+ Integer
-												.toString(EthernetPort.this.m_SendData.length)
-										+ " bytes");
 								EthernetPort.this.m_OutStream
 										.write(EthernetPort.this.m_SendData);
 								EthernetPort.this.m_OutStream.flush();
 								EthernetPort.this.m_SendFlag = Boolean
 										.valueOf(false);
-								logger.info("EthernetPort  Finished sending data");
+								logger.info("EthernetPort  Sending data: "
+										+ Integer
+												.toString(EthernetPort.this.m_SendData.length)
+										+ " bytes");
+								// logger.info("EthernetPort  Finished sending data");
 							}
 
 							EthernetPort.this.m_bytesAvailable = EthernetPort.this.m_InStream
 									.available();
 							if (EthernetPort.this.m_bytesAvailable > 0) {
-								logger.info(
-										"EthernetPort",
-										"Receiving data: "
-												+ Integer
-														.toString(EthernetPort.this.m_bytesAvailable)
-												+ " bytes");
+								logger.info("EthernetPort Receiving data: "
+										+ Integer
+												.toString(EthernetPort.this.m_bytesAvailable)
+										+ " bytes");
 								int n = EthernetPort.this.m_InStream
 										.read(EthernetPort.this.m_receiveData);
 
@@ -138,10 +145,8 @@ public class EthernetPort extends Port {
 
 							EthernetPort.this.m_EthernetThreadRunning = true;
 						} catch (Exception e) {
-							logger.error(
-									"EthernetPort",
-									"Exception occured in run loop: "
-											+ e.getMessage());
+							logger.error("EthernetPort Exception occured in run loop: "
+									+ e.getMessage());
 
 							EthernetPort.this.m_Exception = e;
 							EthernetPort.this.m_CloseFlag = Boolean
@@ -240,7 +245,7 @@ public class EthernetPort extends Port {
 		if ((data != null) && (data.size() > 0)) {
 			parseOutgoingData(data);
 
-			if ((this.m_Socket != null) && (this.m_OutStream != null)) {
+			if ((this.m_Socket != null) && (this.m_OutStream != null)) {//
 				Date NowDate = new Date();
 				Date TimeoutDate = new Date(NowDate.getTime() + 3000L);
 
@@ -289,9 +294,8 @@ public class EthernetPort extends Port {
 					this.m_OutStream.write(sendData);
 					this.m_OutStream.flush();
 				} catch (Exception e) {
-					logger.error("EthernetPort",
-							"Exception occured while sending data immediately: "
-									+ e.getMessage());
+					logger.error("EthernetPort Exception occured while sending data immediately: "
+							+ e.getMessage());
 					retval = Deady.ERROR_CODE.FAILED;
 				}
 			}

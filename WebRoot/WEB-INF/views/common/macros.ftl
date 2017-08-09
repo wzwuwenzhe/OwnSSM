@@ -49,6 +49,34 @@
 </@cleanHeader>
 </#macro>
 
+<#macro htmlHeader4Order title="${companyName}" >
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no"/>
+<title>${title}</title>
+<@css path="/css/order/basictable.css"/>
+<@css path="/css/order/demo.css"/>
+<@css path="/css/order/style.css"/>
+<@css path="/js/My97DatePicker/skin/WdatePicker.css"/>
+<@js path="/js/loginAndRegister/jquery-1.11.1.min.js"/>
+<@js path="/js/jquery.basictable.min.js"/>
+<@js path="/js/My97DatePicker/WdatePicker.js"/>
+</head>
+<#nested>
+</html>
+</#macro>
+
+
+<#assign _today=jodaTime.now().toString("yyyyMMdd")/>
+<#macro DateFields begin=_today end=_today beginValue="" endValue="">
+    <input type="text" <#if beginValue!="">value="${beginValue}"<#else>value="${begin}"</#if> class="Wdate" name="beginDate" id="beginDate" style="cursor:pointer;width:120px;" onclick="WdatePicker()" readonly="readonly" dataType="Require" msg="开始日期不能为空"/>
+    </span>至</span>
+    <input type="text" <#if beginValue!="">value="${endValue}"<#else>value="${end}"</#if> class="Wdate" name="endDate" id="endDate" style="cursor:pointer;width:120px;" onclick="WdatePicker()" readonly="readonly" dataType="Require" msg="结束日期不能为空"/>
+</#macro>
+
 <#macro htmlBody>
 	<body>
 		<div class="container">
@@ -155,8 +183,8 @@
 	</div>
 </#macro>
 
-<#macro form_group id desc type name dataType msg  onkeyup="" value="">
-	<div class="form-group">
+<#macro form_group id desc type name dataType msg  onkeyup="" value="" style="">
+	<div class="form-group" <#if style!="">style="${style}"</#if> >
 		<label for="${id}" class="sr-only">${desc}</label>
 		<input type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
 		dataType="${dataType}" name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${desc}" autocomplete="off">

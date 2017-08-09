@@ -10,4 +10,11 @@ public interface StoreService {
 
 	void modifyStore(Store store);
 
+	/**
+	 * 向打印机中写入图片信息
+	 * 
+	 * @param store
+	 */
+	void uploadPic4Printer(Store store);
+
 }

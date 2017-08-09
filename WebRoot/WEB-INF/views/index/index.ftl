@@ -6,5 +6,6 @@
 			<@project name="新增操作员" href="/operatorRegister" imgName="work-2.jpg"/>
 			<@project name="添加客户" href="/clientRegister" imgName="work-2.jpg"/>
 			<@project name="下单" href="/billing" imgName="work-2.jpg"/>
+			<@project name="订单查询" href="/order" imgName="work-2.jpg"/>
 		</@htmlBody4Main>
 <@htmlFooter4Main/>

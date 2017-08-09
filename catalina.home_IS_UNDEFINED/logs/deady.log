@@ -1,69 +1,68 @@
-2017-07-25 00:00:04,395 [main] INFO  com.deady.printer.Device:91 - DeadyDevice Creating Ethernet port...
-2017-07-25 00:00:04,409 [main] INFO  com.deady.printer.Device:96 - DeadyDevice Port creation successful
-2017-07-25 00:00:04,410 [main] INFO  com.deady.printer.EthernetPort:43 - EthernetPort   ------- openPort method -------
-2017-07-25 00:00:04,411 [Thread-0] INFO  com.deady.printer.EthernetPort:50 - EthernetPort   Thread started
-2017-07-25 00:00:04,412 [Thread-0] INFO  com.deady.printer.EthernetPort:57 - EthernetPort   Buffers cleared
-2017-07-25 00:00:04,412 [Thread-0] INFO  com.deady.printer.EthernetPort:59 - EthernetPort   IP address: 192.168.31.101
-2017-07-25 00:00:04,412 [Thread-0] INFO  com.deady.printer.EthernetPort:61 - EthernetPort
-2017-07-25 00:00:04,419 [Thread-0] INFO  com.deady.printer.EthernetPort:73 - EthernetPort   Socket created
-2017-07-25 00:00:04,420 [Thread-0] INFO  com.deady.printer.EthernetPort:78 - EthernetPort   Streams created
-2017-07-25 00:00:04,420 [Thread-0] INFO  com.deady.printer.EthernetPort:87 - EthernetPort   Starting network loop
-2017-07-25 00:00:04,511 [main] INFO  com.deady.printer.Device:108 - DeadyDevice Port is open
-2017-07-25 00:00:04,512 [main] INFO  com.deady.printer.Device:176 - EpsonComDevice  ------- activateASB method -------
-2017-07-25 00:00:04,513 [main] INFO  com.deady.printer.Device:177 - EpsonComDevice  m_Port==null? false
-2017-07-25 00:00:04,514 [main] INFO  com.deady.printer.Device:206 - EpsonComDevice  binaryData==null? false
-2017-07-25 00:00:04,514 [main] INFO  com.deady.printer.Device:208 - EpsonComDevice  binaryData.size()=3
-2017-07-25 00:00:04,520 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 2 bytes
-2017-07-25 00:00:04,520 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,565 [main] INFO  com.deady.printer.Device:212 - EpsonComDevice  m_Port.writeData returned: SUCCESS
-2017-07-25 00:00:04,572 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:00:04,572 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,622 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 7 bytes
-2017-07-25 00:00:04,622 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,674 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:00:04,674 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,725 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:00:04,726 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,776 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:00:04,776 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,827 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:00:04,827 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,879 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:00:04,879 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:00:04,930 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 4 bytes
-2017-07-25 00:00:04,930 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:01:22,360 [main] INFO  com.deady.printer.Device:94 - DeadyDevice Creating Ethernet port...
-2017-07-25 00:01:22,374 [main] INFO  com.deady.printer.Device:99 - DeadyDevice Port creation successful
-2017-07-25 00:01:22,375 [main] INFO  com.deady.printer.EthernetPort:43 - EthernetPort   ------- openPort method -------
-2017-07-25 00:01:22,377 [Thread-0] INFO  com.deady.printer.EthernetPort:50 - EthernetPort   Thread started
-2017-07-25 00:01:22,378 [Thread-0] INFO  com.deady.printer.EthernetPort:57 - EthernetPort   Buffers cleared
-2017-07-25 00:01:22,378 [Thread-0] INFO  com.deady.printer.EthernetPort:59 - EthernetPort   IP address: 192.168.31.101
-2017-07-25 00:01:22,379 [Thread-0] INFO  com.deady.printer.EthernetPort:61 - EthernetPort
-2017-07-25 00:01:22,387 [Thread-0] INFO  com.deady.printer.EthernetPort:73 - EthernetPort   Socket created
-2017-07-25 00:01:22,387 [Thread-0] INFO  com.deady.printer.EthernetPort:78 - EthernetPort   Streams created
-2017-07-25 00:01:22,387 [Thread-0] INFO  com.deady.printer.EthernetPort:87 - EthernetPort   Starting network loop
-2017-07-25 00:01:22,477 [main] INFO  com.deady.printer.Device:111 - DeadyDevice Port is open
-2017-07-25 00:01:22,479 [main] INFO  com.deady.printer.Device:179 - EpsonComDevice  ------- activateASB method -------
-2017-07-25 00:01:22,480 [main] INFO  com.deady.printer.Device:180 - EpsonComDevice  m_Port==null? false
-2017-07-25 00:01:22,481 [main] INFO  com.deady.printer.Device:209 - EpsonComDevice  binaryData==null? false
-2017-07-25 00:01:22,482 [main] INFO  com.deady.printer.Device:211 - EpsonComDevice  binaryData.size()=3
-2017-07-25 00:01:22,489 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 2 bytes
-2017-07-25 00:01:22,489 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:01:22,532 [main] INFO  com.deady.printer.Device:215 - EpsonComDevice  m_Port.writeData returned: SUCCESS
-2017-07-25 00:01:22,541 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:01:22,541 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:01:22,592 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 7 bytes
-2017-07-25 00:01:22,592 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:04:15,947 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:04:15,948 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:04:20,344 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:04:20,344 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:04:20,394 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:04:20,394 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:04:20,445 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:04:20,446 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:04:20,496 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 3 bytes
-2017-07-25 00:04:20,496 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:04:20,546 [Thread-0] INFO  com.deady.printer.EthernetPort:93 - EthernetPort  Sending data: 4 bytes
-2017-07-25 00:04:20,546 [Thread-0] INFO  com.deady.printer.EthernetPort:102 - EthernetPort  Finished sending data
-2017-07-25 00:04:21,456 [Thread-0] INFO  com.deady.printer.EthernetPort:153 - EthernetPort   Closing network
+2017-08-08 22:40:54,045 [main] INFO  com.deady.printer.Device:49 - DeadyDevice Creating Ethernet port...
+2017-08-08 22:40:54,078 [main] INFO  com.deady.printer.Device:53 - DeadyDevice Port creation successful
+2017-08-08 22:40:54,078 [main] INFO  com.deady.printer.EthernetPort:55 - EthernetPort   ------- openPort method -------
+2017-08-08 22:40:54,084 [Thread-0] INFO  com.deady.printer.EthernetPort:62 - EthernetPort   Thread started
+2017-08-08 22:40:54,084 [Thread-0] INFO  com.deady.printer.EthernetPort:69 - EthernetPort   Buffers cleared
+2017-08-08 22:40:54,085 [Thread-0] INFO  com.deady.printer.EthernetPort:71 - EthernetPort   IP address: www.mama.com
+2017-08-08 22:40:54,085 [Thread-0] INFO  com.deady.printer.EthernetPort:73 - EthernetPort  Port number: 9100
+2017-08-08 22:40:54,093 [Thread-0] INFO  com.deady.printer.EthernetPort:83 - EthernetPort   Socket created
+2017-08-08 22:40:54,094 [Thread-0] INFO  com.deady.printer.EthernetPort:88 - EthernetPort   Streams created
+2017-08-08 22:40:54,094 [Thread-0] INFO  com.deady.printer.EthernetPort:96 - EthernetPort   Starting network loop
+2017-08-08 22:40:54,185 [main] INFO  com.deady.printer.Device:65 - DeadyDevice Port is open
+2017-08-08 22:40:54,203 [main] INFO  com.deady.printer.Device:273 - command:'ESC @'
+2017-08-08 22:40:54,246 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 2 bytes
+2017-08-08 22:40:54,253 [main] INFO  com.deady.printer.Device:273 - command:123321 'LF'
+2017-08-08 22:40:54,296 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 7 bytes
+2017-08-08 22:40:54,303 [main] INFO  com.deady.printer.Device:273 - command:'GS V'66 1
+2017-08-08 22:40:54,346 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 4 bytes
+2017-08-08 22:43:34,060 [main] INFO  com.deady.printer.Device:49 - DeadyDevice Creating Ethernet port...
+2017-08-08 22:43:34,073 [main] INFO  com.deady.printer.Device:53 - DeadyDevice Port creation successful
+2017-08-08 22:43:34,075 [main] INFO  com.deady.printer.EthernetPort:55 - EthernetPort   ------- openPort method -------
+2017-08-08 22:43:34,090 [Thread-0] INFO  com.deady.printer.EthernetPort:62 - EthernetPort   Thread started
+2017-08-08 22:43:34,090 [Thread-0] INFO  com.deady.printer.EthernetPort:69 - EthernetPort   Buffers cleared
+2017-08-08 22:43:34,091 [Thread-0] INFO  com.deady.printer.EthernetPort:71 - EthernetPort   IP address: centos7.deady.tech
+2017-08-08 22:43:34,091 [Thread-0] INFO  com.deady.printer.EthernetPort:73 - EthernetPort  Port number: 26691
+2017-08-08 22:43:34,528 [Thread-0] INFO  com.deady.printer.EthernetPort:83 - EthernetPort   Socket created
+2017-08-08 22:43:34,528 [Thread-0] INFO  com.deady.printer.EthernetPort:88 - EthernetPort   Streams created
+2017-08-08 22:43:34,529 [Thread-0] INFO  com.deady.printer.EthernetPort:96 - EthernetPort   Starting network loop
+2017-08-08 22:43:34,579 [main] INFO  com.deady.printer.Device:65 - DeadyDevice Port is open
+2017-08-08 22:43:34,581 [main] INFO  com.deady.printer.Device:273 - command:'ESC @'
+2017-08-08 22:43:34,629 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 2 bytes
+2017-08-08 22:43:34,632 [main] INFO  com.deady.printer.Device:273 - command:123321 'LF'
+2017-08-08 22:43:34,679 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 7 bytes
+2017-08-08 22:43:34,682 [main] INFO  com.deady.printer.Device:273 - command:'GS V'66 1
+2017-08-08 22:43:34,730 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 4 bytes
+2017-08-08 22:44:46,465 [main] INFO  com.deady.printer.Device:49 - DeadyDevice Creating Ethernet port...
+2017-08-08 22:44:46,476 [main] INFO  com.deady.printer.Device:53 - DeadyDevice Port creation successful
+2017-08-08 22:44:46,477 [main] INFO  com.deady.printer.EthernetPort:55 - EthernetPort   ------- openPort method -------
+2017-08-08 22:44:46,478 [Thread-0] INFO  com.deady.printer.EthernetPort:62 - EthernetPort   Thread started
+2017-08-08 22:44:46,478 [Thread-0] INFO  com.deady.printer.EthernetPort:69 - EthernetPort   Buffers cleared
+2017-08-08 22:44:46,479 [Thread-0] INFO  com.deady.printer.EthernetPort:71 - EthernetPort   IP address: centos7.deady.tech
+2017-08-08 22:44:46,479 [Thread-0] INFO  com.deady.printer.EthernetPort:73 - EthernetPort  Port number: 26691
+2017-08-08 22:44:46,804 [Thread-0] INFO  com.deady.printer.EthernetPort:83 - EthernetPort   Socket created
+2017-08-08 22:44:46,805 [Thread-0] INFO  com.deady.printer.EthernetPort:88 - EthernetPort   Streams created
+2017-08-08 22:44:46,805 [Thread-0] INFO  com.deady.printer.EthernetPort:96 - EthernetPort   Starting network loop
+2017-08-08 22:44:46,880 [main] INFO  com.deady.printer.Device:65 - DeadyDevice Port is open
+2017-08-08 22:44:46,882 [main] INFO  com.deady.printer.Device:273 - command:'ESC @'
+2017-08-08 22:44:46,906 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 2 bytes
+2017-08-08 22:44:46,932 [main] INFO  com.deady.printer.Device:273 - command:123321 'LF'
+2017-08-08 22:44:46,956 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 7 bytes
+2017-08-08 22:44:46,984 [main] INFO  com.deady.printer.Device:273 - command:'GS V'66 1
+2017-08-08 22:44:47,006 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 4 bytes
+2017-08-08 22:45:26,264 [main] INFO  com.deady.printer.Device:49 - DeadyDevice Creating Ethernet port...
+2017-08-08 22:45:26,279 [main] INFO  com.deady.printer.Device:53 - DeadyDevice Port creation successful
+2017-08-08 22:45:26,280 [main] INFO  com.deady.printer.EthernetPort:55 - EthernetPort   ------- openPort method -------
+2017-08-08 22:45:26,281 [Thread-0] INFO  com.deady.printer.EthernetPort:62 - EthernetPort   Thread started
+2017-08-08 22:45:26,282 [Thread-0] INFO  com.deady.printer.EthernetPort:69 - EthernetPort   Buffers cleared
+2017-08-08 22:45:26,282 [Thread-0] INFO  com.deady.printer.EthernetPort:71 - EthernetPort   IP address: centos7.deady.tech
+2017-08-08 22:45:26,282 [Thread-0] INFO  com.deady.printer.EthernetPort:73 - EthernetPort  Port number: 26691
+2017-08-08 22:45:26,610 [Thread-0] INFO  com.deady.printer.EthernetPort:83 - EthernetPort   Socket created
+2017-08-08 22:45:26,610 [Thread-0] INFO  com.deady.printer.EthernetPort:88 - EthernetPort   Streams created
+2017-08-08 22:45:26,610 [Thread-0] INFO  com.deady.printer.EthernetPort:96 - EthernetPort   Starting network loop
+2017-08-08 22:45:26,683 [main] INFO  com.deady.printer.Device:65 - DeadyDevice Port is open
+2017-08-08 22:45:26,685 [main] INFO  com.deady.printer.Device:273 - command:'ESC @'
+2017-08-08 22:45:26,711 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 2 bytes
+2017-08-08 22:45:26,737 [main] INFO  com.deady.printer.Device:273 - command:123321 'LF'
+2017-08-08 22:45:26,763 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 7 bytes
+2017-08-08 22:45:26,788 [main] INFO  com.deady.printer.Device:273 - command:'GS V'66 1
+2017-08-08 22:45:26,813 [Thread-0] INFO  com.deady.printer.EthernetPort:107 - EthernetPort  Sending data: 4 bytes

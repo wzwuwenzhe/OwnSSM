@@ -29,6 +29,9 @@ public class LoginAction {
 	public Object loginView(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		Cookie[] cookies = req.getCookies();
+		if (null == cookies) {
+			return new ModelAndView("/login/login");
+		}
 		boolean flag = false;
 		for (Cookie cookie : cookies) {
 			if (cookie.getName().equals(OperatorSessionInfo.COOKIE_USER_NAME)) {
