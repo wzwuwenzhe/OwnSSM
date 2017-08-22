@@ -16,6 +16,8 @@ public class OrderSearchEntity {
 	private String beginDate;// 查询开始时间
 	@BasicEntityField(length = 8, testValue = "20170801")
 	private String endDate;// 查询结束时间
+	@BasicEntityField(length = 8, testValue = "05779999")
+	private String storeId;// 店铺Id 只能查自己店铺的订单
 
 	public String getOrderName() {
 		return orderName;
@@ -63,5 +65,13 @@ public class OrderSearchEntity {
 
 	public void setBeginDate(String beginDate) {
 		this.beginDate = beginDate;
+	}
+
+	public String getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
 	}
 }

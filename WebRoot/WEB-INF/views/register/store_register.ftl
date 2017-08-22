@@ -18,11 +18,11 @@
 			店铺ID:<input type="text" readonly="readonly" dataType="NumberMax8" name="id" 
 			msg="" class="form-control" id="storeId" value="${storeId}" autocomplete="off">
 		</div>
-		<@form_group id="name" value="${(store.name)!''}" desc="店铺名称(中英文均可)" type="text" name="name" dataType="Text" msg="店铺名称不能包含特殊字符"/>
-		<@form_group id="adress" value="${(store.address)!''}" desc="店铺地址" type="text" name="address" dataType="MoreText" msg="店铺地址不能包含特殊字符" />
+		<@form_group id="name" value="${(store.name)!''}" desc="店铺名称(中英文均可)" type="text" name="name" dataType="Require" msg="店铺名称不能为空"/>
+		<@form_group id="adress" value="${(store.address)!''}" desc="店铺地址" type="text" name="address" dataType="Require" msg="店铺地址不能为空" />
 		<@form_group id="telephone" value="${(store.telePhone)!''}" desc="电话" type="text" name="telePhone" dataType="" msg="请输入正确的固话号码" onkeyup="validate('LTGH',this)" />
 		<@form_group id="mobilephone" value="${(store.mobilePhone)!''}" desc="手机" type="text" name="mobilePhone" dataType="" msg="请输入正确的手机号码" onkeyup="validate('Phone',this)" />
-		<@form_group id="reminder" value="${(store.reminder)!''}" desc="提醒(小票上的温馨提示)" type="text" name="reminder" dataType="" msg="输入的提醒不合法" onkeyup="validate('MoreText',this)"/>
+		<@form_group id="reminder" value="${(store.reminder)!''}" desc="提醒(小票上的温馨提示)" type="text" name="reminder" dataType="" msg="输入的提醒不合法" />
 		<#if userType=="1" && !isAdd>
 			<#assign status="${(store.status)!''}"/>
 			<div class="form-group">

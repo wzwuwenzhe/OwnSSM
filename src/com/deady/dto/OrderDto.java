@@ -19,6 +19,8 @@ public class OrderDto extends Order {
 		this.remark = order.getRemark();
 	}
 
+	private String cusName;// 客户名称
+
 	public OrderDto() {
 
 	}
@@ -33,6 +35,14 @@ public class OrderDto extends Order {
 
 	public void setItemList(List<Item> itemList) {
 		this.itemList = itemList;
+	}
+
+	public String getCusName() {
+		return cusName;
+	}
+
+	public void setCusName(String cusName) {
+		this.cusName = cusName;
 	}
 
 }

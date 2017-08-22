@@ -1,6 +1,7 @@
 package com.deady.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public Client getClientById(String cusId) {
 		return clientDAO.findClientById(cusId);
+	}
+
+	@Override
+	public List<Map<String, String>> getClientId2NameMap(String storeId) {
+		return clientDAO.findClientId2NameMap(storeId);
 	}
 
 }

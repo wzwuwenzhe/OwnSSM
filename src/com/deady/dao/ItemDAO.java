@@ -12,4 +12,6 @@ public interface ItemDAO {
 
 	List<Item> findItemsByOrderId(String orderId);
 
+	void deleItemsByOrderId(String orderId);
+
 }

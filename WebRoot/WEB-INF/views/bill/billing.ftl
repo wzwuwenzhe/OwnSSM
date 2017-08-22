@@ -59,7 +59,7 @@
 	}
 	function addRecord(btn){
 		$(btn).parent().parent().before("<tr>"+
-		"<td><input name='name' dataType='MoreText' msg='商品名称请不要输入特殊子字符' class='form-control' type='text'/></td>"+
+		"<td><input name='name' dataType='Require' msg='商品名称不能为空' class='form-control' type='text'/></td>"+
 		"<td><input name='size' dataType='EnglishAndNumber' msg='尺寸不合法' class='form-control'  type='text'/></td>"+
 		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
 		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' /></td>"+

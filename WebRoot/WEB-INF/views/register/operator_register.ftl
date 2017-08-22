@@ -2,7 +2,7 @@
 <@htmlBody>
 	<@form action="/operatorRegister" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="操作员注册">
 		<@form_group id="storeId" desc="店铺ID" name="storeId" type="text" dataType="NumberMax8" msg="店铺ID长度为8位数字"/>
-		<@form_group id="opName" desc="您的姓名" name="name" type="text" dataType="Chinese" msg="必须为中文,请填您的真实姓名"/>
+		<@form_group id="opName" desc="操作员姓名" name="name" type="text" dataType="Chinese" msg="必须为中文,请填您的真实姓名"/>
 		<@form_group id="mobilephone" desc="手机" name="phone" type="text" dataType="Phone" msg="手机号码错误"/>
 		<!-- 只有超管才能看到这个选项 并且选择用户类型-->
 		<#if userType=="1">

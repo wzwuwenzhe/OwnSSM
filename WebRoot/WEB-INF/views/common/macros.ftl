@@ -17,7 +17,6 @@
 	<@js path="/js/main/jquery.flexslider-min.js"/>
 	<@js path="/js/main/jquery.fancybox.pack.js"/>
 	<@js path="/js/main/jquery.waypoints.min.js"/>
-	<@js path="/js/main/retina.min.js"/>
 	<@js path="/js/main/modernizr.js"/>
 	<@js path="/js/main/main.js"/>
 	<@js path="/js/validator.js"/>
@@ -115,14 +114,14 @@
 <section id="banner" class="banner no-padding">
   <div class="container-fluid">
     <div class="row no-gutter">
-      <div class="flexslider">
+      <!-- <div class="flexslider"> -->
         <ul class="slides">
           <li>
           </li>
           <li>
           </li>
         </ul>
-      </div>
+      <!-- </div> -->
      </div>
   </div>
 </section>
@@ -130,9 +129,11 @@
 
 <#macro headerBanner4Main>
 	<section class="banner" role="banner">
-		<header id="header">
-		<div class="header-content clearfix"> <a class="logo" href="index.html"><img src="${img("/image/main/logo.png")}" alt=""></a>
-		</header>
+		<!--
+			<header id="header">
+			<div class="header-content clearfix"> <a class="logo" href="index.html"><img src="${img("/image/main/logo.png")}" alt=""></a>
+			</header>
+		-->
   	</section>
 </#macro>
 
@@ -150,12 +151,7 @@
 <#macro project name imgName href>
 <div class="col-lg-3 col-md-6 col-sm-6 work"> 
 	<a href="${url(href)}" class="work-box"> <img src="${img("/image/main/"+imgName)}" alt="">
-		<div class="overlay">
-		  <div class="overlay-caption">
-		    <h5>${name}</h5>
-		    <p><i class="fa fa-search-plus fa-2x"></i></p>
-		  </div>
-		</div>
+		<h5>${name}</h5>
 	</a> 
 </div>
 </#macro>

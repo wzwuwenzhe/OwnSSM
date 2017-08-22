@@ -14,4 +14,26 @@
    			select * from store_order 
    			where id=#{orderId}
    		</select>
+   		
+   		<select id="findOrderByCondition" resultType="com.deady.dto.OrderDto"
+   		parameterType="com.deady.entity.order.OrderSearchEntity">
+   			SELECT * FROM store_order WHERE 
+   			creation_time   &gt;= #{beginDate} and creation_time &lt;= #{endDate} 
+   			<if test="storeId !=null and storeId!=''">
+   			and store_id = #{storeId}
+   			</if>
+   			<if test="orderId != null and orderId != ''">
+   			and id = #{orderId} 
+   			</if>
+   			<if test="operatorId != null and operatorId != ''">
+   			and operator_id LIKE '%${operatorId}%'   
+   			</if>
+   			<if test="orderName != null and orderName != ''">
+   			and id IN(SELECT order_id FROM item WHERE name LIKE  '%${orderName}%' and creation_time &gt;= #{beginDate} and creation_time &lt;= #{endDate}  )
+   			</if>
+   		</select>
+   		
+   		<delete id="deleteOrderById" >
+   			delete from store_order where id=#{orderId}
+   		</delete>
 </mapper>

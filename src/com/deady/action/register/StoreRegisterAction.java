@@ -89,7 +89,7 @@ public class StoreRegisterAction {
 		try {
 			Store store = validateStore(req, res, response);
 			storeService.modifyStore(store);
-			storeService.uploadPic4Printer(store);
+			// storeService.uploadPic4Printer(store);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMessage(e.getMessage());

@@ -21,5 +21,9 @@
     	SELECT * FROM client
     	WHERE id=#{cusId}
     </select>
+    
+    <select id="findClientId2NameMap" resultType="java.util.HashMap" >
+    select id,name from client WHERE store_id=#{storeId}
+</select>
 
 </mapper>
