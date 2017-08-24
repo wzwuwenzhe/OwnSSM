@@ -29,7 +29,8 @@ public class OperatorSessionInfo {
 
 	public static void saveCookie(HttpServletRequest request,
 			HttpServletResponse response) {
-		if (request.getParameter("remember").equals("1")) {// 记住我
+		if (null != request.getParameter("remember")
+				&& request.getParameter("remember").equals("1")) {// 记住我
 			Cookie nameCookie = new Cookie(COOKIE_USER_NAME,
 					request.getParameter("username"));
 			// 设置Cookie的有效期为3天

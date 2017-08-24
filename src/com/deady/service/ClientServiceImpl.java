@@ -36,4 +36,14 @@ public class ClientServiceImpl implements ClientService {
 		return clientDAO.findClientId2NameMap(storeId);
 	}
 
+	@Override
+	public void removeClientById(String clientId) {
+		clientDAO.deleteClientById(clientId);
+	}
+
+	@Override
+	public void modifyClient(Client client) {
+		clientDAO.updateClient(client);
+	}
+
 }

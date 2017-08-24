@@ -270,7 +270,7 @@ public class Device {
 					.convertStringToBinary(command);
 			retval = this.m_Port.writeData(binaryData);
 		}
-		logger.info("command:" + command);
+		// logger.info("command:" + command);
 		return retval;
 	}
 

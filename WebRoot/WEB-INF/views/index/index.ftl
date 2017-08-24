@@ -4,9 +4,12 @@
 		<@htmlBody4Main>
 			<@project name="下单" href="/billing" imgName="bill.png"/>
 			<@project name="订单查询" href="/order" imgName="searchOrder.png"/>
-			<@project name="店铺注册" href="/storeRegister" imgName="shop.png"/>
-			<@project name="新增操作员" href="/operatorRegister" imgName="operator.png"/>
-			<@project name="添加客户" href="/clientRegister" imgName="customer.png"/>
+			<#if (userType=="1" || userType=="3")>
+				<@project name="店铺注册" href="/storeRegister" imgName="shop.png"/>
+				<@project name="新增操作员" href="/operatorRegister" imgName="operator.png"/>
+			</#if>
+			<@project name="客户管理" href="/showClient" imgName="customer.png"/>
+			<@project name="用户中心" href="/operatorInfo" imgName="operatorInfo.png"/>
 			<div class="col-lg-3 col-md-6 col-sm-6 work"> 
 				<a href="javascript:void(0)" onclick="shutdownPC()" class="work-box"> <img src="${img("/image/main/power.png")}" alt="">
 					<h5>关机</h5>

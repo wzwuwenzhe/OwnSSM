@@ -21,4 +21,13 @@
             login_name = #{loginName}
     </select>
 
+	<select id="getOperatorCountByStoreId" resultType="Integer" parameterType="string">
+		SELECT COUNT(*) FROM operator 
+		WHERE store_id = #{storeId}
+	</select>
+
+	<update id="updateOperatorPwdById" parameterType="string">
+		UPDATE operator SET pwd = #{pwd} WHERE id=#{id} 
+	</update>
+	
 </mapper>

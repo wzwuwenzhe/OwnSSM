@@ -18,7 +18,7 @@ public class Client implements Serializable {
 	private String name; // 客户名称
 	@BasicEntityField(length = 13, testValue = "18868808242")
 	private String phone;// 客户电话
-
+	@BasicEntityField(length = 32, testValue = "")
 	private String id;// 客户id
 	private String storeId;// 店铺Id
 

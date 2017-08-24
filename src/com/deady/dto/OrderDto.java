@@ -1,6 +1,7 @@
 package com.deady.dto;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.deady.entity.bill.Item;
@@ -17,9 +18,11 @@ public class OrderDto extends Order {
 		this.discount = order.getDiscount();
 		this.totalAmount = order.getTotalAmount();
 		this.remark = order.getRemark();
+		this.creationTime = order.getCreationTime();
 	}
 
 	private String cusName;// 客户名称
+	private String creationTime;// 订单创建时间
 
 	public OrderDto() {
 
@@ -43,6 +46,14 @@ public class OrderDto extends Order {
 
 	public void setCusName(String cusName) {
 		this.cusName = cusName;
+	}
+
+	public String getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(String creationTime) {
+		this.creationTime = creationTime;
 	}
 
 }

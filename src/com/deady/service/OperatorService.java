@@ -19,4 +19,14 @@ public interface OperatorService {
 	 * @return
 	 */
 	Operator getOperatorByLoginName(String userName);
+
+	/**
+	 * 根据店铺ID查找店铺中操作员的数量
+	 * 
+	 * @param storeId
+	 * @return
+	 */
+	int getOperatorCountByStoreId(String storeId);
+
+	void modifyPwdById(String id, String pwd);
 }

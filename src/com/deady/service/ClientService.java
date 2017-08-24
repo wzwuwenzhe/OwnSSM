@@ -14,4 +14,8 @@ public interface ClientService {
 	Client getClientById(String cusId);
 
 	List<Map<String, String>> getClientId2NameMap(String storeId);
+
+	void removeClientById(String clientId);
+
+	void modifyClient(Client client);
 }

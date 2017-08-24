@@ -13,4 +13,8 @@ public interface OperatorDAO {
 
 	Operator getOperatorByLoginName(String loginName);
 
+	int getOperatorCountByStoreId(String storeId);
+
+	void updateOperatorPwdById(@Param("id") String id, @Param("pwd") String pwd);
+
 }

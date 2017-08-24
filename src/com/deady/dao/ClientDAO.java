@@ -18,4 +18,8 @@ public interface ClientDAO {
 
 	List<Map<String, String>> findClientId2NameMap(String storeId);
 
+	void deleteClientById(String clientId);
+
+	void updateClient(Client client);
+
 }

@@ -22,8 +22,8 @@ public class SshAction {
 		// 执行关机操作
 		try {
 			// 使用目标服务器机上的用户名和密码登陆
-			SSHHelper helper = new SSHHelper("192.168.159.132", 22, "root",
-					"wenzhe");
+			SSHHelper helper = new SSHHelper("192.168.31.213", 22, "root",
+					"wenzhebaba2");
 			String command = "shutdown -h now";
 			try {
 				SSHResInfo resInfo = helper.sendCmd(command);

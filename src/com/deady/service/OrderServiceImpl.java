@@ -1,11 +1,15 @@
 package com.deady.service;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,9 @@ import com.deady.entity.order.OrderSearchEntity;
 import com.deady.entity.store.Store;
 import com.deady.printer.Device;
 import com.deady.printer.DeviceParameters;
+import com.deady.utils.ActionUtil;
+import com.deady.utils.DateUtils;
+import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.printer.ORDERSIDE;
 
 @Service
@@ -76,8 +83,11 @@ public class OrderServiceImpl implements OrderService {
 			needCheckCusName = true;
 		}
 		List<OrderDto> resultList = new ArrayList<OrderDto>();
-		for (Order order : orderList) {
+		for (OrderDto order : orderList) {
 			OrderDto dto = new OrderDto(order);
+			dto.setCreationTime(DateUtils.convert2String(DateUtils
+					.convert2Date(order.getCreationTime(),
+							"yyyy-MM-dd HH:mm:ss.s"), "yyyyMMdd"));
 			String cusName = resultMap.get(dto.getCusId());
 			if (needCheckCusName && cusName.indexOf(_cusName) == -1) {
 				continue;
@@ -93,7 +103,8 @@ public class OrderServiceImpl implements OrderService {
 	 * 打印订单
 	 */
 	@Override
-	public void printOrder(String orderId, Operator op) throws Exception {
+	public void printOrder(String orderId, Operator op, boolean isRePrint)
+			throws Exception {
 		OrderDto dto = getOrderDtoById(orderId);
 		Store store = storeService.getStoreById(op.getStoreId());
 		Client client = clientService.getClientById(dto.getCusId());
@@ -106,12 +117,12 @@ public class OrderServiceImpl implements OrderService {
 			Date currentTime = new Date();
 			// 打印店铺联
 			printOrder(device, store, op, client, dto, ORDERSIDE.STORE_SIDE,
-					currentTime);
+					currentTime, isRePrint);
 			device.printString("");
 			device.printString("");
 			// // 打印客户联
 			printOrder(device, store, op, client, dto, ORDERSIDE.CUSTOMER_SIDE,
-					currentTime);
+					currentTime, isRePrint);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -121,8 +132,15 @@ public class OrderServiceImpl implements OrderService {
 
 	}
 
+	public static void main(String[] args) {
+		Date tempDate = DateUtils.convert2Date("2017-08-23 22:30:04.0",
+				"yyyy-MM-dd HH:mm:ss");
+		System.out.println(tempDate);
+	}
+
 	private void printOrder(Device device, Store store, Operator op,
-			Client client, OrderDto dto, ORDERSIDE storeSide, Date currentTime) {
+			Client client, OrderDto dto, ORDERSIDE storeSide, Date currentTime,
+			boolean isRePrint) {
 
 		// TODO logo
 		// device.selectAlignment(ALIGNMENT.CENTER);// 居中
@@ -137,24 +155,34 @@ public class OrderServiceImpl implements OrderService {
 		device.selectAlignType(2);// 右对齐
 		switch (storeSide.getSide()) {
 		case 1:
-			device.printString("店铺联");
+			if (isRePrint) {
+				device.printString("店铺联(重新打印!)");
+			} else {
+				device.printString("店铺联");
+			}
 			break;
 		case 2:
-			device.printString("客户联");
+			if (isRePrint) {
+				device.printString("客户联(重新打印!)");
+			} else {
+				device.printString("客户联");
+			}
 			break;
 		default:
 			throw new RuntimeException("未知票联");
 		}
 		device.selectAlignType(0);// 左对齐
-		device.printString("店名:" + store.getName());
-		device.printString("地址:" + store.getAddress());
-		device.printString("电话:" + store.getTelePhone());
-		device.printString("手机:" + store.getMobilePhone());
-		device.printString("------------------------------------------------");
+		// device.printString("店名:" + store.getName());
+		// device.printString("地址:" + store.getAddress());
+		// device.printString("电话:" + store.getTelePhone());
+		// device.printString("手机:" + store.getMobilePhone());
+		// device.printString("------------------------------------------------");
 		device.printString("交易号:" + dto.getId());
 		device.printString("收款员:" + op.getId());
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String dateString = formatter.format(currentTime);
+		Date creatTime = DateUtils.convert2Date(dto.getCreationTime(),
+				"yyyy-MM-dd HH:mm:ss");
+		String dateString = DateUtils.convert2String(creatTime,
+				"yyyy-MM-dd HH:mm:ss");
 		device.printString("日期:" + dateString);
 		device.printString("客户名称:" + client.getName() + "    客户电话:"
 				+ client.getPhone());
@@ -271,6 +299,101 @@ public class OrderServiceImpl implements OrderService {
 	public void removeOrder(String orderId) {
 		orderDAO.deleteOrderById(orderId);
 		itemDAO.deleItemsByOrderId(orderId);
+	}
+
+	@Override
+	public boolean printReport(String startDateStr, String endDateStr,
+			HttpServletRequest req) throws UnsupportedEncodingException {
+		OrderSearchEntity orderSearch = new OrderSearchEntity();
+		ActionUtil.assObjByRequest(req, orderSearch);
+		orderSearch.setBeginDate(startDateStr);
+		orderSearch.setEndDate(endDateStr);
+		// 将结束时间自动加一天
+		Date nextDate = DateUtils
+				.addDays(DateUtils.convert2Date(orderSearch.getEndDate(),
+						"yyyyMMdd"), 1);
+		orderSearch.setEndDate(DateUtils.convert2String(nextDate, "yyyyMMdd"));
+		Operator operator = OperatorSessionInfo.getOperator(req);
+		// 如果有传storeId值进来 就说明是管理员身份
+		if (StringUtils.isEmpty(orderSearch.getStoreId())) {
+			orderSearch.setStoreId(operator.getStoreId());
+		}
+		List<OrderDto> orderList = getOrderDtoByCondition(orderSearch);
+		if (orderList.size() == 0) {
+			return true;
+		}
+		// 组装数据
+		Map<String, List<OrderDto>> day2recordMap = new LinkedHashMap<String, List<OrderDto>>();
+		for (OrderDto orderDto : orderList) {
+			List<OrderDto> records = day2recordMap.get(orderDto
+					.getCreationTime());
+			if (null == records || records.size() == 0) {
+				records = new ArrayList<OrderDto>();
+				day2recordMap.put(orderDto.getCreationTime(), records);
+			}
+			records.add(orderDto);
+		}
+		// 开始打印
+		for (Map.Entry<String, List<OrderDto>> entry : day2recordMap.entrySet()) {
+			String dateStr = entry.getKey();
+			List<OrderDto> records = entry.getValue();
+			printRecordForOneDay(dateStr, records);
+		}
+
+		return false;
+	}
+
+	private void printRecordForOneDay(String dateStr, List<OrderDto> records) {
+		Device device = null;
+		try {
+			device = new Device();
+			DeviceParameters params = new DeviceParameters();
+			device.setDeviceParameters(params);
+			device.openDevice();
+			// 打印店铺联
+			device.printString(dateStr.substring(0, 4) + "年"
+					+ dateStr.substring(4, 6) + "月" + dateStr.substring(6, 8)
+					+ "日 报表");
+			double dayTotalPrice = 0;
+			for (OrderDto record : records) {
+				dayTotalPrice += printRecord(device, record);
+			}
+			device.printString("当天合计:" + dayTotalPrice + "元");
+			device.printString("");
+			device.printString("");
+			device.cutPaper();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			// 关闭设备 释放内存
+			device.closeDevice();
+		}
+
+	}
+
+	private double printRecord(Device device, OrderDto record) {
+		device.selectAlignType(0);// 左对齐
+		device.printString("客户名称:" + record.getCusName());
+		device.printString("------------------------------------------------");
+		String title = paddingWithSuffix(16, "商品名称", SUFFIX)
+				+ paddingWithSuffix(6, "尺寸", SUFFIX)
+				+ paddingWithSuffix(10, "单价(元)", SUFFIX)
+				+ paddingWithSuffix(6, "数量", SUFFIX)
+				+ paddingWithSuffix(10, "金额(元)", SUFFIX);
+		device.printString(title);
+		List<Item> itemList = record.getItemList();
+		for (Item item : itemList) {
+			device.printString(paddingWithSuffix(16, item.getName(), SUFFIX)
+					+ paddingWithSuffix(6, item.getSize(), SUFFIX)
+					+ paddingWithSuffix(10, item.getUnitPrice(), SUFFIX)
+					+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
+					+ paddingWithSuffix(10, item.getPrice(), SUFFIX));
+		}
+		device.printString("------------------------------------------------");
+		device.selectAlignType(2);// 右对齐
+		device.printString("应付金额:" + record.getTotalAmount() + "元");
+		device.printString("================================================");
+		return Double.parseDouble(record.getTotalAmount());
 	}
 
 }

@@ -29,6 +29,7 @@ public class Order implements Serializable {
 	protected String totalAmount;// 应付总金额
 	@BasicEntityField(length = 100, testValue = "我是一个备注")
 	protected String remark;// 备注
+	protected String creationTime;// 创建时间
 
 	public String getId() {
 		return id;
@@ -92,6 +93,14 @@ public class Order implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(String creationTime) {
+		this.creationTime = creationTime;
 	}
 
 }

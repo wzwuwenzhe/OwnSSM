@@ -101,7 +101,7 @@ public class BillingAction {
 		orderService.addOrder(order);
 		// 发送打印订单请求
 		try {
-			orderService.printOrder(orderId, op);
+			orderService.printOrder(orderId, op, false);
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMessage(e.getMessage());

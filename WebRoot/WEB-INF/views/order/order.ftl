@@ -22,7 +22,8 @@
 			</table>
 			
 			<div class="form-group">
-				<input type="submit"  value="查询"/>
+				<input type="submit" value="查询"/>
+				<input type="button" value="报表打印" onclick="printReport()" />
 				<input type="button" value="返回"   onclick="location.href='./index'" />
 			</div>
 			</form>
@@ -130,6 +131,24 @@
     		});
 		}
 		
+		//报表打印
+		function printReport(){
+			var beginDate = $("#beginDate").val();
+			var endDate = $("#endDate").val();
+			var storeId = $("#storeId").val();
+			$.ajax({
+		        url:"./printReport",
+		        type:"POST",
+		        dataType:"json",
+		        data:{"beginDate":beginDate,"endDate":endDate,"storeId":storeId},
+		        success:function(response){
+		            alert(response.message)
+		        },
+		        error:function(){
+		            alert("出错了,请联系管理员");
+		        }
+    		});
+		}
 	  </script>
 	</body>
 </@htmlHeader4Order>

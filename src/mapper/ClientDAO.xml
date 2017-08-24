@@ -24,6 +24,14 @@
     
     <select id="findClientId2NameMap" resultType="java.util.HashMap" >
     select id,name from client WHERE store_id=#{storeId}
-</select>
+	</select>
+	
+	<delete id="deleteClientById">
+	delete from client where id = #{clientId}
+	</delete>
 
+	<update id="updateClient" parameterType="com.deady.entity.client.Client" >
+	update client set name=#{name} , phone=#{phone} 
+	where id = #{id}
+	</update>
 </mapper>

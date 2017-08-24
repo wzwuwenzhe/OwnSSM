@@ -33,6 +33,7 @@ public class OperatorRegisterAction {
 			throws Exception {
 		Operator op = OperatorSessionInfo.getOperator(req);
 		req.setAttribute("userType", op.getUserType());
+		req.setAttribute("storeId", op.getStoreId());
 		return new ModelAndView("/register/operator_register");
 	}
 
@@ -49,10 +50,16 @@ public class OperatorRegisterAction {
 			response.setMessage("用户名重复!");
 			return response;
 		}
-		// TODO 要先去表里查这个店铺的操作员数量
-		// 再生成操作员Id
-		// 这里先写死
-		op.setId(op.getStoreId() + "00");
+		// 店铺中已经注册的操作员数量
+		int operatorCount = operatorService.getOperatorCountByStoreId(op
+				.getStoreId());
+		String count = "";
+		if (operatorCount < 10) {
+			count += "0" + operatorCount;
+		} else {
+			count += operatorCount;
+		}
+		op.setId(op.getStoreId() + count);
 		operatorService.insertOperator(op);
 		response.setSuccess(true);
 		response.setMessage("注册成功!");

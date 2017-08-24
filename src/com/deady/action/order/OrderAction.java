@@ -87,7 +87,7 @@ public class OrderAction {
 			return response;
 		}
 		Operator op = OperatorSessionInfo.getOperator(req);
-		orderService.printOrder(orderId, op);
+		orderService.printOrder(orderId, op, true);
 		response.setSuccess(true);
 		response.setMessage("重新打印成功!");
 		return response;
@@ -108,6 +108,40 @@ public class OrderAction {
 		orderService.removeOrder(orderId);
 		response.setSuccess(true);
 		response.setMessage("订单删除成功!");
+		return response;
+	}
+
+	@RequestMapping(value = "/printReport", method = RequestMethod.POST)
+	@DeadyAction(createToken = true)
+	@ResponseBody
+	public Object printReport(HttpServletRequest req, HttpServletResponse res)
+			throws Exception {
+		String startDateStr = req.getParameter("beginDate");
+		String endDateStr = req.getParameter("endDate");
+		FormResponse response = new FormResponse(req);
+		if (StringUtils.isEmpty(startDateStr)
+				|| StringUtils.isEmpty(endDateStr)) {
+			response.setSuccess(false);
+			response.setMessage("开始时间或者结束时间不能为空");
+			return response;
+		}
+		Date startDate = DateUtils.convert2Date(startDateStr, "yyyyMMdd");
+		Date endDate = DateUtils.addDays(
+				DateUtils.convert2Date(endDateStr, "yyyyMMdd"), 1);
+		if (startDate.getTime() > endDate.getTime()) {
+			response.setSuccess(false);
+			response.setMessage("结束时间不能早于开始时间!");
+			return response;
+		}
+		boolean isEmpty = orderService.printReport(startDateStr, endDateStr,
+				req);
+		if (isEmpty) {
+			response.setSuccess(false);
+			response.setMessage("没有找到可以打印的订单!");
+			return response;
+		}
+		response.setSuccess(true);
+		response.setMessage("报表打印成功!");
 		return response;
 	}
 }

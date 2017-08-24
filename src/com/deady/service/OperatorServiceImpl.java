@@ -24,4 +24,14 @@ public class OperatorServiceImpl implements OperatorService {
 		return operatorDAO.getOperatorByLoginName(userName);
 	}
 
+	@Override
+	public int getOperatorCountByStoreId(String storeId) {
+		return operatorDAO.getOperatorCountByStoreId(storeId);
+	}
+
+	@Override
+	public void modifyPwdById(String id, String pwd) {
+		operatorDAO.updateOperatorPwdById(id, pwd);
+	}
+
 }
