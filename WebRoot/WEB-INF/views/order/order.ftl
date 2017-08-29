@@ -34,7 +34,6 @@
 			  <tr>
 				<th>商品名称</th>
 				<th>单价</th>
-				<th>尺寸</th>
 				<th>数量</th>
 				<th>金额(元)</th>
 				<th>总计(元)</th>
@@ -54,7 +53,6 @@
 							<#if (item_index == 0) >
 								<td>${item.name}</td>
 								<td>${item.unitPrice}</td>
-								<td>${item.size}</td>
 								<td>${item.amount}</td>
 								<td>${item.price}</td>
 							</#if>
@@ -78,7 +76,6 @@
 							<tr>
 								<td>${item.name}</td>
 								<td>${item.unitPrice}</td>
-								<td>${item.size}</td>
 								<td>${item.amount}</td>
 								<td>${item.price}</td>
 							</tr>

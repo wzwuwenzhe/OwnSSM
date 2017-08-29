@@ -19,11 +19,10 @@
 			<thead>
 				<tr>
 					<td style="width:35%">商品名称</td>
-					<td style="width:10%">尺寸</td>
-					<td style="width:15%">单价(元)</td>
 					<td style="width:10%">数量</td>
+					<td style="width:15%">单价(元)</td>
 					<td style="width:20%">金额(元)</td>
-					<td style="width:10%">操作</td>
+					<td style="width:20%">操作</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -59,15 +58,13 @@
 	}
 	function addRecord(btn){
 		$(btn).parent().parent().before("<tr>"+
-		"<td><input name='name' dataType='Require' msg='商品名称不能为空' class='form-control' type='text'/></td>"+
-		"<td><select name='size'><option value='M'>M</option><option value='L'>L</option><option value='XL'>XL</option></select></td>"+
-		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
+		"<td><input name='name' dataType='Require' msg='商品名称不能为空' class='form-control' type='text'/><input type='hidden' name='size' value='通码'/></td>"+
 		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' /></td>"+
+		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
 		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label>元</td>"+
 		"<td><input  class='form-control' type='button'  value='删除' onclick='removeRecord(this)'/></td>"+
 		"</tr>");
 	}
-	
 	function calculate(number){
 		var tr = $(number).parent().parent();
 		$("#smallCount").html('');

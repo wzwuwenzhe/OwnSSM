@@ -21,6 +21,7 @@ import com.deady.common.FormResponse;
 import com.deady.dto.OrderDto;
 import com.deady.entity.operator.Operator;
 import com.deady.entity.order.OrderSearchEntity;
+import com.deady.service.OperatorService;
 import com.deady.service.OrderService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.DateUtils;
@@ -31,6 +32,8 @@ public class OrderAction {
 
 	@Autowired
 	OrderService orderService;
+	@Autowired
+	OperatorService operatorService;
 
 	@RequestMapping(value = "/order", method = RequestMethod.GET)
 	@DeadyAction(createToken = true)

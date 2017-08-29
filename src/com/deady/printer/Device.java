@@ -142,14 +142,14 @@ public class Device {
 		String command = String.format("GS a %d",
 				new Object[] { Byte.valueOf(commandByte) });
 		Vector<Byte> binaryData = PrinterTools.convertEscposToBinary(command);
-		logger.info("EpsonComDevice  binaryData==null? "
-				+ Boolean.toString(binaryData == null));
-		logger.info("EpsonComDevice  binaryData.size()="
-				+ Integer.toString(binaryData.size()));
+		// logger.info("EpsonComDevice  binaryData==null? "
+		// + Boolean.toString(binaryData == null));
+		// logger.info("EpsonComDevice  binaryData.size()="
+		// + Integer.toString(binaryData.size()));
 
 		retval = this.m_Port.writeData(binaryData);
-		logger.info("EpsonComDevice  m_Port.writeData returned: "
-				+ retval.toString());
+		// logger.info("EpsonComDevice  m_Port.writeData returned: "
+		// + retval.toString());
 
 		return retval;
 	}
@@ -270,7 +270,7 @@ public class Device {
 					.convertStringToBinary(command);
 			retval = this.m_Port.writeData(binaryData);
 		}
-		// logger.info("command:" + command);
+		logger.info("command:" + command);
 		return retval;
 	}
 

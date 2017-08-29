@@ -29,7 +29,7 @@
 		</table>
 		<br/>
 		<div class="form-group">
-			<input type="submit" value="新增客户" class="btn btn-primary" onclick="location.href='./clientRegister'">
+			<input type="button" value="新增客户" class="btn btn-primary" onclick="location.href='./clientRegister'">
 			<input type="button" value="返回" class="btn btn-primary back"  onclick="location.href='./index'">
 		</div>
 	</div>

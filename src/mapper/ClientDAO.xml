@@ -15,6 +15,7 @@
             client
         WHERE 
             store_id = #{storeId}
+        order by modify_time desc 
     </select>
     
     <select id="findClientById" resultType="Client">

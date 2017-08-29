@@ -123,6 +123,7 @@ public class OrderServiceImpl implements OrderService {
 			// // 打印客户联
 			printOrder(device, store, op, client, dto, ORDERSIDE.CUSTOMER_SIDE,
 					currentTime, isRePrint);
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -172,11 +173,15 @@ public class OrderServiceImpl implements OrderService {
 			throw new RuntimeException("未知票联");
 		}
 		device.selectAlignType(0);// 左对齐
-		// device.printString("店名:" + store.getName());
-		// device.printString("地址:" + store.getAddress());
-		// device.printString("电话:" + store.getTelePhone());
-		// device.printString("手机:" + store.getMobilePhone());
-		// device.printString("------------------------------------------------");
+		if (storeSide.getSide() == 2) {
+			device.printString("店名:" + store.getName());
+			device.printString("");
+			device.printString("");
+			device.printString("地址:" + store.getAddress());
+			device.printString("电话:" + store.getTelePhone());
+			device.printString("手机:" + store.getMobilePhone());
+			device.printString("------------------------------------------------");
+		}
 		device.printString("交易号:" + dto.getId());
 		device.printString("收款员:" + op.getId());
 		Date creatTime = DateUtils.convert2Date(dto.getCreationTime(),
@@ -188,19 +193,19 @@ public class OrderServiceImpl implements OrderService {
 				+ client.getPhone());
 		device.printString("================================================");
 		String title = paddingWithSuffix(16, "商品名称", SUFFIX)
-				+ paddingWithSuffix(6, "尺寸", SUFFIX)
-				+ paddingWithSuffix(10, "单价(元)", SUFFIX)
 				+ paddingWithSuffix(6, "数量", SUFFIX)
-				+ paddingWithSuffix(10, "金额(元)", SUFFIX);
+				+ paddingWithSuffix(13, "单价(元)", SUFFIX)
+				+ paddingWithSuffix(13, "金额(元)", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = dto.getItemList();
 		for (Item item : itemList) {
 			device.printString(paddingWithSuffix(16, item.getName(), SUFFIX)
-					+ paddingWithSuffix(6, item.getSize(), SUFFIX)
-					+ paddingWithSuffix(10, item.getUnitPrice(), SUFFIX)
 					+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
-					+ paddingWithSuffix(10, item.getPrice(), SUFFIX));
+					+ paddingWithSuffix(13, item.getUnitPrice(), SUFFIX)
+					+ paddingWithSuffix(13, item.getPrice(), SUFFIX));
 		}
+		device.printString("");
+		device.printString("");
 		device.printString("------------------------------------------------");
 		device.selectAlignType(2);// 右对齐
 		device.printString("小计:" + dto.getSmallCount() + "元");
@@ -220,6 +225,10 @@ public class OrderServiceImpl implements OrderService {
 			// + paddingWithSuffix(16, "微信加好友", SUFFIX);
 			// device.printString(qrcode);
 			// TODO 打印二维码
+			device.printString("");
+			device.printString("");
+			device.printString("");
+			device.printString("");
 			break;
 		default:
 			throw new RuntimeException("未知票联");
@@ -376,18 +385,16 @@ public class OrderServiceImpl implements OrderService {
 		device.printString("客户名称:" + record.getCusName());
 		device.printString("------------------------------------------------");
 		String title = paddingWithSuffix(16, "商品名称", SUFFIX)
-				+ paddingWithSuffix(6, "尺寸", SUFFIX)
-				+ paddingWithSuffix(10, "单价(元)", SUFFIX)
 				+ paddingWithSuffix(6, "数量", SUFFIX)
-				+ paddingWithSuffix(10, "金额(元)", SUFFIX);
+				+ paddingWithSuffix(13, "单价(元)", SUFFIX)
+				+ paddingWithSuffix(13, "金额(元)", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = record.getItemList();
 		for (Item item : itemList) {
 			device.printString(paddingWithSuffix(16, item.getName(), SUFFIX)
-					+ paddingWithSuffix(6, item.getSize(), SUFFIX)
-					+ paddingWithSuffix(10, item.getUnitPrice(), SUFFIX)
 					+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
-					+ paddingWithSuffix(10, item.getPrice(), SUFFIX));
+					+ paddingWithSuffix(13, item.getUnitPrice(), SUFFIX)
+					+ paddingWithSuffix(13, item.getPrice(), SUFFIX));
 		}
 		device.printString("------------------------------------------------");
 		device.selectAlignType(2);// 右对齐

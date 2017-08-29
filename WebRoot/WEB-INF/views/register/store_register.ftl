@@ -62,7 +62,9 @@
 				<#else>
 					alert(response.message);
 				</#if>
-					location.href='${url("")}';
+					window.setTimeout(function(){
+						location.href='${url("")}';
+					},3000); 
 			    
 			}else{
 				alert(response.msg)

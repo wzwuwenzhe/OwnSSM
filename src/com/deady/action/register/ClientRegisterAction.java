@@ -36,6 +36,7 @@ public class ClientRegisterAction {
 		if (!StringUtils.isEmpty(clientId)) {
 			Client client = clientService.getClientById(clientId);
 			req.setAttribute("client", client);
+			req.setAttribute("clientId", clientId);
 		}
 		return new ModelAndView("/register/client_register");
 	}

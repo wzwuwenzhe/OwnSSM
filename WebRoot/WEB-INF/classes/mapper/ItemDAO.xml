@@ -30,7 +30,7 @@
 		
 		<select id="findItemsByOrderId" resultType="Item">
 			SELECT * from item
-			WHERE order_id=#{orderId}
+			WHERE order_id=#{orderId} order by name ,size
 		</select>
 		
 		<delete id="deleItemsByOrderId" >
