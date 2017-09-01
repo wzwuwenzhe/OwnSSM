@@ -36,7 +36,7 @@ public class OrderAction {
 	OperatorService operatorService;
 
 	@RequestMapping(value = "/order", method = RequestMethod.GET)
-	@DeadyAction(createToken = true)
+	@DeadyAction(createToken = true, checkLogin = true)
 	public Object showOrder(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		Operator operator = OperatorSessionInfo.getOperator(req);

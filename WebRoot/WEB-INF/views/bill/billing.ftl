@@ -1,18 +1,18 @@
 <@htmlHeader>
 	<@css path="/css/loginAndRegister/bill.css"/>
+	<@css path="/css/billing/autocomplete.css" />
+	<@js path="/js/autocomplete.js" />
+	<@js path="/js/map.js" />
 </@htmlHeader>
 <@htmlBody>
 	<@form action="/billing" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="开单">
 	<div class="form-group">
-		<#if (clientList?size>0)>
-		客户:<select name="cusId">
-				<#list clientList as client>
-					<option value="${client.id}">${client.name}</option>
-				</#list>
-			</select>
-		<#else>
-			<a style="text-decoration:none;" href="${url("/clientRegister")}">您还没有客户,请先点我添加客户</a>
-		</#if>
+		<input type="hidden" id="cusId" name="cusId" />
+		<div id="demo">
+			<div class="wrapper">
+				<div id="search-form"></div>
+			</div>
+		</div>
 	</div>
 	<div class="form-group">
 		<table class="billtable">
@@ -50,8 +50,39 @@
 	<@showMsg type="danger"/>
 	<script type="text/javascript">
 		<#if _token?exists>_token='${_token}';</#if>
-
 	
+	var proposals = new Array();
+	var map = new Map();
+	<#list clientList as client>
+		proposals[${client_index}] = '${client.name}';
+		var Custom = new Object();
+		Custom.id = '${client.id}';
+		Custom.name = '${client.name}';
+		Custom.phone = '${client.phone}';
+		map.put('${client.name}',Custom);
+	</#list>
+	
+	function cleanIdValue(){
+		$("#cusId").val('');
+	}
+	function cleanValue(){
+		$("#cusId").val('');
+		$("#cusName").val('');
+	}
+	
+	$(document).ready(function(){
+		$('#search-form').autocomplete({
+			hints: proposals,
+			width: 300,
+			height: 30,
+			onSubmit: function(text){
+				$('#message').html('Selected: <b>' + text + '</b>');			
+			}
+		});
+	});
+	
+
+
 	function removeRecord(btn){
 		$(btn).parent().parent().remove();
 		calculateTotal();
@@ -117,6 +148,8 @@
 				alert(response.msg)
 			}
 		}
+	
+	
 	</script>
 </@htmlBody>
 <@htmlFooter/>

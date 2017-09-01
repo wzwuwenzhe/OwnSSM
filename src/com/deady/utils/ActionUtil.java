@@ -44,6 +44,10 @@ public class ActionUtil {
 		return config.getString("store.img.upload.path");
 	}
 
+	public static String getLunarCalendarYear() {
+		return config.getString("lunar.calendar.year");
+	}
+
 	public static boolean isTestMode() {
 		return config.getString("test.mode.enable").equals("true");
 	}

@@ -63,6 +63,9 @@
 <@js path="/js/loginAndRegister/jquery-1.11.1.min.js"/>
 <@js path="/js/jquery.basictable.min.js"/>
 <@js path="/js/My97DatePicker/WdatePicker.js"/>
+<style type="text/css">
+table,table tr th, table tr td { border:1px solid #000000; }
+</style>
 </head>
 <#nested>
 </html>
@@ -77,7 +80,7 @@
 </#macro>
 
 <#macro htmlBody>
-	<body>
+	<body id="billingBody">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4 col-md-offset-4">
@@ -179,7 +182,7 @@
 	</div>
 </#macro>
 
-<#macro form_group id desc type name dataType msg  onkeyup="" value="" style="">
+<#macro form_group id desc type name dataType msg  onkeyup="" value="" style="" >
 	<div class="form-group" <#if style!="">style="${style}"</#if> >
 		<label for="${id}" class="sr-only">${desc}</label>
 		<input type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
