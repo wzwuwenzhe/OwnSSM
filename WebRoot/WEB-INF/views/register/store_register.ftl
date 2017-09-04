@@ -23,8 +23,8 @@
 		<@form_group id="telephone" value="${(store.telePhone)!''}" desc="电话" type="text" name="telePhone" dataType="" msg="请输入正确的固话号码" onkeyup="validate('LTGH',this)" />
 		<@form_group id="mobilephone" value="${(store.mobilePhone)!''}" desc="手机" type="text" name="mobilePhone" dataType="" msg="请输入正确的手机号码" onkeyup="validate('Phone',this)" />
 		<@form_group id="reminder" value="${(store.reminder)!''}" desc="提醒(小票上的温馨提示)" type="text" name="reminder" dataType="" msg="输入的提醒不合法" />
+		<#assign status="${(store.status)!''}"/>
 		<#if userType=="1" && !isAdd>
-			<#assign status="${(store.status)!''}"/>
 			<div class="form-group">
 				店铺状态:
 				<input type="radio" <#if status=="1">checked="checked"</#if>  name="status"  id="normalStatus" value="1" />
@@ -32,6 +32,8 @@
 				<input type="radio" <#if status=="0">checked="checked"</#if> name="status"  id="unNormalstatus" value="0" />
 				<label for="unNormalstatus">停用</label>
 			</div>
+		<#else>
+			<input type="hidden" name="status" value="${status}"/>
 		</#if>
 		<@uploadImg id="logoImg" value="${(store.logoImg)!''}" desc="店铺Logo图片" />
 		<@uploadImg id="wxAddImg" value="${(store.wxAddImg)!''}" desc="微信添加好友二维码"/>

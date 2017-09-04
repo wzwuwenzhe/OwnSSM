@@ -75,21 +75,6 @@ public class BillingAction {
 		}
 		Operator op = OperatorSessionInfo.getOperator(req);
 		Order order = new Order();
-		// 如果为新客户 就需要先添加客户
-		String cusId = null;
-		if (StringUtils.isEmpty(req.getParameter("cusId"))) {
-			Client c = new Client();
-			cusId = UUID.randomUUID().toString().replaceAll("-", "");
-			c.setId(cusId);
-			c.setName(req.getParameter("cusName"));
-			c.setStoreId(op.getStoreId());
-			clientService.addClient(c);
-		}
-
-		ActionUtil.assObjByRequest(req, order);
-		if (null == order.getCusId() && null != cusId) {
-			order.setCusId(cusId);
-		}
 		Date now = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 		String dateString = formatter.format(now);
@@ -104,6 +89,21 @@ public class BillingAction {
 			response.setSuccess(false);
 			response.setMessage("请填写订单内容");
 			return response;
+		}
+		// 如果为新客户 就需要先添加客户
+		String cusId = null;
+		if (StringUtils.isEmpty(req.getParameter("cusId"))) {
+			Client c = new Client();
+			cusId = UUID.randomUUID().toString().replaceAll("-", "");
+			c.setId(cusId);
+			c.setName(req.getParameter("cusName"));
+			c.setStoreId(op.getStoreId());
+			clientService.addClient(c);
+		}
+
+		ActionUtil.assObjByRequest(req, order);
+		if (null == order.getCusId() && null != cusId) {
+			order.setCusId(cusId);
 		}
 		// 下单的订单中 款号对应数量map
 		Map<String, String> name2AmountMap = new HashMap<String, String>();

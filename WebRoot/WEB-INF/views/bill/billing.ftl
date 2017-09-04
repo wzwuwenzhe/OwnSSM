@@ -38,7 +38,12 @@
 		<br/>
 		折扣金额:<input id='discount' name="discount" onkeyup="calculateTotal()" style="width:50px;" type="text" value="0" />元 <br/>
 		应付金额:<label id='totalAmount'></label>元 
-		<input type="hidden" name="totalAmount"/>
+		<input type="hidden" name="totalAmount"/><br/>
+		付款方式:
+		<input type="radio" id="payType1" name="payType" value="1" checked="checked"/><label for="payType1">现金</label>
+		<input type="radio" id="payType2" name="payType" value="2" /><label for="payType2">刷卡</label>
+		<input type="radio" id="payType3" name="payType" value="3" /><label for="payType3">支付宝</label>
+		<input type="radio" id="payType4" name="payType" value="4" /><label for="payType4">微信</label>
 		<br/>
 	</div>
 	<@form_group id="remark" value="${(order.remark)!''}" desc="备注" type="text" name="remark" dataType="" msg="" />

@@ -54,9 +54,7 @@ public class StockAction {
 		Operator op = OperatorSessionInfo.getOperator(req);
 		List<Factory> factoryList = factoryService.getFactoryListByStoreId(op
 				.getStoreId());
-		if (null != factoryList && factoryList.size() > 0) {
-			req.setAttribute("factoryList", factoryList);
-		}
+		req.setAttribute("factoryList", factoryList);
 		if (null != req.getParameter("name")) {
 			// 款号
 			String name = req.getParameter("name");
@@ -131,7 +129,7 @@ public class StockAction {
 		String name = req.getParameter("name");
 		String year = ActionUtil.getLunarCalendarYear();
 		Operator op = OperatorSessionInfo.getOperator(req);
-		//storage  和 stock 两个表一起删了
+		// storage 和 stock 两个表一起删了
 		stockService.removeStorage(name, year, op.getStoreId());
 		response.setSuccess(true);
 		response.setMessage("库存删除成功!");

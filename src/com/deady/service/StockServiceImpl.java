@@ -56,6 +56,9 @@ public class StockServiceImpl implements StockService {
 		Map<String, Object> params = new HashMap<String, Object>(2);
 		params.put("year", year);
 		params.put("names", nameSet.toArray(new String[0]));
+		if (nameSet.size() == 0) {
+			return new ArrayList<Storage>();
+		}
 		stockDAO.findStockListByYearAndNameArr(params);
 		List<Stock> stockList = stockDAO.findStockListByYearAndNameArr(params);
 		Map<String, String> factoryId2NameMap = new HashMap<String, String>();

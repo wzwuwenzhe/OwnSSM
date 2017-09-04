@@ -11,3 +11,6 @@ CREATE TABLE `store_order` (
   `creation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间' ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单表'
+
+ALTER TABLE
+    deady.store_order ADD (pay_type CHAR(1) DEFAULT '1' NOT NULL)

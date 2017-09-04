@@ -189,8 +189,11 @@ public class OrderServiceImpl implements OrderService {
 		String dateString = DateUtils.convert2String(creatTime,
 				"yyyy-MM-dd HH:mm:ss");
 		device.printString("日期:" + dateString);
-		device.printString("客户名称:" + client.getName() + "    客户电话:"
-				+ client.getPhone());
+		device.printString("客户名称:"
+				+ client.getName()
+				+ "    客户电话:"
+				+ (StringUtils.isEmpty(client.getPhone()) ? "" : client
+						.getPhone()));
 		device.printString("================================================");
 		String title = paddingWithSuffix(16, "商品名称", SUFFIX)
 				+ paddingWithSuffix(6, "数量", SUFFIX)
@@ -211,6 +214,23 @@ public class OrderServiceImpl implements OrderService {
 		device.printString("小计:" + dto.getSmallCount() + "元");
 		device.printString("折扣金额:" + dto.getDiscount() + "元");
 		device.printString("应付金额:" + dto.getTotalAmount() + "元");
+		switch (Integer.parseInt(dto.getPayType())) {
+		case 1:
+			device.printString("付款方式:  现金");
+			break;
+		case 2:
+			device.printString("付款方式:  刷卡");
+			break;
+		case 3:
+			device.printString("付款方式:  支付宝");
+			break;
+		case 4:
+			device.printString("付款方式:  微信");
+			break;
+		default:
+			device.printString("付款方式:  未知");
+			break;
+		}
 		device.printString("备注:"
 				+ (StringUtils.isEmpty(dto.getRemark()) ? "" : dto.getRemark()));
 		switch (storeSide.getSide()) {

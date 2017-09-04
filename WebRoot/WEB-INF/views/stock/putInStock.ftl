@@ -42,6 +42,7 @@
 					alert(response.msg)
 				}
 			}
+			console.log('${factoryList?size}')
 	    </script>
 </@htmlBody>
 <@htmlFooter/>

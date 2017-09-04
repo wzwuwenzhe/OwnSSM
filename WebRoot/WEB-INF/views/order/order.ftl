@@ -37,6 +37,7 @@
 				<th>数量</th>
 				<th>金额(元)</th>
 				<th>总计(元)</th>
+				<th>付款方式</th>
 			  	<th>序号</th>
 				<th>客户名称</th>
 				<th>操作员ID</th>
@@ -59,6 +60,7 @@
 						</#list>
 					</#if>
 					<td rowspan="${itemSize}">${order.totalAmount}</td>
+					<td rowspan="${itemSize}">${order.payTypeDesc}</td>
 					<td rowspan="${itemSize}">${order_index+1}</td>
 					<td rowspan="${itemSize}">${order.cusName}</td> 
 					<td rowspan="${itemSize}">${order.operatorId}</td>
