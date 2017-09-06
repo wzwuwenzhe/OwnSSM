@@ -93,12 +93,22 @@ public class BillingAction {
 		// 如果为新客户 就需要先添加客户
 		String cusId = null;
 		if (StringUtils.isEmpty(req.getParameter("cusId"))) {
-			Client c = new Client();
-			cusId = UUID.randomUUID().toString().replaceAll("-", "");
-			c.setId(cusId);
-			c.setName(req.getParameter("cusName"));
-			c.setStoreId(op.getStoreId());
-			clientService.addClient(c);
+			Client c = null;
+			// 根据客户名称找一下客户 如果存在就使用之前的客户 如果不存在就新建
+			List<Client> existsClients = clientService
+					.getClientsByNameAndStoreId(req.getParameter("cusName"),
+							op.getStoreId());
+			if (null != existsClients && existsClients.size() > 0) {
+				c = existsClients.get(0);
+				cusId = c.getId();
+			} else {
+				c = new Client();
+				cusId = UUID.randomUUID().toString().replaceAll("-", "");
+				c.setId(cusId);
+				c.setName(req.getParameter("cusName"));
+				c.setStoreId(op.getStoreId());
+				clientService.addClient(c);
+			}
 		}
 
 		ActionUtil.assObjByRequest(req, order);

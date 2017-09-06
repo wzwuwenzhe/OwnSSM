@@ -46,4 +46,10 @@ public class ClientServiceImpl implements ClientService {
 		clientDAO.updateClient(client);
 	}
 
+	@Override
+	public List<Client> getClientsByNameAndStoreId(String cusName,
+			String storeId) {
+		return clientDAO.findClientsByNameAndStoreId(cusName, storeId);
+	}
+
 }

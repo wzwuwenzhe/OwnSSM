@@ -16,10 +16,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
-import com.deady.entity.client.Client;
 import com.deady.entity.factory.Factory;
 import com.deady.entity.operator.Operator;
 import com.deady.service.FactoryService;
+import com.deady.service.StockService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
 
@@ -28,6 +28,8 @@ public class FactoryRegisterAction {
 
 	@Autowired
 	private FactoryService factoryService;
+	@Autowired
+	private StockService stockService;
 
 	@RequestMapping(value = "/showFactory", method = RequestMethod.GET)
 	@DeadyAction(checkLogin = true)
@@ -80,6 +82,13 @@ public class FactoryRegisterAction {
 		if (StringUtils.isEmpty(factoryId)) {
 			response.setSuccess(false);
 			response.setMessage("工厂编号不能为空!");
+			return response;
+		}
+		// 如果厂家关联的库存 则不能删除 否则库存显示会出问题
+		int size = stockService.getStockSizeByFactoryId(factoryId);
+		if (size > 0) {
+			response.setSuccess(false);
+			response.setMessage("厂家已有产品入库,无法删除!");
 			return response;
 		}
 		factoryService.removeFactoryById(factoryId);

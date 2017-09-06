@@ -105,4 +105,9 @@ public class StockServiceImpl implements StockService {
 		stockDAO.deleteStock(name, year, storeId);
 	}
 
+	@Override
+	public int getStockSizeByFactoryId(String factoryId) {
+		return stockDAO.findStocksByFactoryId(factoryId);
+	}
+
 }

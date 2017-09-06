@@ -13,8 +13,8 @@
 				<th>单次数量</th>
 				<th>入库时间</th>
 				<th>款号</th>
-			  	<th>合计</th>
 				<th>库存</th>
+			  	<th>合计</th>
 				<th>操作</th>
 			  </tr>
 			</thead>
@@ -33,8 +33,8 @@
 						</#list>
 					</#if>
 					<td rowspan="${stockSize}">${storage.name}</td>
-					<td rowspan="${stockSize}">${storage.total}</td> 
 					<td rowspan="${stockSize}">${storage.stockLeft}</td>
+					<td rowspan="${stockSize}">${storage.total}</td> 
 					<td rowspan="${stockSize}">
 						<a href="javascript:void(0)" onclick="putInStock('${storage.name}')">入库</a> | 
 						<#if userType=="1" || userType=="3">

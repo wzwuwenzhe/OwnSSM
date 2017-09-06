@@ -18,4 +18,6 @@ public interface ClientService {
 	void removeClientById(String clientId);
 
 	void modifyClient(Client client);
+
+	List<Client> getClientsByNameAndStoreId(String cusName, String storeId);
 }

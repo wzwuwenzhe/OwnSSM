@@ -57,5 +57,9 @@
      <delete id="deleteStock">
     delete from stock where name =#{name} and year=#{year} and store_id=#{storeId}
     </delete>
+    
+    <select id="findStocksByFactoryId" resultType="int">
+    select count(1) from stock where factory_id = #{factoryId}
+    </select>
    
 </mapper>

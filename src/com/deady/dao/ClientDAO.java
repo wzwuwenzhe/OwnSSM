@@ -22,4 +22,7 @@ public interface ClientDAO {
 
 	void updateClient(Client client);
 
+	List<Client> findClientsByNameAndStoreId(@Param("cusName") String cusName,
+			@Param("storeId") String storeId);
+
 }

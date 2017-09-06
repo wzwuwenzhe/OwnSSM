@@ -35,4 +35,8 @@
 	update client set name=#{name} , phone=#{phone} 
 	where id = #{id}
 	</update>
+	
+	<select id="findClientsByNameAndStoreId" resultType="com.deady.entity.client.Client">
+	select * from client where name = #{cusName} and store_id = #{storeId}
+	</select>
 </mapper>

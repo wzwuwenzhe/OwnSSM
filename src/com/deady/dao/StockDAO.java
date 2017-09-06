@@ -3,6 +3,8 @@ package com.deady.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.deady.entity.stock.Stock;
 import com.deady.entity.stock.Storage;
 
@@ -18,8 +20,12 @@ public interface StockDAO {
 
 	List<Stock> findStockListByYearAndNameArr(Map<String, Object> params);
 
-	void deleteStorage(String name, String year, String storeId);
+	void deleteStorage(@Param("name") String name, @Param("year") String year,
+			@Param("storeId") String storeId);
 
-	void deleteStock(String name, String year, String storeId);
+	void deleteStock(@Param("name") String name, @Param("year") String year,
+			@Param("storeId") String storeId);
+
+	int findStocksByFactoryId(String factoryId);
 
 }

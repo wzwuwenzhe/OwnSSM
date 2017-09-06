@@ -25,4 +25,6 @@ public interface StockService {
 
 	void removeStorage(String name, String year, String storeId);
 
+	int getStockSizeByFactoryId(String factoryId);
+
 }
