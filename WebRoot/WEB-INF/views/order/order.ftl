@@ -1,49 +1,64 @@
 <@htmlHeader4Order >
 	<body>
-	<div class="container">
 		<div id="searchDiv" style="text-align:center">
 			<form id="searchForm" action="${url("/orderSearch")}" method="post" >
 			<input type="hidden" name="_token" value="${_token}"/>
+			
 			<#if userType=="1">
-				<@form_group value="${(entity.storeId)!''}" id="storeId" desc="店铺Id" name="storeId" dataType="Chinese" msg="" type="text"/>
+				<@form_input value="${(entity.storeId)!''}" id="storeId" desc="店铺Id" name="storeId" dataType="Chinese" msg="" type="text" style="width:100px;"/>
 			</#if>
-			<table>
-				<tr>
-					<td><@form_group value="${(entity.orderId)!''}" id="orderId" desc="交易号" name="orderId" dataType="Chinese" msg="" type="text"/></td>
-					<td><@form_group value="${(entity.orderName)!''}" id="orderName" desc="商品名称" name="orderName" dataType="Chinese" msg="" type="text"/></td>
-				</tr>
-				<tr>
-					<td><@form_group value="${(entity.cusName)!''}" id="cusName" desc="客户名称" name="cusName" dataType="Chinese" msg="客户名称必须全部为中文" type="text"/></td>
-					<td><@form_group value="${(entity.operatorId)!''}" id="operatorId" desc="操作员ID" name="operatorId" dataType="Chinese" msg="客户名称必须全部为中文" type="text"/></td>
-				</tr>
-				<tr>
-					<td colspan="2">查询时间:<@DateFields beginValue="${(entity.beginDate)!''}" endValue="${(entity.endDate)!''}"/></td>
-				</tr>
-			</table>
+			<div class="layui-fluid">
+			  <div class="layui-row">
+			    <div class="layui-col-sm3">
+			      <div class="grid-demo grid-demo-bg1">
+					<@form_input value="${(entity.orderId)!''}" id="orderId" desc="交易号" name="orderId" dataType="Chinese" msg="" type="text" style="width:100px;"/>
+			      </div>
+			    </div>
+			    <div class="layui-col-sm3">
+			      <div class="grid-demo">
+					<@form_input value="${(entity.orderName)!''}" id="orderName" desc="商品名称" name="orderName" dataType="Chinese" msg="" type="text" style="width:100px;"/>
+				  </div>
+			    </div>
+			    <div class="layui-col-sm3">
+			      <div class="grid-demo grid-demo-bg1">
+					<@form_input value="${(entity.cusName)!''}" id="cusName" desc="客户名称" name="cusName" dataType="Chinese" msg="客户名称必须全部为中文" type="text" style="width:100px;"/>
+				  </div>
+			    </div>
+			    <div class="layui-col-sm3">
+			      <div class="grid-demo">
+					<@form_input value="${(entity.operatorId)!''}" id="operatorId" desc="操作员ID" name="operatorId" dataType="Chinese" msg="客户名称必须全部为中文" type="text" style="width:100px;"/>
+				  </div>
+			    </div>
+			  </div>
+			</div>
+			<div style="margin: 10px;">
+				查询时间:<@DateFields beginValue="${(entity.beginDate)!''}" endValue="${(entity.endDate)!''}"/>
+			</div>
 			
 			<div class="form-group">
-				<input type="submit" value="查询"/>
-				<input type="button" value="报表打印" onclick="printReport()" />
-				<input type="button" value="返回"   onclick="location.href='./index'" />
+				<input class="layui-btn layui-btn-radius" type="submit" value="查询"/>
+				<input class="layui-btn layui-btn-warm layui-btn-radius" type="button" value="报表打印" onclick="printReport()" />
+				<input class="layui-btn layui-btn-primary layui-btn-radius" type="button" value="返回"   onclick="location.href='./index'" />
 			</div>
 			</form>
 		</div>
-		<div id="page">
-		  <table id="table">
-			<thead>
-			  <tr>
-				<th>商品名称</th>
-				<th>单价</th>
-				<th>数量</th>
-				<th>金额(元)</th>
-				<th>总计(元)</th>
-				<th>付款方式</th>
-			  	<th>序号</th>
-				<th>客户名称</th>
-				<th>操作员ID</th>
-				<th>操作</th>
-			  </tr>
-			</thead>
+	<div class="container">
+		<div id="page" >
+		  <table id="table" class="layui-table" lay-filter="parse-table-demo">
+  		  	<thead>
+		  		<tr>
+					<th>商品名称</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>金额(元)</th>
+					<th>总计(元)</th>
+					<th>付款方式</th>
+				  	<th>序号</th>
+					<th>客户名称</th>
+					<th>操作员ID</th>
+					<th>操作</th>
+				  </tr>
+		  	</thead>
 			<tbody>
 			<#list orderList as order>
 				<tr>
@@ -87,7 +102,7 @@
 				</#if>
 		    </#list>
 			</tbody>
-		  </table>
+			</table>
 		</div>
 	</div>
 		

@@ -48,6 +48,8 @@
 </@cleanHeader>
 </#macro>
 
+
+
 <#macro htmlHeader4Order title="${companyName}" >
 <!doctype html>
 <html lang="zh">
@@ -56,13 +58,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0, user-scalable=no"/>
 <title>${title}</title>
-<@css path="/css/order/basictable.css"/>
-<@css path="/css/order/demo.css"/>
-<@css path="/css/order/style.css"/>
+
+<@css path="/js/layui/css/layui.css"/>
 <@css path="/js/My97DatePicker/skin/WdatePicker.css"/>
 <@js path="/js/loginAndRegister/jquery-1.11.1.min.js"/>
 <@js path="/js/jquery.basictable.min.js"/>
 <@js path="/js/My97DatePicker/WdatePicker.js"/>
+<@js path="/js/layui/layui.js"/>
 <style type="text/css">
 table,table tr th, table tr td { border:1px solid #000000; }
 </style>
@@ -188,6 +190,16 @@ table,table tr th, table tr td { border:1px solid #000000; }
 		<input type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
 		dataType="${dataType}" name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${desc}" autocomplete="off">
 	</div>
+</#macro>
+
+<#macro form_input id name desc type dataType msg onkeyup="" value="" style="">
+	<div class="layui-form-item">
+	   <label class="layui-form-label">${name}</label>
+	   <div class="layui-input-block">
+	   	 <input class="layui-input"  id="${id}" type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
+		dataType="${dataType}" name="${name}" msg="${msg}"  id="${id}" placeholder="${desc}" autocomplete="off" style="${style}">
+	   </div>
+	 </div>
 </#macro>
 
 <#macro js path remotecss=false>

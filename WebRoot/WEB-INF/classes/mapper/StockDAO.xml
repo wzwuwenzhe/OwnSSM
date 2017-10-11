@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.deady.dao.StockDAO">
+    
+    <insert id="insertStock" parameterType="com.deady.entity.stock.Stock">
+        INSERT  INTO stock (store_id,name,year,factory_id,amount)
+        VALUES (#{storeId},#{name}, #{year},#{factoryId},#{amount})
+    </insert>
+    
+    
+    <select id="findStorageByStoreId" resultType="com.deady.entity.stock.Storage">
+        SELECT
+            *
+        FROM
+            storage
+        WHERE 
+            store_id = #{storeId}
+        order by year,name 
+    </select>
+    
+    
+
+	<update id="updateStorage" parameterType="com.deady.entity.stock.Storage" >
+	update storage set total=#{total} , stock_left=#{stockLeft} 
+	where store_id = #{storeId} and year=#{year} and name=#{name}
+	</update>
+   
+   
+   <insert id="insertStorage" parameterType="com.deady.entity.stock.Storage">
+        INSERT  INTO storage (store_id,name,year,total,stock_left)
+        VALUES (#{storeId},#{name}, #{year},#{total},#{stockLeft})
+    </insert>
+    
+    <select id="findStockListByYearAndNameArr" parameterType="map" resultType="com.deady.entity.stock.Stock" >
+        select *   
+        from stock 
+        where 1=1  
+        <if test="year != '' and year != null"> 
+        	and year = #{year} 
+        </if>
+        <if test="names != '' and names != null">  
+            and name in  
+            <foreach item="item" index="index" collection="names" open="("  
+                separator="," close=")">  
+                #{item}  
+            </foreach>  
+        </if>  
+    </select>
+    
+    <delete id="deleteStorage">
+    delete from storage where name =#{name} and year=#{year} and store_id=#{storeId}
+    </delete>
+    
+    
+     <delete id="deleteStock">
+    delete from stock where name =#{name} and year=#{year} and store_id=#{storeId}
+    </delete>
+    
+    <select id="findStocksByFactoryId" resultType="int">
+    select count(1) from stock where factory_id = #{factoryId}
+    </select>
+   
+</mapper>
