@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.deady.entity.client.Client;
+import com.deady.utils.PageUtils;
 
 public interface ClientService {
 
@@ -20,4 +21,6 @@ public interface ClientService {
 	void modifyClient(Client client);
 
 	List<Client> getClientsByNameAndStoreId(String cusName, String storeId);
+
+	List<Client> getClientListByStoreId4Page(String storeId, PageUtils page);
 }

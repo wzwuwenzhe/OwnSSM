@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.deady.dao.ClientDAO;
 import com.deady.entity.client.Client;
+import com.deady.utils.PageUtils;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -50,6 +51,17 @@ public class ClientServiceImpl implements ClientService {
 	public List<Client> getClientsByNameAndStoreId(String cusName,
 			String storeId) {
 		return clientDAO.findClientsByNameAndStoreId(cusName, storeId);
+	}
+
+	@Override
+	public List<Client> getClientListByStoreId4Page(String storeId,
+			PageUtils page) {
+		// 查询条件总数
+		int total = clientDAO.countClientListByStoreId(storeId);
+		page.setTotal(total);
+		// 按照分页条件进行查询
+		return clientDAO.findClientListByStoreId4Page(storeId,
+				(page.getStart() - 1) * page.getPagesize(), page.getPagesize());
 	}
 
 }

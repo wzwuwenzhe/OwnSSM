@@ -1,5 +1,7 @@
 <@htmlHeader>
+	<@css path="/js/layui/css/layui.css"/>
 	<@css path="/css/loginAndRegister/bill.css"/>
+	<@js path="/js/layui/layui.js"/>
 </@htmlHeader>
 <@htmlBody>
 	<@form action="" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="客户管理">
@@ -28,6 +30,7 @@
 			</tbody>
 		</table>
 		<br/>
+		<div id="page"></div>
 		<div class="form-group">
 			<input type="button" value="新增客户" class="btn btn-primary" onclick="location.href='./clientRegister'">
 			<input type="button" value="返回" class="btn btn-primary back"  onclick="location.href='./index'">
@@ -35,7 +38,25 @@
 	</div>
 	</@form>
 	<script type="text/javascript">
-	
+	  //分页功能
+	  layui.use(['laypage', 'layer'], function(){
+	  var laypage = layui.laypage
+	  ,layer = layui.layer;
+	  
+	  laypage.render({
+	    elem: 'page'
+	    ,count: '${page.total}'
+	    ,curr :'${page.start}'
+	    ,layout: ['count', 'prev', 'page', 'next']
+	    ,jump: function(obj,first){
+	    if(!first){
+		    var start = obj.curr;
+		    location.href="./showClient?start="+start;
+	    }
+	    }
+	  });
+	  });
+	  
 	function deleteClient(clientId){
 		infoUtil.confirm("确定要删除该客户吗,删除后不可恢复!",{
 	        title:'删除客户确认',

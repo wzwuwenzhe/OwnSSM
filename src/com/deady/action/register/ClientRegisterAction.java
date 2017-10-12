@@ -21,6 +21,7 @@ import com.deady.entity.operator.Operator;
 import com.deady.service.ClientService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
+import com.deady.utils.PageUtils;
 
 @Controller
 public class ClientRegisterAction {
@@ -45,10 +46,12 @@ public class ClientRegisterAction {
 	@DeadyAction(checkLogin = true)
 	public Object showClient(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
+		PageUtils page = new PageUtils(req);
 		Operator operator = OperatorSessionInfo.getOperator(req);
-		List<Client> clientList = clientService.getClientListByStoreId(operator
-				.getStoreId());
+		List<Client> clientList = clientService.getClientListByStoreId4Page(
+				operator.getStoreId(), page);
 		req.setAttribute("clientList", clientList);
+		req.setAttribute("page", page);
 		return new ModelAndView("/client/client");
 	}
 

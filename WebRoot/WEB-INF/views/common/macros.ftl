@@ -194,7 +194,7 @@ table,table tr th, table tr td { border:1px solid #000000; }
 
 <#macro form_input id name desc type dataType msg onkeyup="" value="" style="">
 	<div class="layui-form-item">
-	   <label class="layui-form-label">${name}</label>
+	   <label class="layui-form-label">${desc}</label>
 	   <div class="layui-input-block">
 	   	 <input class="layui-input"  id="${id}" type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
 		dataType="${dataType}" name="${name}" msg="${msg}"  id="${id}" placeholder="${desc}" autocomplete="off" style="${style}">

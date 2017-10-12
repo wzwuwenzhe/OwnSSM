@@ -25,4 +25,9 @@ public interface ClientDAO {
 	List<Client> findClientsByNameAndStoreId(@Param("cusName") String cusName,
 			@Param("storeId") String storeId);
 
+	int countClientListByStoreId(String storeId);
+
+	List<Client> findClientListByStoreId4Page(@Param("storeId") String storeId,
+			@Param("start") int start, @Param("pagesize") int pagesize);
+
 }

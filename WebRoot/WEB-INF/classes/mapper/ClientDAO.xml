@@ -39,4 +39,23 @@
 	<select id="findClientsByNameAndStoreId" resultType="com.deady.entity.client.Client">
 	select * from client where name = #{cusName} and store_id = #{storeId}
 	</select>
+	
+	<select id="countClientListByStoreId" resultType="int">
+		SELECT
+            count(*)
+        FROM
+            client
+        WHERE 
+            store_id = #{storeId}
+	</select>
+	<select id="findClientListByStoreId4Page" resultType="Client">
+		SELECT
+            *
+        FROM
+            client
+        WHERE 
+            store_id = #{storeId}
+        order by modify_time desc 
+        limit #{start}, #{pagesize}
+	</select>
 </mapper>
