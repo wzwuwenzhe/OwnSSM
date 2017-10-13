@@ -1,12 +1,12 @@
 <@htmlHeader4Order >
 	<body>
 	<div style="text-align:center">
-		<input type="button" value="返回上一页" onclick="location.href='./showStockManage'"/>
-		<input type="button" value="返回首页" onclick="location.href='./index'"/>
+		<input class="layui-btn layui-btn-radius" type="button" value="返回上一页" onclick="location.href='./showStockManage'"/>
+		<input class="layui-btn layui-btn-normal layui-btn-radius" type="button" value="返回首页" onclick="location.href='./index'"/>
 	</div>
 	<div class="container">
 		<div id="page">
-		  <table id="table">
+		  <table id="table" class="layui-table" lay-filter="parse-table-demo">
 			<thead>
 			  <tr>
 				<th>厂家</th>

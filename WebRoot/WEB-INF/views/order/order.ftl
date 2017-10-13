@@ -47,13 +47,13 @@
 		  <table id="table" class="layui-table" lay-filter="parse-table-demo">
   		  	<thead>
 		  		<tr>
+				  	<th>序号</th>
 					<th>商品名称</th>
 					<th>单价</th>
 					<th>数量</th>
 					<th>金额(元)</th>
 					<th>总计(元)</th>
 					<th>付款方式</th>
-				  	<th>序号</th>
 					<th>客户名称</th>
 					<th>操作员ID</th>
 					<th>操作</th>
@@ -63,6 +63,7 @@
 			<#list orderList as order>
 				<tr>
 					<#assign itemSize = order.itemList?size >
+					<td rowspan="${itemSize}">${order_index+1}</td>
 					<#if (order.itemList?size > 0 ) >
 						<#assign itemList = order.itemList >
 						<#list itemList as item>
@@ -76,7 +77,6 @@
 					</#if>
 					<td rowspan="${itemSize}">${order.totalAmount}</td>
 					<td rowspan="${itemSize}">${order.payTypeDesc}</td>
-					<td rowspan="${itemSize}">${order_index+1}</td>
 					<td rowspan="${itemSize}">${order.cusName}</td> 
 					<td rowspan="${itemSize}">${order.operatorId}</td>
 					<td rowspan="${itemSize}">
