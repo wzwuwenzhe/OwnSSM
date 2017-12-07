@@ -1,3 +1,14 @@
 /android
 /com
 /deady.properties
+/jdbc.properties
+/logback.xml
+/mapper
+/memcache.properties
+/mvc-core.xml
+/mybatis-config.xml
+/spring-core.xml
+/spring-dao.xml
+/spring-service.xml
+/sql
+/test

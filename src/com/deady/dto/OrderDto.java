@@ -44,6 +44,8 @@ public class OrderDto extends Order {
 			return "支付宝";
 		case 4:
 			return "微信";
+		case 5:
+			return "未付";
 		default:
 			return "未知";
 		}

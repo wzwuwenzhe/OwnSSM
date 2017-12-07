@@ -29,7 +29,7 @@ public class Order implements Serializable {
 	protected String totalAmount;// 应付总金额
 	@BasicEntityField(length = 100, testValue = "我是一个备注")
 	protected String remark;// 备注
-	// 新增属性 付款方式 1:现金 2:刷卡 3:支付宝 4:微信
+	// 新增属性 付款方式 1:现金 2:刷卡 3:支付宝 4:微信5:未付
 	@BasicEntityField(length = 1, testValue = "1")
 	protected String payType;// 付款方式
 	protected String creationTime;// 创建时间

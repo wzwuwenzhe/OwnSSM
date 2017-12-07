@@ -44,6 +44,7 @@
 		<input type="radio" id="payType2" name="payType" value="2" /><label for="payType2">刷卡</label>
 		<input type="radio" id="payType3" name="payType" value="3" /><label for="payType3">支付宝</label>
 		<input type="radio" id="payType4" name="payType" value="4" /><label for="payType4">微信</label>
+		<input type="radio" id="payType5" name="payType" value="5" /><label for="payType5">未付</label>
 		<br/>
 	</div>
 	<@form_group id="remark" value="${(order.remark)!''}" desc="备注" type="text" name="remark" dataType="" msg="" />

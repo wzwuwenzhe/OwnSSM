@@ -227,6 +227,9 @@ public class OrderServiceImpl implements OrderService {
 		case 4:
 			device.printString("付款方式:  微信");
 			break;
+		case 5:
+			device.printString("付款方式:  未付");
+			break;
 		default:
 			device.printString("付款方式:  未知");
 			break;
