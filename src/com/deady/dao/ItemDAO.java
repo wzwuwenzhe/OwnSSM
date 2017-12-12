@@ -8,8 +8,6 @@ public interface ItemDAO {
 
 	void insertItems(List<Item> itemList);
 
-	void insertItem(Item item);
-
 	List<Item> findItemsByOrderId(String orderId);
 
 	void deleItemsByOrderId(String orderId);

@@ -25,6 +25,25 @@ public class Stock implements Serializable {
 	private String creationTime;// 入库时间
 	private String sumForOneFactory;// 同款式下工厂的总数
 	private String factoryName;
+	@BasicEntityField(length = 100, testValue = "黑色")
+	private String color;// 款式颜色
+	@BasicEntityField(length = 100, testValue = "M")
+	private String size;// 款式尺寸
+
+	public Stock() {
+		// 默认构造器
+	}
+
+	public Stock(String color, String size, String amount, String storeId,
+			String year, String name, String factoryId) {
+		this.color = color;
+		this.size = size;
+		this.amount = amount;
+		this.storeId = storeId;
+		this.year = year;
+		this.name = name;
+		this.factoryId = factoryId;
+	}
 
 	public String getStoreId() {
 		return storeId;
@@ -88,6 +107,22 @@ public class Stock implements Serializable {
 
 	public void setFactoryName(String factoryName) {
 		this.factoryName = factoryName;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
 	}
 
 }

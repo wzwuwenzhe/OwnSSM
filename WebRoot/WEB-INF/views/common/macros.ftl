@@ -184,11 +184,22 @@ table,table tr th, table tr td { border:1px solid #000000; }
 	</div>
 </#macro>
 
-<#macro form_group id desc type name dataType msg  onkeyup="" value="" style="" >
+<#macro checkboxes item name >
+    <div class="checkbox-group">
+    	<#list item as i>
+    		<input type="checkbox" name="${name}" id="${i}"/><label for="${i}">${i}</label>
+		</#list>
+    </div>
+	<div>
+		其他:<input type="text" style="width:50px;" /><input type="button" onclick="addNewItem(this,${name})" value="+"/>
+	</div>
+</#macro>
+
+<#macro form_group id desc type name dataType msg  onkeyup="" value="" style="" action="" readonly="">
 	<div class="form-group" <#if style!="">style="${style}"</#if> >
 		<label for="${id}" class="sr-only">${desc}</label>
-		<input type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if>
-		dataType="${dataType}" name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${desc}" autocomplete="off">
+		<input type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if> <#if action!="">onblur="${action}"</#if>
+		dataType="${dataType}" name="${name}" msg="${msg}" class="form-control" id="${id}" placeholder="${desc}" autocomplete="off" <#if readonly!=""> readonly</#if> />
 	</div>
 </#macro>
 

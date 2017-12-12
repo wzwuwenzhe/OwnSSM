@@ -18,16 +18,18 @@
 		<table class="billtable">
 			<thead>
 				<tr>
-					<td style="width:35%">商品名称</td>
-					<td style="width:10%">数量</td>
-					<td style="width:15%">单价(元)</td>
-					<td style="width:20%">金额(元)</td>
-					<td style="width:20%">操作</td>
+					<td style="width:20%">款号</td>
+					<td style="width:12%">颜色</td>
+					<td style="width:12%">尺码</td>
+					<td style="width:12%">数量</td>
+					<td style="width:12%">单价</td>
+					<td style="width:17%">金额</td>
+					<td style="width:5%">操作</td>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td colspan="6"><input class="form-control" type="button" value="新增" onclick="addRecord(this)"/></td>
+					<td colspan="7"><input class="form-control" type="button" value="新增" onclick="addRecord(this)"/></td>
 				</tr>
 			</tbody>
 		</table>
@@ -39,7 +41,7 @@
 		折扣金额:<input id='discount' name="discount" onkeyup="calculateTotal()" onfocus="$('#discount').val('')" style="width:50px;" type="text" value="0" />元 <br/>
 		应付金额:<label id='totalAmount'></label>元 
 		<input type="hidden" name="totalAmount"/><br/>
-		付款方式:
+		付款方式:</br>
 		<input type="radio" id="payType1" name="payType" value="1" checked="checked"/><label for="payType1">现金</label>
 		<input type="radio" id="payType2" name="payType" value="2" /><label for="payType2">刷卡</label>
 		<input type="radio" id="payType3" name="payType" value="3" /><label for="payType3">支付宝</label>
@@ -95,11 +97,13 @@
 	}
 	function addRecord(btn){
 		$(btn).parent().parent().before("<tr>"+
-		"<td><input name='name' dataType='Require' msg='商品名称不能为空' class='form-control' type='text'/><input type='hidden' name='size' value='通码'/></td>"+
+		"<td><input name='name' dataType='Require' msg='商品名称不能为空' class='form-control' type='text' onblur='findColorsAndSizes(this)'/></td>"+
+		"<td><select name='color'></select></td>"+
+		"<td><select name='size'></select></td>"+
 		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' /></td>"+
 		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
-		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label>元</td>"+
-		"<td><input  class='form-control' type='button'  value='删除' onclick='removeRecord(this)'/></td>"+
+		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
+		"<td><a href='javascript:void(0)' onclick='removeRecord(this)'>删</a></td>"+
 		"</tr>");
 	}
 	function calculate(number){
@@ -155,6 +159,53 @@
 			}
 		}
 	
+	//根据款号找到颜色和尺码
+	function findColorsAndSizes(item){
+		var _name = $(item).val();
+		if("" ==_name || null == _name){
+			alert("款号不能为空");
+			return;
+		}
+		$.ajax({
+				url:"./getCorlorAndSizeByName.htm",
+				type:"POST",
+				data:{name:_name},
+				success:function(response){
+					if(response.result==2){//表示查询到了数据
+						var sizeArr = response.sizes.split(",");
+						var colorArr = response.colors.split(",");
+						showSizeAndColor(sizeArr,colorArr,item);
+						return;
+					}
+					showSizeAndColor(sizeArr,colorArr,item);//传空的也无妨
+		        },
+		        error:function(){
+		            alert("系统错误,请联系管理员");
+		        }
+			});
+	}
+	
+	function showSizeAndColor(sizesArr,colorsArr,item){
+		if(null == sizesArr || null == colorsArr){
+				//默认 黑色白色   M,L,XL
+				appendSelector(['M','L','XL'],['黑色','白色'],item);
+				return;
+		}
+		appendSelector(sizesArr,colorsArr,item);
+	}
+	
+	function appendSelector(sizeArr,colorArr,item){
+		var colorSelector = $(item).parent().next().find("select").eq(0);
+		colorSelector.empty();
+		for(var i =0;i<colorArr.length;i++){
+			colorSelector.append("<option value='"+colorArr[i]+"'>"+colorArr[i]+"</option>");
+		}
+		var sizeSelector = $(item).parent().next().next().find("select").eq(0);
+		sizeSelector.empty();
+		for(var i =0;i<sizeArr.length;i++){
+			sizeSelector.append("<option value='"+sizeArr[i]+"'>"+sizeArr[i]+"</option>");
+		}
+	}
 	
 	</script>
 </@htmlBody>

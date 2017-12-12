@@ -20,6 +20,8 @@ public class Item implements Serializable {
 	private String id;// 自身id
 	@BasicEntityField(length = 32, testValue = "333")
 	private String name;// 商品名称
+	@BasicEntityField(length = 32, testValue = "黑色")
+	private String color;// 商品名称
 	@BasicEntityField(length = 32, testValue = "XL")
 	private String size;// 尺寸
 	@BasicEntityField(length = 32, testValue = "25.00")
@@ -83,6 +85,14 @@ public class Item implements Serializable {
 
 	public void setPrice(String price) {
 		this.price = price;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 }

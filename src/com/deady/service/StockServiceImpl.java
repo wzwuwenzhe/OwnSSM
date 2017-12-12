@@ -15,6 +15,7 @@ import com.deady.dao.StockDAO;
 import com.deady.entity.factory.Factory;
 import com.deady.entity.stock.Stock;
 import com.deady.entity.stock.Storage;
+import com.deady.utils.ActionUtil;
 import com.deady.utils.DateUtils;
 
 @Service
@@ -59,7 +60,6 @@ public class StockServiceImpl implements StockService {
 		if (nameSet.size() == 0) {
 			return new ArrayList<Storage>();
 		}
-		stockDAO.findStockListByYearAndNameArr(params);
 		List<Stock> stockList = stockDAO.findStockListByYearAndNameArr(params);
 		Map<String, String> factoryId2NameMap = new HashMap<String, String>();
 		List<Factory> storeFactoryList = factoryDAO
@@ -108,6 +108,23 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public int getStockSizeByFactoryId(String factoryId) {
 		return stockDAO.findStocksByFactoryId(factoryId);
+	}
+
+	@Override
+	public Stock getColorAndSizeByNameAndStoreId(String name, String storeId) {
+		String year = ActionUtil.getLunarCalendarYear();
+		return stockDAO.findStocksByStoreIdAndNameAndYear(storeId, name, year);
+	}
+
+	@Override
+	public Storage getStorageByNameAndStoreId(String name, String storeId) {
+		String year = ActionUtil.getLunarCalendarYear();
+		return stockDAO.findStorageByNameAndStoreId(year, name, storeId);
+	}
+
+	@Override
+	public void addStocks(List<Stock> stockList) {
+		stockDAO.insertStocks(stockList);
 	}
 
 }

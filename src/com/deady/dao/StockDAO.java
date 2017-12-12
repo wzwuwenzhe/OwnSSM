@@ -28,4 +28,12 @@ public interface StockDAO {
 
 	int findStocksByFactoryId(String factoryId);
 
+	Stock findStocksByStoreIdAndNameAndYear(@Param("storeId") String storeId,
+			@Param("name") String name, @Param("year") String year);
+
+	Storage findStorageByNameAndStoreId(@Param("year") String year,
+			@Param("name") String name, @Param("storeId") String storeId);
+
+	void insertStocks(List<Stock> stockList);
+
 }

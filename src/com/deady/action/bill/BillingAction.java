@@ -65,8 +65,8 @@ public class BillingAction {
 	@DeadyAction(createToken = true, checkToken = true)
 	@ResponseBody
 	public Object doBilling(HttpServletRequest req, HttpServletResponse res,
-			String[] name, String[] size, String[] unitPrice, String[] amount,
-			String[] price) throws Exception {
+			String[] name, String[] color, String[] size, String[] unitPrice,
+			String[] amount, String[] price) throws Exception {
 		FormResponse response = new FormResponse(req);
 		if (StringUtils.isEmpty(req.getParameter("cusName"))) {
 			response.setSuccess(false);
@@ -130,6 +130,7 @@ public class BillingAction {
 			// 后期考虑加验证 每一项都需要验证
 			Item item = new Item();
 			item.setName(name[i]);
+			item.setColor(color[i]);
 			item.setSize(size[i]);
 			item.setUnitPrice(unitPrice[i]);
 			item.setAmount(amount[i]);
@@ -142,6 +143,7 @@ public class BillingAction {
 		orderService.addOrder(order);
 		// 发送打印订单请求
 		try {
+			// TODO 修改打印信息
 			orderService.printOrder(orderId, op, false);
 		} catch (Exception e) {
 			response.setSuccess(false);
@@ -169,7 +171,8 @@ public class BillingAction {
 				Storage storage = new Storage(op.getStoreId(), year, kuanhao,
 						oldStorage.getTotal(),
 						(Integer.parseInt(stockLeft) - Integer
-								.parseInt(allAmount)) + "");
+								.parseInt(allAmount)) + "",
+						oldStorage.getColors(), oldStorage.getSizes());
 				stockService.updateStorage(storage);
 			}
 		}

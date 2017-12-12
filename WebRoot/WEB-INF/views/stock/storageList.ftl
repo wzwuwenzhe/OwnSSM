@@ -10,6 +10,8 @@
 			<thead>
 			  <tr>
 				<th>厂家</th>
+				<th>颜色</th>
+				<th>尺码</th>
 				<th>单次数量</th>
 				<th>入库时间</th>
 				<th>款号</th>
@@ -27,6 +29,8 @@
 						<#list stockList as stock>
 							<#if (stock_index == 0) >
 								<td>${stock.factoryName}</td>
+								<td>${stock.color}</td>
+								<td>${stock.size}</td>
 								<td>${stock.amount}</td>
 								<td>${stock.creationTime}</td>
 							</#if>
@@ -48,6 +52,8 @@
 						<#if (stock_index>0)>
 							<tr>
 								<td>${stock.factoryName}</td>
+								<td>${stock.color}</td>
+								<td>${stock.size}</td>
 								<td>${stock.amount}</td>
 								<td>${stock.creationTime}</td>
 							</tr>

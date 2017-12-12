@@ -23,7 +23,7 @@
     
 
 	<update id="updateStorage" parameterType="com.deady.entity.stock.Storage" >
-	update storage set total=#{total} , stock_left=#{stockLeft} 
+	update storage set total=#{total} , stock_left=#{stockLeft} ,colors=#{colors},sizes=#{sizes}
 	where store_id = #{storeId} and year=#{year} and name=#{name}
 	</update>
    
@@ -61,5 +61,26 @@
     <select id="findStocksByFactoryId" resultType="int">
     select count(1) from stock where factory_id = #{factoryId}
     </select>
+    
+    <select id="findStocksByStoreIdAndNameAndYear" resultType="Stock">
+    select  * from stock where store_id=#{storeId} and name=#{name} and year=#{year} 
+    </select>
+    
+    <select id="findStorageByNameAndStoreId" resultType="Storage">
+    select  * from storage where  year=#{year}  and name=#{name} and store_id=#{storeId}
+    </select>
    
+   	<insert id="insertStocks" parameterType="java.util.List">
+		   insert into stock (store_id,name,year,factory_id,amount,color,size) values
+		   <foreach collection="list" item="stock" index="index"
+		       separator=",">
+		       (#{stock.storeId},
+		       #{stock.name},
+		       #{stock.year} ,
+		       #{stock.factoryId} ,
+		       #{stock.amount} ,
+		       #{stock.color} ,
+		       #{stock.size}   )
+		   </foreach>
+		</insert>
 </mapper>

@@ -9,6 +9,7 @@
 		       (#{item.id},
 		       #{item.orderId},
 		       #{item.name} ,
+		       #{item.color},
 		       #{item.size} ,
 		       #{item.unitPrice} ,
 		       #{item.amount} ,
@@ -16,17 +17,6 @@
 		   </foreach>
 		</insert>
 		
-		<insert id ="insertItem" parameterType="com.deady.entity.bill.Item">
-			insert into item (id,order_id,store_id,name,size,unit_price,amount,price) values
-			(#{id},
-		       #{orderId},
-		       #{storeId},
-		       #{name} ,
-		       #{size} ,
-		       #{unitPrice} ,
-		       #{amount} ,
-		       #{price})
-		</insert>
 		
 		<select id="findItemsByOrderId" resultType="Item">
 			SELECT * from item
