@@ -52,6 +52,7 @@ public class StockServiceImpl implements StockService {
 		Map<String, Object> params = new HashMap<String, Object>(2);
 		params.put("year", year);
 		params.put("names", nameSet.toArray(new String[0]));
+		params.put("storeId", storeId);
 		if (nameSet.size() == 0) {
 			return new ArrayList<Storage>();
 		}
