@@ -195,17 +195,21 @@ public class OrderServiceImpl implements OrderService {
 				+ (StringUtils.isEmpty(client.getPhone()) ? "" : client
 						.getPhone()));
 		device.printString("================================================");
-		String title = paddingWithSuffix(16, "商品名称", SUFFIX)
+		String title = paddingWithSuffix(10, "款号", SUFFIX)
+				+ paddingWithSuffix(8, "颜色", SUFFIX)
+				+ paddingWithSuffix(8, "尺码", SUFFIX)
+				+ paddingWithSuffix(8, "单价", SUFFIX)
 				+ paddingWithSuffix(6, "数量", SUFFIX)
-				+ paddingWithSuffix(13, "单价(元)", SUFFIX)
-				+ paddingWithSuffix(13, "金额(元)", SUFFIX);
+				+ paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = dto.getItemList();
 		for (Item item : itemList) {
-			device.printString(paddingWithSuffix(16, item.getName(), SUFFIX)
-					+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
-					+ paddingWithSuffix(13, item.getUnitPrice(), SUFFIX)
-					+ paddingWithSuffix(13, item.getPrice(), SUFFIX));
+			device.printString(paddingWithSuffix(10, item.getName(), SUFFIX)
+					+ paddingWithSuffix(8, item.getColor(), SUFFIX)
+					+ paddingWithSuffix(8, item.getSize(), SUFFIX)
+					+ paddingWithSuffix(8, item.getAmount(), SUFFIX)
+					+ paddingWithSuffix(6, item.getUnitPrice(), SUFFIX)
+					+ paddingWithSuffix(8, item.getPrice(), SUFFIX));
 		}
 		device.printString("");
 		device.printString("");
@@ -230,10 +234,16 @@ public class OrderServiceImpl implements OrderService {
 		case 5:
 			device.printString("付款方式:  未付");
 			break;
+		case 6:
+			device.printString("付款方式:  月结");
+			break;
 		default:
 			device.printString("付款方式:  未知");
 			break;
 		}
+		device.printString("送货地址:"
+				+ (StringUtils.isEmpty(dto.getAddress()) ? "" : dto
+						.getAddress()));
 		device.printString("备注:"
 				+ (StringUtils.isEmpty(dto.getRemark()) ? "" : dto.getRemark()));
 		switch (storeSide.getSide()) {
@@ -424,6 +434,11 @@ public class OrderServiceImpl implements OrderService {
 		device.printString("应付金额:" + record.getTotalAmount() + "元");
 		device.printString("================================================");
 		return Double.parseDouble(record.getTotalAmount());
+	}
+
+	@Override
+	public void modifyOrderPayTypeByOrderId(String orderId, String payType) {
+		orderDAO.updateOrderPayTypeById(orderId, payType);
 	}
 
 }
