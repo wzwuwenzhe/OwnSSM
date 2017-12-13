@@ -27,11 +27,6 @@ public class StockServiceImpl implements StockService {
 	private FactoryDAO factoryDAO;
 
 	@Override
-	public void addStock(Stock stock) {
-		stockDAO.insertStock(stock);
-	}
-
-	@Override
 	public List<Storage> getStorageByStoreId(String storeId) {
 		return stockDAO.findStorageByStoreId(storeId);
 	}

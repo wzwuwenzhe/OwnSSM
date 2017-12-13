@@ -29,7 +29,6 @@
 
 <#macro htmlHeader title="${companyName}" >
 <@cleanHeader title=title>
-	<@css path="https://fonts.googleapis.com/css?family=Open+Sans:400,700,300" remotecss=true/>
 	<@css path="/css/loginAndRegister/bootstrap.min.css"/>
     <@css path="/css/loginAndRegister/animate.css"/>
 	<@css path="/css/loginAndRegister/style.css"/>

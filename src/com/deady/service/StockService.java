@@ -7,8 +7,6 @@ import com.deady.entity.stock.Storage;
 
 public interface StockService {
 
-	void addStock(Stock stock);
-
 	List<Storage> getStorageByStoreId(String storeId);
 
 	void updateStorage(Storage storage);

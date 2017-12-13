@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -151,18 +152,20 @@ public class StockAction {
 			if (null == stockValue) {
 				Stock stock = new Stock(color[i], size[i], amount[i],
 						op.getStoreId(), year, name, factoryId);
-				stockList.add(stock);
 				colorAndSize2StockMap.put(colorAndSizeKey, stock);
 			} else {
 				int lastAmount = Integer.parseInt(stockValue.getAmount());
 				int nowAmount = Integer.parseInt(amount[i]);
 				stockValue.setAmount((lastAmount + nowAmount) + "");
-				stockList.add(stockValue);
 				colorAndSize2StockMap.put(colorAndSizeKey, stockValue);
 			}
 			// 累计单次入库总数
 			onceTotal += Integer.parseInt(amount[i]);
 
+		}
+		// 只取不重复的单条库存
+		for (Entry<String, Stock> entry : colorAndSize2StockMap.entrySet()) {
+			stockList.add(entry.getValue());
 		}
 		// stock入库 //TODO 应该需要设计一个事务 把添加stock和修改storage 放在同一个事务下
 		stockService.addStocks(stockList);
@@ -186,7 +189,7 @@ public class StockAction {
 					colorSet.add(colors[i]);
 				}
 				for (int i = 0; i < sizes.length; i++) {
-					sizeSet.add(size[i]);
+					sizeSet.add(sizes[i]);
 				}
 				// 去空格 去两头括号
 				s.setColors(dealwithSet(colorSet));

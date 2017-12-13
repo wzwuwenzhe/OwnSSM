@@ -197,9 +197,6 @@
 				return;
 			}
 			addTableItem(_color,_size,_amount);
-			console.log(_color);
-			console.log(_size);
-			console.log(_amount);
 			$("#page").show();
 			$("#_amount").val('');
 			$("#totalDiv").show();

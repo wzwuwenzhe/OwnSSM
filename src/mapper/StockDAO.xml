@@ -4,10 +4,6 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.deady.dao.StockDAO">
     
-    <insert id="insertStock" parameterType="com.deady.entity.stock.Stock">
-        INSERT  INTO stock (store_id,name,year,factory_id,amount)
-        VALUES (#{storeId},#{name}, #{year},#{factoryId},#{amount})
-    </insert>
     
     
     <select id="findStorageByStoreId" resultType="com.deady.entity.stock.Storage">
@@ -29,8 +25,8 @@
    
    
    <insert id="insertStorage" parameterType="com.deady.entity.stock.Storage">
-        INSERT  INTO storage (store_id,name,year,total,stock_left)
-        VALUES (#{storeId},#{name}, #{year},#{total},#{stockLeft})
+        INSERT  INTO storage (store_id,name,year,total,stock_left,colors,sizes)
+        VALUES (#{storeId},#{name}, #{year},#{total},#{stockLeft},#{colors},#{sizes})
     </insert>
     
     <select id="findStockListByYearAndNameArr" parameterType="map" resultType="com.deady.entity.stock.Stock" >
