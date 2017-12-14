@@ -1,5 +1,6 @@
 package com.deady.action.order;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
 import com.deady.dto.OrderDto;
+import com.deady.entity.bill.Item;
 import com.deady.entity.operator.Operator;
 import com.deady.entity.order.OrderSearchEntity;
 import com.deady.service.OperatorService;
@@ -26,6 +28,8 @@ import com.deady.service.OrderService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.DateUtils;
 import com.deady.utils.OperatorSessionInfo;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Controller
 public class OrderAction {
@@ -45,7 +49,7 @@ public class OrderAction {
 	}
 
 	@RequestMapping(value = "/orderSearch", method = RequestMethod.POST)
-	@DeadyAction(createToken = true)
+	@DeadyAction(createToken = true, checkLogin = true)
 	public Object searchOrder(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		OrderSearchEntity orderSearch = new OrderSearchEntity();
@@ -75,6 +79,101 @@ public class OrderAction {
 		req.setAttribute("orderList", orderList);
 		req.setAttribute("userType", operator.getUserType());
 		return new ModelAndView("/order/order");
+	}
+
+	@RequestMapping(value = "/payForTheMoney", method = RequestMethod.POST)
+	@DeadyAction(createToken = true)
+	@ResponseBody
+	public Object payForTheMoney(HttpServletRequest req, HttpServletResponse res)
+			throws Exception {
+		FormResponse response = new FormResponse(req);
+		String orderId = req.getParameter("orderId");// 订单编号
+		String payType = req.getParameter("payType");// 支付类型
+		OrderDto order = orderService.getOrderDtoById(orderId);
+		if (null == order) {
+			response.setSuccess(false);
+			response.setMessage("无法查询到订单!");
+			return response;
+		}
+		orderService.modifyOrderPayTypeByOrderId(orderId, payType);
+		response.setSuccess(true);
+		response.setMessage("付款方式更新成功!");
+		return response;
+
+	}
+
+	@RequestMapping(value = "/getOrderById", method = RequestMethod.POST)
+	@DeadyAction(createToken = true)
+	@ResponseBody
+	public Object getOrderById(HttpServletRequest req, HttpServletResponse res)
+			throws Exception {
+		FormResponse response = new FormResponse(req);
+		String orderId = req.getParameter("orderId");// 订单编号
+		OrderDto order = orderService.getOrderDtoById(orderId);
+		if (null == order) {
+			response.setSuccess(false);
+			response.setMessage("无法查询到订单!");
+			return response;
+		}
+		List<Item> itemList = order.getItemList();
+		if (null == itemList || itemList.size() == 0) {
+			response.setSuccess(false);
+			response.setMessage("订单查询失败!");
+			return response;
+		}
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		List<Object> _itemList = new ArrayList<Object>();
+		for (Item item : itemList) {
+			Map<String, Object> itemMap = new HashMap<String, Object>();
+			itemMap.put("name", item.getName());
+			itemMap.put("size", item.getSize());
+			itemMap.put("color", item.getColor());
+			itemMap.put("unitPrice", item.getUnitPrice());
+			itemMap.put("amount", item.getAmount());
+			itemMap.put("price", item.getPrice());
+			_itemList.add(itemMap);
+		}
+		resultMap.put("items", _itemList);
+		resultMap.put("address", StringUtils.isEmpty(order.getAddress()) ? ""
+				: order.getAddress());
+		resultMap.put("remark", StringUtils.isEmpty(order.getRemark()) ? ""
+				: order.getRemark());
+		response.setSuccess(true);
+		response.setMessage("订单信息获取成功!");
+		response.setData(resultMap);
+		return response;
+
+	}
+
+	@RequestMapping(value = "/deliverGoods", method = RequestMethod.POST)
+	@DeadyAction(createToken = true)
+	@ResponseBody
+	public Object doDeliverGoods(HttpServletRequest req, HttpServletResponse res)
+			throws Exception {
+		FormResponse response = new FormResponse(req);
+		String isOweGoods = req.getParameter("isOweGoods");// 是否欠货
+		String oweGoodsRemarkText = req.getParameter("oweGoodsRemarkText");// 欠货备注信息
+		String orderId = req.getParameter("orderId");// 订单编号
+		OrderDto order = orderService.getOrderDtoById(orderId);
+		if (null == order) {
+			response.setSuccess(false);
+			response.setMessage("无法查询到订单!");
+			return response;
+		}
+		if (isOweGoods.equals("1")) {// 欠货
+			orderService.modifyOrderStateById(orderId, "3");
+			orderService.modifyOrderRemarkById(
+					orderId,
+					(StringUtils.isEmpty(order.getRemark()) ? "" : order
+							.getRemark()) + "   发货备注：" + oweGoodsRemarkText);
+
+		} else if (isOweGoods.equals("0")) {// 正常发货
+			orderService.modifyOrderStateById(orderId, "4");
+		}
+		response.setSuccess(true);
+		response.setMessage("发货成功!");
+		return response;
+
 	}
 
 	@RequestMapping(value = "/rePrint", method = RequestMethod.POST)

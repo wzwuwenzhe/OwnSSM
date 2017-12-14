@@ -34,4 +34,28 @@ public interface OrderService {
 	boolean printReport(String startDateStr, String endDateStr,
 			HttpServletRequest req) throws UnsupportedEncodingException;
 
+	/**
+	 * 修改订单支付状态
+	 * 
+	 * @param orderId
+	 * @param payType
+	 */
+	void modifyOrderPayTypeByOrderId(String orderId, String payType);
+
+	/**
+	 * 根据订单编号 修改订单状态
+	 * 
+	 * @param orderId
+	 * @param string
+	 */
+	void modifyOrderStateById(String orderId, String state);
+
+	/**
+	 * 根据订单编号 修改备注信息
+	 * 
+	 * @param orderId
+	 * @param string
+	 */
+	void modifyOrderRemarkById(String orderId, String string);
+
 }

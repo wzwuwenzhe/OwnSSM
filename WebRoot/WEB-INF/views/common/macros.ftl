@@ -64,6 +64,8 @@
 <@js path="/js/jquery.basictable.min.js"/>
 <@js path="/js/My97DatePicker/WdatePicker.js"/>
 <@js path="/js/layui/layui.js"/>
+<@js path="/js/layer/layer.js"/>
+<@js path="/js/layer/extend/layer.ext.js"/>
 <style type="text/css">
 table,table tr th, table tr td { border:1px solid #000000; }
 </style>
@@ -160,8 +162,9 @@ table,table tr th, table tr td { border:1px solid #000000; }
 </div>
 </#macro>
 
-<#macro form  action class h2 id="_form" onsubmit="return $form.submit(this);" enctype="">
-	<form id="${id}" accept-charset="UTF-8" <#if enctype!="">enctype="${enctype}"</#if> action="${url("${action}")}" onsubmit="${onsubmit}" method="post" class="${class}" data-animate-effect="fadeIn">
+<#macro form  action class h2 id="_form" onsubmit="return $form.submit(this);" enctype="" style="">
+	<form id="${id}" accept-charset="UTF-8" <#if enctype!="">enctype="${enctype}"</#if> action="${url("${action}")}" onsubmit="${onsubmit}" method="post" class="${class}" data-animate-effect="fadeIn"
+	<#if style!="">style="${style}"</#if> >
 		<h2>${h2}</h2>
 		<input type="hidden" name="_token" value="${_token}"/>
 		<#nested>

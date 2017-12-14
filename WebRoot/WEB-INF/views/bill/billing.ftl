@@ -42,13 +42,15 @@
 		应付金额:<label id='totalAmount'></label>元 
 		<input type="hidden" name="totalAmount"/><br/>
 		付款方式:</br>
-		<input type="radio" id="payType1" name="payType" value="1" checked="checked"/><label for="payType1">现金</label>
+		<input type="radio" id="payType5" name="payType" value="5" checked="checked" /><label for="payType5">未付</label>
+		<input type="radio" id="payType1" name="payType" value="1" /><label for="payType1">现金</label>
 		<input type="radio" id="payType2" name="payType" value="2" /><label for="payType2">刷卡</label>
 		<input type="radio" id="payType3" name="payType" value="3" /><label for="payType3">支付宝</label>
 		<input type="radio" id="payType4" name="payType" value="4" /><label for="payType4">微信</label>
-		<input type="radio" id="payType5" name="payType" value="5" /><label for="payType5">未付</label>
+		<input type="radio" id="payType6" name="payType" value="6" /><label for="payType6">月结</label>
 		<br/>
 	</div>
+	<@form_group id="address" value="${(order.address)!''}" desc="送货地址" type="text" name="address" dataType="" msg="" />
 	<@form_group id="remark" value="${(order.remark)!''}" desc="备注" type="text" name="remark" dataType="" msg="" />
 	<div class="form-group">
 		<input type="submit" value="下单" class="btn btn-primary">

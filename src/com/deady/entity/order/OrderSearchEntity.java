@@ -18,6 +18,8 @@ public class OrderSearchEntity {
 	private String endDate;// 查询结束时间
 	@BasicEntityField(length = 8, testValue = "05779999")
 	private String storeId;// 店铺Id 只能查自己店铺的订单
+	@BasicEntityField(length = 1, testValue = "1")
+	private String state;// 订单状态
 
 	public String getOrderName() {
 		return orderName;
@@ -73,5 +75,13 @@ public class OrderSearchEntity {
 
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }

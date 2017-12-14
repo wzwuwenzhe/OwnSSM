@@ -42,7 +42,10 @@
                 separator="," close=")">  
                 #{item}  
             </foreach>  
-        </if>  
+        </if>
+        <if test="storeId != '' and storeId != null"> 
+        	and store_id = #{storeId} 
+        </if>
     </select>
     
     <delete id="deleteStorage">

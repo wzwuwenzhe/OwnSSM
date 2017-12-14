@@ -24,6 +24,8 @@ import com.deady.entity.client.Client;
 import com.deady.entity.operator.Operator;
 import com.deady.entity.order.OrderSearchEntity;
 import com.deady.entity.store.Store;
+import com.deady.enums.OrderStateEnum;
+import com.deady.enums.PayTypeEnum;
 import com.deady.printer.Device;
 import com.deady.printer.DeviceParameters;
 import com.deady.utils.ActionUtil;
@@ -134,9 +136,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public static void main(String[] args) {
-		Date tempDate = DateUtils.convert2Date("2017-08-23 22:30:04.0",
-				"yyyy-MM-dd HH:mm:ss");
-		System.out.println(tempDate);
+
+		System.out.println(PayTypeEnum.valueOf("CASH").getPayTypeInfo());
 	}
 
 	private void printOrder(Device device, Store store, Operator op,
@@ -218,29 +219,9 @@ public class OrderServiceImpl implements OrderService {
 		device.printString("小计:" + dto.getSmallCount() + "元");
 		device.printString("折扣金额:" + dto.getDiscount() + "元");
 		device.printString("应付金额:" + dto.getTotalAmount() + "元");
-		switch (Integer.parseInt(dto.getPayType())) {
-		case 1:
-			device.printString("付款方式:  现金");
-			break;
-		case 2:
-			device.printString("付款方式:  刷卡");
-			break;
-		case 3:
-			device.printString("付款方式:  支付宝");
-			break;
-		case 4:
-			device.printString("付款方式:  微信");
-			break;
-		case 5:
-			device.printString("付款方式:  未付");
-			break;
-		case 6:
-			device.printString("付款方式:  月结");
-			break;
-		default:
-			device.printString("付款方式:  未知");
-			break;
-		}
+		device.printString("付款方式:  "
+				+ PayTypeEnum.typeOf(Integer.parseInt(dto.getPayType()))
+						.getPayTypeInfo());
 		device.printString("送货地址:"
 				+ (StringUtils.isEmpty(dto.getAddress()) ? "" : dto
 						.getAddress()));
@@ -385,6 +366,9 @@ public class OrderServiceImpl implements OrderService {
 		return false;
 	}
 
+	/**
+	 * 打印某一天的报表
+	 */
 	private void printRecordForOneDay(String dateStr, List<OrderDto> records) {
 		Device device = null;
 		try {
@@ -396,11 +380,57 @@ public class OrderServiceImpl implements OrderService {
 			device.printString(dateStr.substring(0, 4) + "年"
 					+ dateStr.substring(4, 6) + "月" + dateStr.substring(6, 8)
 					+ "日 报表");
+			double cash = 0;
+			double card = 0;
+			double zfb = 0;
+			double weixin = 0;
+			double monthPay = 0;
 			double dayTotalPrice = 0;
+			// 款号和单价对应数量的散列表
+			Map<String, Integer> nameAndPrice2AmountMap = new HashMap<String, Integer>();
 			for (OrderDto record : records) {
-				dayTotalPrice += printRecord(device, record);
+				// 过滤未付款订单
+				if (record.getPayType().equals(
+						PayTypeEnum.NOTPAY.getType() + "")) {
+					continue;
+				}
+				if (record.getPayType().equals(PayTypeEnum.CASH.getType() + "")) {
+					cash += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(PayTypeEnum.CARD.getType() + "")) {
+					card += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(PayTypeEnum.ZFB.getType() + "")) {
+					zfb += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(
+						PayTypeEnum.WEIXIN.getType() + "")) {
+					weixin += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(
+						PayTypeEnum.MONTHPAY.getType() + "")) {
+					monthPay += Double.parseDouble(record.getTotalAmount());
+				}
+				dayTotalPrice += Double.parseDouble(record.getTotalAmount());
+				// 打印记录
+				printRecord(device, record, nameAndPrice2AmountMap);
 			}
-			device.printString("当天合计:" + dayTotalPrice + "元");
+			device.selectAlignType(1);// 居中
+			for (Map.Entry<String, Integer> entry : nameAndPrice2AmountMap
+					.entrySet()) {
+				String[] nameAndPriceArr = entry.getKey().split(",");
+				Integer amount = entry.getValue();
+				String name = nameAndPriceArr[0];
+				String price = nameAndPriceArr[1];
+				device.printString("当天款式: " + name + " 单价: " + price + " 共卖出: "
+						+ amount + "件");
+			}
+			device.printString("当天现金:" + cash + "元");
+			device.printString("当天刷卡:" + card + "元");
+			device.printString("当天支付宝:" + zfb + "元");
+			device.printString("当天微信:" + weixin + "元");
+			device.printString("当天月结:" + monthPay + "元");
+			device.printString("当天销售额:" + dayTotalPrice + "元");
 			device.printString("");
 			device.printString("");
 			device.cutPaper();
@@ -413,32 +443,61 @@ public class OrderServiceImpl implements OrderService {
 
 	}
 
-	private double printRecord(Device device, OrderDto record) {
+	private void printRecord(Device device, OrderDto record,
+			Map<String, Integer> nameAndPrice2AmountMap) {
 		device.selectAlignType(0);// 左对齐
 		device.printString("客户名称:" + record.getCusName());
 		device.printString("------------------------------------------------");
-		String title = paddingWithSuffix(16, "商品名称", SUFFIX)
+		String title = paddingWithSuffix(10, "款号", SUFFIX)
+				+ paddingWithSuffix(8, "颜色", SUFFIX)
+				+ paddingWithSuffix(8, "尺码", SUFFIX)
+				+ paddingWithSuffix(8, "单价", SUFFIX)
 				+ paddingWithSuffix(6, "数量", SUFFIX)
-				+ paddingWithSuffix(13, "单价(元)", SUFFIX)
-				+ paddingWithSuffix(13, "金额(元)", SUFFIX);
+				+ paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = record.getItemList();
 		for (Item item : itemList) {
-			device.printString(paddingWithSuffix(16, item.getName(), SUFFIX)
-					+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
-					+ paddingWithSuffix(13, item.getUnitPrice(), SUFFIX)
-					+ paddingWithSuffix(13, item.getPrice(), SUFFIX));
+			device.printString(paddingWithSuffix(10, item.getName(), SUFFIX)
+					+ paddingWithSuffix(8, item.getColor(), SUFFIX)
+					+ paddingWithSuffix(8, item.getSize(), SUFFIX)
+					+ paddingWithSuffix(8, item.getAmount(), SUFFIX)
+					+ paddingWithSuffix(6, item.getUnitPrice(), SUFFIX)
+					+ paddingWithSuffix(8, item.getPrice(), SUFFIX));
+			// 统计款式售出数量
+			String name = item.getName();
+			String price = item.getUnitPrice();
+			String key = name + "," + price;
+			String amount = item.getAmount();
+			if (null == nameAndPrice2AmountMap.get(key)) {
+				nameAndPrice2AmountMap.put(key, Integer.parseInt(amount));
+			} else {
+				int lastAmount = nameAndPrice2AmountMap.get(key);
+				lastAmount += Integer.parseInt(amount);
+				nameAndPrice2AmountMap.put(key, lastAmount);
+			}
 		}
 		device.printString("------------------------------------------------");
 		device.selectAlignType(2);// 右对齐
-		device.printString("应付金额:" + record.getTotalAmount() + "元");
+		device.printString("付款方式:"
+				+ PayTypeEnum.typeOf(Integer.parseInt(record.getPayType()))
+						.getPayTypeInfo() + "  金额:" + record.getTotalAmount()
+				+ "元");
 		device.printString("================================================");
-		return Double.parseDouble(record.getTotalAmount());
 	}
 
 	@Override
 	public void modifyOrderPayTypeByOrderId(String orderId, String payType) {
 		orderDAO.updateOrderPayTypeById(orderId, payType);
+	}
+
+	@Override
+	public void modifyOrderStateById(String orderId, String state) {
+		orderDAO.updateOrderStateById(orderId, state);
+	}
+
+	@Override
+	public void modifyOrderRemarkById(String orderId, String remark) {
+		orderDAO.updateOrderRemarkById(orderId, remark);
 	}
 
 }

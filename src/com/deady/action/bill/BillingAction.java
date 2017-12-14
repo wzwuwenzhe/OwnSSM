@@ -26,6 +26,8 @@ import com.deady.entity.bill.Order;
 import com.deady.entity.client.Client;
 import com.deady.entity.operator.Operator;
 import com.deady.entity.stock.Storage;
+import com.deady.enums.OrderStateEnum;
+import com.deady.enums.PayTypeEnum;
 import com.deady.service.ClientService;
 import com.deady.service.ItemService;
 import com.deady.service.OrderService;
@@ -112,6 +114,12 @@ public class BillingAction {
 		}
 
 		ActionUtil.assObjByRequest(req, order);
+		// 根据下单时的付款方式 选择订单状态
+		if (order.getPayType().equals(PayTypeEnum.NOTPAY.getType() + "")) {// 未付款
+			order.setState(OrderStateEnum.NOTPAY.getState() + "");// 未付款
+		} else {
+			order.setState(order.getPayType());// 待发货
+		}
 		if (null == order.getCusId() && null != cusId) {
 			order.setCusId(cusId);
 		}
@@ -181,6 +189,10 @@ public class BillingAction {
 		response.setMessage("订单添加成功!");
 		response.setData("/index");
 		return response;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(PayTypeEnum.NOTPAY.getType());
 	}
 
 	@RequestMapping(value = "/getClientNameList", method = RequestMethod.POST)

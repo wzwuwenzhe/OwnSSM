@@ -5,9 +5,9 @@
 <mapper namespace="com.deady.dao.OrderDAO">
 		 <insert id="insertOrder"  parameterType="com.deady.entity.bill.Order">
          	insert into store_order 
-         	(id,cus_id,operator_id,store_id,small_count,discount,total_amount,remark,pay_type) 
+         	(id,cus_id,operator_id,store_id,small_count,discount,total_amount,remark,pay_type,address,state) 
          	values(#{id},#{cusId},#{operatorId},#{storeId},#{smallCount},
-         	#{discount},#{totalAmount},#{remark},#{payType})  
+         	#{discount},#{totalAmount},#{remark},#{payType},#{address},#{state})  
    		</insert>
    		
    		<select id="findOrderById" resultType="Order">
@@ -31,9 +31,26 @@
    			<if test="orderName != null and orderName != ''">
    			and id IN(SELECT order_id FROM item WHERE name LIKE  '%${orderName}%' and creation_time &gt;= #{beginDate} and creation_time &lt;= #{endDate}  )
    			</if>
+   			<if test="state != null and state !=''">
+   			and state=#{state}
+   			</if>
    		</select>
    		
    		<delete id="deleteOrderById" >
    			delete from store_order where id=#{orderId}
    		</delete>
+   		
+   		<update id="updateOrderPayTypeById" parameterType="string">
+   			update store_order set pay_type=#{payType} ,state=2
+   			where id=#{orderId} 
+   		</update>
+   		<update id="updateOrderStateById" parameterType="string">
+   			update store_order set state=#{state} 
+   			where id=#{orderId} 
+   		</update>
+   		<update id="updateOrderRemarkById" parameterType="string">
+   			update store_order set remark=#{remark} 
+   			where id=#{orderId} 
+   		</update>
+   		
 </mapper>
