@@ -23,4 +23,12 @@ public interface ClientService {
 	List<Client> getClientsByNameAndStoreId(String cusName, String storeId);
 
 	List<Client> getClientListByStoreId4Page(String storeId, PageUtils page);
+
+	/**
+	 * 根据顾客id 更新顾客送货地址
+	 * 
+	 * @param id
+	 * @param newDeliverAddress
+	 */
+	void updateClientAddressById(String id, String newDeliverAddress);
 }

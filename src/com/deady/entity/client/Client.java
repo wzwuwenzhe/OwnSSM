@@ -21,6 +21,7 @@ public class Client implements Serializable {
 	@BasicEntityField(length = 32, testValue = "")
 	private String id;// 客户id
 	private String storeId;// 店铺Id
+	private String deliverAddress;// 送货地址
 
 	public String getStoreId() {
 		return storeId;
@@ -52,6 +53,14 @@ public class Client implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getDeliverAddress() {
+		return deliverAddress;
+	}
+
+	public void setDeliverAddress(String deliverAddress) {
+		this.deliverAddress = deliverAddress;
 	}
 
 }

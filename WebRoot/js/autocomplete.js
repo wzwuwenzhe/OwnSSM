@@ -31,7 +31,7 @@ Author: Lorenzo Cioni - https://github.com/lorecioni
 				.css('height', params.height * 2);	
 				
 			//Text input		
-			var input = $('<input id="cusName" type="text" autocomplete="off" name="cusName" onkeyup="cleanIdValue()" onfocus="cleanValue()" >')
+			var input = $('<input id="cusName" type="text" autocomplete="off" name="cusName" onkeyup="cleanIdValue()" onfocus="cleanValue()" onblur="findClientAddress()" >')
 				.attr('placeholder', params.placeholder)
 				.addClass('autocomplete-input')
 				.css({

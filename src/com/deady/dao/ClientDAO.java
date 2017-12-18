@@ -30,4 +30,7 @@ public interface ClientDAO {
 	List<Client> findClientListByStoreId4Page(@Param("storeId") String storeId,
 			@Param("start") int start, @Param("pagesize") int pagesize);
 
+	void modifyClientAddressById(@Param("id") String id,
+			@Param("newDeliverAddress") String newDeliverAddress);
+
 }

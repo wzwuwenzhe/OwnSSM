@@ -73,6 +73,24 @@
 		map.put('${client.name}',Custom);
 	</#list>
 	
+	//根据客户名称查找客户送货地址
+	function findClientAddress(){
+		var clientName = $("#cusName").val();
+		$.ajax({
+				url:"./getClientAddressByName.htm",
+				type:"POST",
+				dataType:"json",
+				data:{clientName:clientName},
+				success:function(response){
+					if(response.success==true){
+						$("#address").val(response.data);
+					}
+		        },
+		        error:function(){
+		            alert("系统错误,请联系管理员");
+		        }
+			});
+	}
 	function cleanIdValue(){
 		$("#cusId").val('');
 	}

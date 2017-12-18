@@ -64,4 +64,9 @@ public class ClientServiceImpl implements ClientService {
 				(page.getStart() - 1) * page.getPagesize(), page.getPagesize());
 	}
 
+	@Override
+	public void updateClientAddressById(String id, String newDeliverAddress) {
+		clientDAO.modifyClientAddressById(id, newDeliverAddress);
+	}
+
 }

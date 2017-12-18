@@ -105,6 +105,13 @@ public class BillingAction {
 			if (null != existsClients && existsClients.size() > 0) {
 				c = existsClients.get(0);
 				cusId = c.getId();
+				// 如果送货地址有变动 则更新送货地址
+				String oldDeliverAddress = c.getDeliverAddress();
+				String newDeliverAddress = req.getParameter("address");
+				if (!oldDeliverAddress.equals(newDeliverAddress)) {
+					clientService.updateClientAddressById(c.getId(),
+							newDeliverAddress);
+				}
 			} else {
 				c = new Client();
 				cusId = UUID.randomUUID().toString().replaceAll("-", "");
@@ -194,10 +201,6 @@ public class BillingAction {
 		response.setMessage("订单正在打印!");
 		response.setData("/index");
 		return response;
-	}
-
-	public static void main(String[] args) {
-
 	}
 
 	@RequestMapping(value = "/getClientNameList", method = RequestMethod.POST)

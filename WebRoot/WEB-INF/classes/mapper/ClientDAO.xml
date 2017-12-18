@@ -58,4 +58,7 @@
         order by modify_time desc 
         limit #{start}, #{pagesize}
 	</select>
+	<update id="modifyClientAddressById">
+		update client set deliver_address = #{newDeliverAddress} where id=#{id}
+	</update>
 </mapper>

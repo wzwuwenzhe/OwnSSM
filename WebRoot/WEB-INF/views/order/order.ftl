@@ -68,6 +68,7 @@
 					<th>单价</th>
 					<th>数量</th>
 					<th>尺码</th>
+					<th>颜色</th>
 					<th>金额(元)</th>
 					<th>总计(元)</th>
 					<th>付款方式</th>
@@ -91,6 +92,7 @@
 								<td>${item.unitPrice}</td>
 								<td>${item.amount}</td>
 								<td>${item.size}</td>
+								<td>${item.color}</td>
 								<td>${item.price}</td>
 							</#if>
 						</#list>
@@ -130,6 +132,7 @@
 								<td>${item.unitPrice}</td>
 								<td>${item.amount}</td>
 								<td>${item.size}</td>
+								<td>${item.color}</td>
 								<td>${item.price}</td>
 							</tr>
 						</#if>

@@ -1,6 +1,8 @@
 package com.deady.action.register;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -90,6 +92,41 @@ public class ClientRegisterAction {
 		response.setSuccess(true);
 		response.setMessage("删除成功!");
 		return response;
+	}
+
+	/**
+	 * 根据用户名称找到用户的地址
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getClientAddressByName", method = RequestMethod.POST)
+	@DeadyAction(createToken = true)
+	@ResponseBody
+	public Object getClientAddressByName(HttpServletRequest req,
+			HttpServletResponse res) throws Exception {
+		FormResponse response = new FormResponse(req);
+		String cusName = req.getParameter("clientName");
+		if (StringUtils.isEmpty(cusName)) {
+			response.setSuccess(false);
+			response.setMessage("请先填写客户姓名");
+			return response;
+		}
+		Operator op = OperatorSessionInfo.getOperator(req);
+		List<Client> clientList = clientService.getClientsByNameAndStoreId(
+				cusName, op.getStoreId());
+		if (null == clientList || clientList.size() == 0) {
+			response.setSuccess(false);
+			response.setMessage("找不到该客户");
+			return response;
+		} else {
+			Client c = clientList.get(0);
+			response.setSuccess(true);
+			response.setMessage("找到了!");
+			response.setData(StringUtils.isEmpty(c.getDeliverAddress()) ? ""
+					: c.getDeliverAddress());
+			return response;
+		}
 	}
 
 	@RequestMapping(value = "/clientModify", method = RequestMethod.POST)
