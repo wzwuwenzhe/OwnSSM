@@ -209,8 +209,8 @@ public class OrderServiceImpl implements OrderService {
 		String title = paddingWithSuffix(10, "款号", SUFFIX)
 				+ paddingWithSuffix(8, "颜色", SUFFIX)
 				+ paddingWithSuffix(8, "尺码", SUFFIX)
-				+ paddingWithSuffix(8, "单价", SUFFIX)
 				+ paddingWithSuffix(6, "数量", SUFFIX)
+				+ paddingWithSuffix(8, "单价", SUFFIX)
 				+ paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = dto.getItemList();
@@ -489,8 +489,8 @@ public class OrderServiceImpl implements OrderService {
 		String title = paddingWithSuffix(10, "款号", SUFFIX)
 				+ paddingWithSuffix(8, "颜色", SUFFIX)
 				+ paddingWithSuffix(8, "尺码", SUFFIX)
-				+ paddingWithSuffix(8, "单价", SUFFIX)
 				+ paddingWithSuffix(6, "数量", SUFFIX)
+				+ paddingWithSuffix(8, "单价", SUFFIX)
 				+ paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = record.getItemList();
