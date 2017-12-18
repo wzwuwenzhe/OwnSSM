@@ -189,6 +189,7 @@ public class ActionUtil {
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(BasicEntityField.class)) {
 				String fieldName = field.getName();
+				request.setCharacterEncoding("UTF-8");
 				String encode = request.getCharacterEncoding();
 				String value = request.getParameter(fieldName);
 				if (!encode.toUpperCase().equals("UTF-8")) {

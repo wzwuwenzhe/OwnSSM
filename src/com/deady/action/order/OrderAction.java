@@ -28,8 +28,10 @@ import com.deady.service.OrderService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.DateUtils;
 import com.deady.utils.OperatorSessionInfo;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.deady.utils.task.BillTask;
+import com.deady.utils.task.ReportTask;
+import com.deady.utils.task.Task;
+import com.jcraft.jsch.Logger;
 
 @Controller
 public class OrderAction {
@@ -58,6 +60,16 @@ public class OrderAction {
 				|| StringUtils.isEmpty(orderSearch.getEndDate())) {
 			req.setAttribute("success", "0");
 			req.setAttribute("msg", "查询时间都不能为空!");
+			return new ModelAndView("/order/order");
+		}
+		Date startDate = DateUtils.convert2Date(orderSearch.getBeginDate(),
+				"yyyyMMdd");
+		Date endDate = DateUtils
+				.addDays(DateUtils.convert2Date(orderSearch.getEndDate(),
+						"yyyyMMdd"), 1);
+		if (startDate.getTime() >= endDate.getTime()) {
+			req.setAttribute("success", "0");
+			req.setAttribute("msg", "结束时间不能早于开始时间!");
 			return new ModelAndView("/order/order");
 		}
 		String oldEndDateStr = orderSearch.getEndDate();
@@ -188,10 +200,15 @@ public class OrderAction {
 			response.setMessage("订单编号不能为空!");
 			return response;
 		}
-		Operator op = OperatorSessionInfo.getOperator(req);
-		orderService.printOrder(orderId, op, true);
+		try {
+			Task task = new BillTask(orderId, req, true);
+			Thread thread = new Thread(task);
+			thread.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		response.setSuccess(true);
-		response.setMessage("重新打印成功!");
+		response.setMessage("正在重新打印!");
 		return response;
 	}
 
@@ -207,6 +224,7 @@ public class OrderAction {
 			response.setMessage("订单编号不能为空!");
 			return response;
 		}
+
 		orderService.removeOrder(orderId);
 		response.setSuccess(true);
 		response.setMessage("订单删除成功!");
@@ -230,20 +248,24 @@ public class OrderAction {
 		Date startDate = DateUtils.convert2Date(startDateStr, "yyyyMMdd");
 		Date endDate = DateUtils.addDays(
 				DateUtils.convert2Date(endDateStr, "yyyyMMdd"), 1);
-		if (startDate.getTime() > endDate.getTime()) {
+		if (startDate.getTime() >= endDate.getTime()) {
 			response.setSuccess(false);
 			response.setMessage("结束时间不能早于开始时间!");
 			return response;
 		}
-		boolean isEmpty = orderService.printReport(startDateStr, endDateStr,
-				req);
-		if (isEmpty) {
+
+		try {
+			Task task = new ReportTask(startDateStr, endDateStr, req);
+			Thread thread = new Thread(task);
+			thread.start();
+		} catch (Exception e) {
 			response.setSuccess(false);
-			response.setMessage("没有找到可以打印的订单!");
+			response.setMessage(e.getMessage());
 			return response;
 		}
+
 		response.setSuccess(true);
-		response.setMessage("报表打印成功!");
+		response.setMessage("报表正在成功!");
 		return response;
 	}
 }

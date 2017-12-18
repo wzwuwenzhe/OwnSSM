@@ -29,5 +29,5 @@
             <bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
         </property>
     </bean>
-	
+	<bean id="springContextUtil" class="com.deady.utils.SpringContextUtil"/>
 </beans>

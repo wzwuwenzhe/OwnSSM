@@ -1,7 +1,6 @@
 package com.deady.service;
 
 import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,12 +16,14 @@ import org.springframework.stereotype.Service;
 
 import com.deady.dao.ItemDAO;
 import com.deady.dao.OrderDAO;
+import com.deady.dao.StockDAO;
 import com.deady.dto.OrderDto;
 import com.deady.entity.bill.Item;
 import com.deady.entity.bill.Order;
 import com.deady.entity.client.Client;
 import com.deady.entity.operator.Operator;
 import com.deady.entity.order.OrderSearchEntity;
+import com.deady.entity.stock.Storage;
 import com.deady.entity.store.Store;
 import com.deady.enums.OrderStateEnum;
 import com.deady.enums.PayTypeEnum;
@@ -44,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
 	private ClientService clientService;
 	@Autowired
 	private StoreService storeService;
+	@Autowired
+	private StockDAO stockDAO;
 
 	private static final String SUFFIX = " ";
 
@@ -136,8 +139,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	public static void main(String[] args) {
-
-		System.out.println(PayTypeEnum.valueOf("CASH").getPayTypeInfo());
+		Device device = new Device();
+		DeviceParameters params = new DeviceParameters();
+		device.setDeviceParameters(params);
+		device.openDevice();
+		device.selectFontBoldAndFontSize(0, false, 0, 5);
+		device.printString("你好");
+		device.closeDevice();
 	}
 
 	private void printOrder(Device device, Store store, Operator op,
@@ -175,7 +183,9 @@ public class OrderServiceImpl implements OrderService {
 		}
 		device.selectAlignType(0);// 左对齐
 		if (storeSide.getSide() == 2) {
+			device.selectFontBoldAndFontSize(0, true, 0, 4);
 			device.printString("店名:" + store.getName());
+			device.selectFontBoldAndFontSize(0, false, 0, 1);
 			device.printString("");
 			device.printString("");
 			device.printString("地址:" + store.getAddress());
@@ -217,7 +227,7 @@ public class OrderServiceImpl implements OrderService {
 		device.printString("------------------------------------------------");
 		device.selectAlignType(2);// 右对齐
 		device.printString("小计:" + dto.getSmallCount() + "元");
-		device.printString("折扣金额:" + dto.getDiscount() + "元");
+		// device.printString("折扣金额:" + dto.getDiscount() + "元");
 		device.printString("应付金额:" + dto.getTotalAmount() + "元");
 		device.printString("付款方式:  "
 				+ PayTypeEnum.typeOf(Integer.parseInt(dto.getPayType()))
@@ -320,6 +330,34 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public void removeOrder(String orderId) {
+		Order order = orderDAO.findOrderById(orderId);
+		List<Item> items = itemDAO.findItemsByOrderId(orderId);
+		Map<String, Integer> name2AmountMap = new HashMap<String, Integer>();
+		if (null != items && items.size() > 0) {
+			for (Item item : items) {
+				String name = item.getName();// 款号
+				int amount = Integer.parseInt(item.getAmount());
+				Integer lastAmount = name2AmountMap.get(name);
+				if (null == lastAmount) {
+					name2AmountMap.put(name, amount);
+				} else {
+					name2AmountMap.put(name, lastAmount + amount);
+				}
+			}
+		}
+		for (Map.Entry<String, Integer> entry : name2AmountMap.entrySet()) {
+			String name = entry.getKey();
+			int amount = entry.getValue();
+			String year = ActionUtil.getLunarCalendarYear();
+			Storage storage = stockDAO.findStorageByNameAndStoreId(year, name,
+					order.getStoreId());
+			if (null == storage) {// 找不到这个款式
+				continue;
+			}
+			storage.setStockLeft(Integer.parseInt(storage.getStockLeft())
+					+ amount + "");
+			stockDAO.updateStorage(storage);
+		}
 		orderDAO.deleteOrderById(orderId);
 		itemDAO.deleItemsByOrderId(orderId);
 	}
@@ -478,7 +516,12 @@ public class OrderServiceImpl implements OrderService {
 		}
 		device.printString("------------------------------------------------");
 		device.selectAlignType(2);// 右对齐
-		device.printString("付款方式:"
+		device.printString(StringUtils.isEmpty(record.getRemark()) ? ""
+				: record.getRemark());
+		device.printString("发货状态:"
+				+ OrderStateEnum.typeOf(Integer.parseInt(record.getState()))
+						.getOrderStateInfo()
+				+ "  付款方式:"
 				+ PayTypeEnum.typeOf(Integer.parseInt(record.getPayType()))
 						.getPayTypeInfo() + "  金额:" + record.getTotalAmount()
 				+ "元");

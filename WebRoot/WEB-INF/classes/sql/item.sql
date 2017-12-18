@@ -12,5 +12,3 @@ CREATE TABLE `item` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='订单项目表'
 
-ALTER TABLE
-    deady.item ADD (color VARCHAR(50) DEFAULT '黑色' NOT NULL)

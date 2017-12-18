@@ -9,5 +9,3 @@ CREATE TABLE `client` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='客户信息表'
 
-ALTER TABLE
-    deady.client MODIFY COLUMN phone VARCHAR(13) COMMENT '手机号码'

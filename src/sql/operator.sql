@@ -12,5 +12,3 @@ CREATE TABLE `operator` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='操作员表'
 
-ALTER TABLE
-    operator ADD CONSTRAINT operator_loginName UNIQUE (login_name);

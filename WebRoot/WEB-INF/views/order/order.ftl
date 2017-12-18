@@ -9,11 +9,13 @@
 			</#if>
 			<div class="layui-fluid">
 			  <div class="layui-row">
+			    <!--
 			    <div class="layui-col-sm3">
 			      <div class="grid-demo grid-demo-bg1">
 					<@form_input value="${(entity.orderId)!''}" id="orderId" desc="交易号" name="orderId" dataType="Chinese" msg="" type="text" style="width:100px;"/>
 			      </div>
 			    </div>
+			    -->
 			    <div class="layui-col-sm3">
 			      <div class="grid-demo">
 					<@form_input value="${(entity.orderName)!''}" id="orderName" desc="商品名称" name="orderName" dataType="Chinese" msg="" type="text" style="width:100px;"/>
@@ -65,6 +67,7 @@
 					<th>商品名称</th>
 					<th>单价</th>
 					<th>数量</th>
+					<th>尺码</th>
 					<th>金额(元)</th>
 					<th>总计(元)</th>
 					<th>付款方式</th>
@@ -87,6 +90,7 @@
 								<td>${item.name}</td>
 								<td>${item.unitPrice}</td>
 								<td>${item.amount}</td>
+								<td>${item.size}</td>
 								<td>${item.price}</td>
 							</#if>
 						</#list>
@@ -102,17 +106,17 @@
 						<#if orderState=="3">style="color:blue;font-weight:bold"</#if>>${order.orderStateDesc}</td> 
 					<td rowspan="${itemSize}">
 						<#if orderState=="1">
-							<a href="javascript:void(0)" onclick="showPayMoneyDiv(this,'${order.id}')" >付款</a>
+							<input type="button" value="付款" onclick="showPayMoneyDiv(this,'${order.id}')"/>
 						<#elseif orderState=="2">
-							<a href="javascript:void(0)"  onclick="showDeliverDiv(this,'${order.id}')" >发货</a>
+							<input type="button" value="发货" onclick="showDeliverDiv(this,'${order.id}')"/>
 						<#elseif orderState=="3">
-							<a href="javascript:void(0)"  onclick="showDeliverDiv(this,'${order.id}')" >欠货发货</a>
+							<input type="button" value="欠货发货" onclick="showDeliverDiv(this,'${order.id}')"/>
 						</#if>
 						</br>
-						<a href="javascript:void(0)" onclick="rePrint('${order.id}');">重新打印</a> 
+							<input type="button" value="重新打印" onclick="rePrint('${order.id}');"/>
 						</br> 
 						<#if userType=="1" || userType=="3">
-							<a href="javascript:void(0)" onclick="deleteOrder('${order.id}');" >删除订单</a>
+							<input type="button" value="删除订单" onclick="deleteOrder('${order.id}');"/>
 						</#if>
 						
 					</td>
@@ -125,6 +129,7 @@
 								<td>${item.name}</td>
 								<td>${item.unitPrice}</td>
 								<td>${item.amount}</td>
+								<td>${item.size}</td>
 								<td>${item.price}</td>
 							</tr>
 						</#if>
@@ -297,8 +302,8 @@
 						"<tr><td>"+item.name+"</td>"+
 						"<td>"+item.color+"</td>"+
 						"<td>"+item.size+"</td>"+
-						"<td>"+item.amount+"</td>"+
 						"<td>"+item.unitPrice+"</td>"+
+						"<td>"+item.amount+"</td>"+
 						"<td>"+item.price+"</td>");
 					});
 					$("#addressAndRemark").empty();

@@ -39,6 +39,7 @@
 		<input type="hidden" name="smallCount"/>
 		<br/>
 		折扣金额:<input id='discount' name="discount" onkeyup="calculateTotal()" onfocus="$('#discount').val('')" style="width:50px;" type="text" value="0" />元 <br/>
+		<!--<input name="discount" id="discount" type="hidden" onkeyup="calculateTotal()" value="0" />-->
 		应付金额:<label id='totalAmount'></label>元 
 		<input type="hidden" name="totalAmount"/><br/>
 		付款方式:</br>

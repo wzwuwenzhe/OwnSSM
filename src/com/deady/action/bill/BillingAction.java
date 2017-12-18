@@ -35,6 +35,8 @@ import com.deady.service.StockService;
 import com.deady.service.StoreService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
+import com.deady.utils.task.BillTask;
+import com.deady.utils.task.Task;
 
 @Controller
 public class BillingAction {
@@ -118,7 +120,7 @@ public class BillingAction {
 		if (order.getPayType().equals(PayTypeEnum.NOTPAY.getType() + "")) {// 未付款
 			order.setState(OrderStateEnum.NOTPAY.getState() + "");// 未付款
 		} else {
-			order.setState(order.getPayType());// 待发货
+			order.setState(OrderStateEnum.WAITDELIVER.getState() + "");// 待发货
 		}
 		if (null == order.getCusId() && null != cusId) {
 			order.setCusId(cusId);
@@ -151,8 +153,11 @@ public class BillingAction {
 		orderService.addOrder(order);
 		// 发送打印订单请求
 		try {
-			// TODO 修改打印信息
-			orderService.printOrder(orderId, op, false);
+			// 将打印的操作放到线程中执行 TODO
+			// orderService.printOrder(orderId, op, false);
+			Task task = new BillTask(orderId, req, false);
+			Thread thread = new Thread(task);
+			thread.start();
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMessage(e.getMessage());
@@ -186,13 +191,13 @@ public class BillingAction {
 		}
 
 		response.setSuccess(true);
-		response.setMessage("订单添加成功!");
+		response.setMessage("订单正在打印!");
 		response.setData("/index");
 		return response;
 	}
 
 	public static void main(String[] args) {
-		System.out.println(PayTypeEnum.NOTPAY.getType());
+
 	}
 
 	@RequestMapping(value = "/getClientNameList", method = RequestMethod.POST)

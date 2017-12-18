@@ -13,6 +13,6 @@ CREATE TABLE `stock` (
 
 
 ALTER TABLE
-    deady.stock ADD (colors VARCHAR(100) DEFAULT '黑色,白色' NOT NULL);
+    deady.stock ADD (color VARCHAR(100) DEFAULT '黑色' NOT NULL);
 ALTER TABLE
-    deady.stock ADD (sizes VARCHAR(100) DEFAULT 'M,L,XL' NOT NULL)
+    deady.stock ADD (size VARCHAR(100) DEFAULT 'M' NOT NULL);

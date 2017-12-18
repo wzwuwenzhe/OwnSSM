@@ -14,10 +14,10 @@ CREATE TABLE `store_order` (
 
 ALTER TABLE
     deady.store_order ADD (pay_type CHAR(1) DEFAULT '1' NOT NULL)
+ALTER TABLE
+	deady.store_order MODIFY COLUMN discount VARCHAR(20) DEFAULT '0' COMMENT '折扣'
     /*2017-12-13  添加送货地址 、订单状态 */
 ALTER TABLE
 	deady.store_order ADD (address VARCHAR(100))
 ALTER TABLE
 	deady.store_order ADD (state CHAR(1) DEFAULT '2' NOT NULL)
-ALTER TABLE
-	deady.store_order MODIFY COLUMN discount VARCHAR(20) DEFAULT '0' COMMENT '折扣'

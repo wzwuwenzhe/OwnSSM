@@ -16,4 +16,4 @@ CREATE TABLE `storage` (
 ALTER TABLE
     deady.storage ADD (colors VARCHAR(100) DEFAULT '黑色,白色' NOT NULL);
 ALTER TABLE
-    deady.storage ADD (sizes VARCHAR(100) DEFAULT 'M,L,XL' NOT NULL)
+    deady.storage ADD (sizes VARCHAR(100) DEFAULT 'M,L,XL' NOT NULL);

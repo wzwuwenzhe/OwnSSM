@@ -21,6 +21,11 @@ public interface OrderService {
 	void printOrder(String orderId, Operator op, boolean isRePrint)
 			throws Exception;
 
+	/**
+	 * 删除订单的同时 需要把库存加回来
+	 * 
+	 * @param orderId
+	 */
 	void removeOrder(String orderId);
 
 	/**
