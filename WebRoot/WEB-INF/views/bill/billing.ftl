@@ -29,7 +29,7 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td colspan="7"><input class="form-control" type="button" value="新增" onclick="addRecord(this)"/></td>
+					<td colspan="7"><input class="form-control" type="button" value="新增新款" onclick="addRecord(this)"/></td>
 				</tr>
 			</tbody>
 		</table>
@@ -95,20 +95,89 @@
 
 
 	function removeRecord(btn){
+		//先找到第一个td的rowspan的值
+		var firstRowspan = $(btn).parent().parent().find("td").eq(0).attr("rowspan");
+		
+		if(parseInt(firstRowspan)>1){
+			for(var n = 0 ;n < (firstRowspan-1) ; n++){
+				$(btn).parent().parent().next().remove();
+			}
+		}
 		$(btn).parent().parent().remove();
 		calculateTotal();
 	}
+	//新增新款
 	function addRecord(btn){
-		$(btn).parent().parent().before("<tr>"+
-		"<td><input name='name' dataType='Require' msg='商品名称不能为空' class='form-control' type='text' onblur='findColorsAndSizes(this)'/></td>"+
+		$(btn).parent().parent().before("<tr class='first'>"+
+		"<td rowspan='2'><input  dataType='Require' msg='商品名称不能为空' class='form-control' style='border-bottom:0px;' type='text' onblur='findColorsAndSizes(this)'/></td>"+
 		"<td><select name='color'></select></td>"+
 		"<td><select name='size'></select></td>"+
 		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' /></td>"+
 		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
 		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
 		"<td><a href='javascript:void(0)' onclick='removeRecord(this)'>删</a></td>"+
+		"</tr><tr>"+
+		"<td colspan='6'><input class='form-control' type='button' value='新增同款' onclick='addSameRecord(this)'/></td>"+
 		"</tr>");
 	}
+	//新增同款
+	function addSameRecord(btn){
+		//修改第一列的rowspan
+		//是否同一个款式只有一行记录
+		var hasMoreThanOneLine = false ;
+		var prev = $(btn).parent().parent().prev();
+		do {
+		    var flag = $(prev).is('.first');
+		    if(flag){
+		    	//如果款号没有输入  就不能新增
+		    	var _name = $(prev).find("td").eq(0).find("input").eq(0).val();
+		    	if(!_name || _name==""){
+		    		alert("请先填写款号!");
+		    		return;
+		    	}
+		    	var lastrowspan = $(prev).find("td").eq(0).attr("rowspan");
+		    	$(prev).find("td").eq(0).attr("rowspan",(parseInt(lastrowspan)+1));
+		    }else{
+			    prev = $(prev).prev();
+			    hasMoreThanOneLine = true;
+		    }
+		}
+		while (flag==false);
+		
+		var prevTd2 =  $(btn).parent().parent().prev().find("td").eq(1).html();
+		var prevTd3 =  $(btn).parent().parent().prev().find("td").eq(2).html();
+		if(hasMoreThanOneLine){
+			prevTd2 =  $(btn).parent().parent().prev().find("td").eq(0).html();
+			prevTd3 =  $(btn).parent().parent().prev().find("td").eq(1).html();
+		}
+		$(btn).parent().parent().before("<tr>"+
+		"<td>"+prevTd2+"</td>"+
+		"<td>"+prevTd3+"</td>"+
+		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' /></td>"+
+		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
+		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
+		"<td><a href='javascript:void(0)' onclick='removeRecordForOne(this)'>删</a></td>"+
+		"</tr>");
+	}
+	
+	function removeRecordForOne(btn){
+		//修改第一列的rowspan
+		var hasMoreThanOneLine = false ;
+		var prev = $(btn).parent().parent().prev();
+		do {
+		    var flag = $(prev).is('.first');
+		    if(flag){
+		    	var lastrowspan = $(prev).find("td").eq(0).attr("rowspan");
+		    	$(prev).find("td").eq(0).attr("rowspan",(parseInt(lastrowspan)-1));
+		    }else{
+			    prev = $(prev).prev();
+			    hasMoreThanOneLine = true;
+		    }
+		}
+		while (flag==false);
+		$(btn).parent().parent().remove();
+	}
+	
 	function calculate(number){
 		var tr = $(number).parent().parent();
 		$("#smallCount").html('');
@@ -169,6 +238,11 @@
 			alert("款号不能为空");
 			return;
 		}
+		//添加隐藏的name选项  以便数据添加
+		if($(item).parent().next().find('input').eq(0)){
+			$(item).parent().next().find('input').eq(0).remove();
+		}
+		$(item).parent().next().append("<input type='hidden' value='"+$(item).val()+"' name='name'/>");
 		$.ajax({
 				url:"./getCorlorAndSizeByName.htm",
 				type:"POST",
@@ -198,6 +272,7 @@
 	}
 	
 	function appendSelector(sizeArr,colorArr,item){
+		//添加多选框
 		var colorSelector = $(item).parent().next().find("select").eq(0);
 		colorSelector.empty();
 		for(var i =0;i<colorArr.length;i++){
