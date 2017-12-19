@@ -143,8 +143,14 @@ public class OrderServiceImpl implements OrderService {
 		DeviceParameters params = new DeviceParameters();
 		device.setDeviceParameters(params);
 		device.openDevice();
-		device.selectFontBoldAndFontSize(0, false, 0, 5);
-		device.printString("你好");
+		device.selectFontSize(17);
+		String title = paddingWithSuffix(6, "款号", SUFFIX)
+				+ paddingWithSuffix(4, "颜色", SUFFIX)
+				+ paddingWithSuffix(4, "尺码", SUFFIX)
+				+ paddingWithSuffix(5, "数量", SUFFIX)
+				+ paddingWithSuffix(4, "单价", SUFFIX)
+				+ paddingWithSuffix(4, "金额", SUFFIX);
+		device.printString(title);
 		device.closeDevice();
 	}
 
@@ -184,7 +190,9 @@ public class OrderServiceImpl implements OrderService {
 		device.selectAlignType(0);// 左对齐
 		if (storeSide.getSide() == 2) {
 			device.selectFontBoldAndFontSize(0, true, 0, 4);
-			device.printString("店名:" + store.getName());
+			device.selectFontSize(68);
+			device.printString(store.getName());
+			device.selectFontSize(0);
 			device.selectFontBoldAndFontSize(0, false, 0, 1);
 			device.printString("");
 			device.printString("");
@@ -200,11 +208,16 @@ public class OrderServiceImpl implements OrderService {
 		String dateString = DateUtils.convert2String(creatTime,
 				"yyyy-MM-dd HH:mm:ss");
 		device.printString("日期:" + dateString);
-		device.printString("客户名称:"
-				+ client.getName()
-				+ "    客户电话:"
-				+ (StringUtils.isEmpty(client.getPhone()) ? "" : client
-						.getPhone()));
+		// device.printString("客户名称:"
+		// + client.getName()
+		// + "    客户电话:"
+		// + (StringUtils.isEmpty(client.getPhone()) ? "" : client
+		// .getPhone()));
+		if (storeSide.getSide() == 1) {
+			device.selectFontSize(17);
+		}
+		device.printString("客户名称:" + client.getName());
+		device.selectFontSize(0);
 		device.printString("================================================");
 		String title = paddingWithSuffix(10, "款号", SUFFIX)
 				+ paddingWithSuffix(8, "颜色", SUFFIX)
@@ -214,17 +227,33 @@ public class OrderServiceImpl implements OrderService {
 				+ paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = dto.getItemList();
-		for (Item item : itemList) {
-			device.printString(paddingWithSuffix(10, item.getName(), SUFFIX)
-					+ paddingWithSuffix(8, item.getColor(), SUFFIX)
-					+ paddingWithSuffix(8, item.getSize(), SUFFIX)
-					+ paddingWithSuffix(8, item.getAmount(), SUFFIX)
-					+ paddingWithSuffix(6, item.getUnitPrice(), SUFFIX)
-					+ paddingWithSuffix(8, item.getPrice(), SUFFIX));
+		if (storeSide.getSide() == 1) {
+			device.selectFontSize(17);
+			for (Item item : itemList) {
+				device.printString(paddingWithSuffix(10, item.getName(), SUFFIX)
+						+ paddingWithSuffix(8, item.getColor(), SUFFIX)
+						+ paddingWithSuffix(8, item.getSize(), SUFFIX)
+						+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
+						+ paddingWithSuffix(8, item.getUnitPrice(), SUFFIX)
+						+ paddingWithSuffix(8, item.getPrice(), SUFFIX));
+				device.selectFontSize(0);
+				device.printString("------------------------------------------------");
+				device.selectFontSize(17);
+			}
+		} else {
+			for (Item item : itemList) {
+				device.printString(paddingWithSuffix(10, item.getName(), SUFFIX)
+						+ paddingWithSuffix(8, item.getColor(), SUFFIX)
+						+ paddingWithSuffix(8, item.getSize(), SUFFIX)
+						+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
+						+ paddingWithSuffix(8, item.getUnitPrice(), SUFFIX)
+						+ paddingWithSuffix(8, item.getPrice(), SUFFIX));
+			}
 		}
+		device.selectFontSize(0);
 		device.printString("");
 		device.printString("");
-		device.printString("------------------------------------------------");
+		device.printString("================================================");
 		device.selectAlignType(2);// 右对齐
 		device.printString("小计:" + dto.getSmallCount() + "元");
 		// device.printString("折扣金额:" + dto.getDiscount() + "元");
@@ -232,11 +261,15 @@ public class OrderServiceImpl implements OrderService {
 		device.printString("付款方式:  "
 				+ PayTypeEnum.typeOf(Integer.parseInt(dto.getPayType()))
 						.getPayTypeInfo());
+		if (storeSide.getSide() == 1) {
+			device.selectFontSize(17);
+		}
 		device.printString("送货地址:"
 				+ (StringUtils.isEmpty(dto.getAddress()) ? "" : dto
 						.getAddress()));
 		device.printString("备注:"
 				+ (StringUtils.isEmpty(dto.getRemark()) ? "" : dto.getRemark()));
+		device.selectFontSize(0);
 		switch (storeSide.getSide()) {
 		case 1:
 
@@ -272,7 +305,8 @@ public class OrderServiceImpl implements OrderService {
 	 *            如果长度不足,用suffix来补足,如果超了就截取指定长度
 	 * @return
 	 */
-	private String paddingWithSuffix(int length, String text, String suffix) {
+	private static String paddingWithSuffix(int length, String text,
+			String suffix) {
 		// 获取text的按照Byte计算的实际长度 一个中文两个字符 英文数字一个字符
 		int realLength = getChineseLength(text);
 		StringBuffer sb = new StringBuffer(text);

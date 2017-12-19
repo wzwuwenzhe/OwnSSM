@@ -222,12 +222,13 @@ public class Device {
 		return retval;
 	}
 
-	private Deady.ERROR_CODE selectFontSize(int i) {
-		int options = 0;
-		options |= (1 * i);
-		options |= (16 * i);
+	public Deady.ERROR_CODE selectFontSize(int i) {
+		// int options = 0;
+		// |= 是按位或操作
+		// options |= (1 * i);
+		// options |= (16 * i);
 		String command = String.format("GS ! %d",
-				new Object[] { Integer.valueOf(options) });
+				new Object[] { Integer.valueOf(i) });
 		return excuseCommand(command);
 	}
 
@@ -270,7 +271,7 @@ public class Device {
 					.convertStringToBinary(command);
 			retval = this.m_Port.writeData(binaryData);
 		}
-		logger.info("command:" + command);
+
 		return retval;
 	}
 

@@ -11,7 +11,7 @@ public class DeviceParameters {
 	public DeviceParameters() {
 		this.PortName = "";
 		this.PortNumber = 9100;
-		this.IPAddress = "192.168.31.101";
+		this.IPAddress = "192.168.31.201";
 		this.DeviceID = '\000';
 		this.DeviceName = "";
 	}

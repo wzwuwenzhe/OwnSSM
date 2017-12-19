@@ -217,8 +217,30 @@ public class PrinterTools {
 			v.add(new Byte((byte) 112));
 			v.add(new Byte((byte) 1));
 			v.add(new Byte((byte) 0));
+		} else if (command.indexOf("GS !") != -1) {
+			v.add(new Byte((byte) Deady.ASCII_CONTROL_CODE.GS.getASCIIValue()));
+			v.add(new Byte((byte) 33));
+			command = command.substring(5, command.length());
+			v.add(new Byte((byte) Integer.parseInt(command)));
 		}
+		logger.info("command:" + command);
 		return v;
+	}
+
+	public static byte[] charToByte(char c) {
+		byte[] b = new byte[2];
+		b[0] = (byte) ((c & 0xFF00) >> 8);
+		b[1] = (byte) (c & 0xFF);
+		return b;
+	}
+
+	public static void main(String[] args) {
+		String command = "GS ! 85";
+		if (command.indexOf("GS !") != -1) {
+			System.out.println(1);
+		} else {
+			System.out.println(0);
+		}
 	}
 
 	// TODO 存储flash位图的方法
