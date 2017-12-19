@@ -19,7 +19,7 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public int addClient(Client c) {
 		return clientDAO.insertClient(c.getId(), c.getStoreId(), c.getName(),
-				c.getPhone());
+				c.getPhone(), c.getDeliverAddress());
 	}
 
 	@Override

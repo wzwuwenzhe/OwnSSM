@@ -4,8 +4,8 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.deady.dao.ClientDAO">
     <insert id="insertClient">
-        INSERT  INTO client (id,store_id, name,phone)
-        VALUES (#{id},#{storeId}, #{name},#{phone})
+        INSERT  INTO client (id,store_id, name,phone,deliver_address)
+        VALUES (#{id},#{storeId}, #{name},#{phone},#{deliverAddress})
     </insert>
     
     <select id="findClientListByStoreId" resultType="Client">

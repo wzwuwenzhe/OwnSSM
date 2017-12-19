@@ -102,12 +102,12 @@ public class BillingAction {
 			List<Client> existsClients = clientService
 					.getClientsByNameAndStoreId(req.getParameter("cusName"),
 							op.getStoreId());
+			String newDeliverAddress = req.getParameter("address");
 			if (null != existsClients && existsClients.size() > 0) {
 				c = existsClients.get(0);
 				cusId = c.getId();
 				// 如果送货地址有变动 则更新送货地址
 				String oldDeliverAddress = c.getDeliverAddress();
-				String newDeliverAddress = req.getParameter("address");
 				if (!oldDeliverAddress.equals(newDeliverAddress)) {
 					clientService.updateClientAddressById(c.getId(),
 							newDeliverAddress);
@@ -118,6 +118,7 @@ public class BillingAction {
 				c.setId(cusId);
 				c.setName(req.getParameter("cusName"));
 				c.setStoreId(op.getStoreId());
+				c.setDeliverAddress(newDeliverAddress);
 				clientService.addClient(c);
 			}
 		}

@@ -10,7 +10,8 @@ import com.deady.entity.client.Client;
 public interface ClientDAO {
 
 	int insertClient(@Param("id") String id, @Param("storeId") String storeId,
-			@Param("name") String name, @Param("phone") String phone);
+			@Param("name") String name, @Param("phone") String phone,
+			@Param("deliverAddress") String deliverAddress);
 
 	List<Client> findClientListByStoreId(String storeId);
 
