@@ -1,18 +1,16 @@
 <@htmlHeader>
 	<@css path="/css/loginAndRegister/bill.css"/>
-	<@css path="/css/billing/autocomplete.css" />
-	<@js path="/js/autocomplete.js" />
+	<@css path="/css/billing/awesomplete.css" />
+	<@css path="/css/billing/default.css" />
+	<@css path="/css/billing/normalize.css" />
+	<@js path="/js/awesomplete.js" />
 	<@js path="/js/map.js" />
 </@htmlHeader>
 <@htmlBody>
 	<@form action="/billing" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="开单">
-	<div class="form-group">
+	<div class="form-group" style="text-align:center">
 		<input type="hidden" id="cusId" name="cusId" />
-		<div id="demo">
-			<div class="wrapper">
-				<div id="search-form"></div>
-			</div>
-		</div>
+		<input name="cusName" class="awesomplete" data-list="" type="text" placeholder="客户名称" onblur="selectDeliverAddress(this)"/>
 	</div>
 	<div class="form-group">
 		<table class="billtable">
@@ -70,9 +68,29 @@
 		Custom.id = '${client.id}';
 		Custom.name = '${client.name}';
 		Custom.phone = '${client.phone}';
+		Custom.address = '${client.deliverAddress}';
 		map.put('${client.name}',Custom);
 	</#list>
-	
+	//页面加载完成时 写入map中的自动完成数据
+	$(document).ready(function(){ 
+		var dataList ="";
+		var keyArr = map.keys();
+		for(var i = 0;i<keyArr.length;i++){
+			dataList += ","+keyArr[i]
+		}
+		$(".awesomplete").attr("data-list",dataList.substring(1,dataList.length));
+	}); 
+	function selectDeliverAddress(item){
+		var _cusName =$(item).val();
+		var _client = map.get(_cusName);
+		if(null != _client){
+			$("#address").val(_client.address);
+			$("#cusId").val(_client.id);
+		}else{
+			$("#address").val('');
+			$("#cusId").val('');
+		}
+	}
 	//根据客户名称查找客户送货地址
 	function findClientAddress(){
 		var clientName = $("#cusName").val();
@@ -91,24 +109,7 @@
 		        }
 			});
 	}
-	function cleanIdValue(){
-		$("#cusId").val('');
-	}
-	function cleanValue(){
-		$("#cusId").val('');
-		$("#cusName").val('');
-	}
 	
-	$(document).ready(function(){
-		$('#search-form').autocomplete({
-			hints: proposals,
-			width: 300,
-			height: 30,
-			onSubmit: function(text){
-				$('#message').html('Selected: <b>' + text + '</b>');			
-			}
-		});
-	});
 	
 
 

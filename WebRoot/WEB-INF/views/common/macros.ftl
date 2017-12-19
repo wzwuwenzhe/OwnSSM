@@ -197,7 +197,7 @@ table,table tr th, table tr td { border:1px solid #000000; }
 	</div>
 </#macro>
 
-<#macro form_group id desc type name dataType msg  onkeyup="" value="" style="" action="" readonly="">
+<#macro form_group id desc type name dataType msg  onkeyup="" value="" style="" action="" readonly=""  >
 	<div class="form-group" <#if style!="">style="${style}"</#if> >
 		<label for="${id}" class="sr-only">${desc}</label>
 		<input type="${type}" <#if value!="">value="${value}"</#if> <#if onkeyup!=""> onkeyup="${onkeyup}"</#if> <#if action!="">onblur="${action}"</#if>
