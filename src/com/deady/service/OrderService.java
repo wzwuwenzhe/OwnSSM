@@ -63,4 +63,25 @@ public interface OrderService {
 	 */
 	void modifyOrderRemarkById(String orderId, String string);
 
+	/**
+	 * 远程调用打印订单方法
+	 * 
+	 * @param orderId
+	 * @param operatorId
+	 * @param storeId
+	 * @param isRePrint
+	 */
+	void printOrder(String orderId, String operatorId, String storeId,
+			boolean isRePrint);
+
+	/**
+	 * 远程调用打印报表方法
+	 * 
+	 * @param beginDate
+	 * @param endDate
+	 * @param storeId
+	 */
+
+	void printReport(String beginDate, String endDate, String storeId);
+
 }

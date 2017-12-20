@@ -29,6 +29,8 @@ import com.deady.utils.ActionUtil;
 import com.deady.utils.DateUtils;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.task.BillTask;
+import com.deady.utils.task.RemoteBillTask;
+import com.deady.utils.task.RemoteReportTask;
 import com.deady.utils.task.ReportTask;
 import com.deady.utils.task.Task;
 import com.jcraft.jsch.Logger;
@@ -200,8 +202,10 @@ public class OrderAction {
 			response.setMessage("订单编号不能为空!");
 			return response;
 		}
+		Operator op = OperatorSessionInfo.getOperator(req);
 		try {
-			Task task = new BillTask(orderId, req, true);
+			Task task = new RemoteBillTask(orderId, op.getId(),
+					op.getStoreId(), true);
 			Thread thread = new Thread(task);
 			thread.start();
 		} catch (Exception e) {
@@ -253,9 +257,10 @@ public class OrderAction {
 			response.setMessage("结束时间不能早于开始时间!");
 			return response;
 		}
-
+		Operator op = OperatorSessionInfo.getOperator(req);
 		try {
-			Task task = new ReportTask(startDateStr, endDateStr, req);
+			Task task = new RemoteReportTask(startDateStr, endDateStr,
+					op.getStoreId());
 			Thread thread = new Thread(task);
 			thread.start();
 		} catch (Exception e) {

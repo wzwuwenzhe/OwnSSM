@@ -36,6 +36,7 @@ import com.deady.service.StoreService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.task.BillTask;
+import com.deady.utils.task.RemoteBillTask;
 import com.deady.utils.task.Task;
 
 @Controller
@@ -163,7 +164,8 @@ public class BillingAction {
 		try {
 			// 将打印的操作放到线程中执行 TODO
 			// orderService.printOrder(orderId, op, false);
-			Task task = new BillTask(orderId, req, false);
+			Task task = new RemoteBillTask(orderId, op.getId(),
+					op.getStoreId(), false);
 			Thread thread = new Thread(task);
 			thread.start();
 		} catch (Exception e) {

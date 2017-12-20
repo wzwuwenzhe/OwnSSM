@@ -2,6 +2,7 @@ package com.deady.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,10 +11,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cnblogs.zxub.utils2.configuration.ConfigUtil;
+import com.cnblogs.zxub.utils2.http.config.Configuration;
 import com.deady.dao.ItemDAO;
 import com.deady.dao.OrderDAO;
 import com.deady.dao.StockDAO;
@@ -31,8 +37,13 @@ import com.deady.printer.Device;
 import com.deady.printer.DeviceParameters;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.DateUtils;
+import com.deady.utils.HttpClientUtil;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.printer.ORDERSIDE;
+import com.deady.utils.task.RemoteBillTask;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -48,6 +59,11 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private StockDAO stockDAO;
 
+	private static PropertiesConfiguration config = ConfigUtil
+			.getProperties("deady");
+	private static Logger logger = LoggerFactory
+			.getLogger(OrderServiceImpl.class);
+
 	private static final String SUFFIX = " ";
 
 	@Override
@@ -55,6 +71,7 @@ public class OrderServiceImpl implements OrderService {
 		orderDAO.insertOrder(order);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public OrderDto getOrderDtoById(String orderId) {
 		Order order = orderDAO.findOrderById(orderId);
@@ -64,6 +81,7 @@ public class OrderServiceImpl implements OrderService {
 		return dto;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<OrderDto> getOrderDtoByCondition(OrderSearchEntity orderSearch) {
 		List<OrderDto> orderList = orderDAO.findOrderByCondition(orderSearch);
@@ -97,7 +115,8 @@ public class OrderServiceImpl implements OrderService {
 			if (needCheckCusName && cusName.indexOf(_cusName) == -1) {
 				continue;
 			}
-			dto.setItemList(itemDAO.findItemsByOrderId(order.getId()));
+			List<Item> tempList = itemDAO.findItemsByOrderId(order.getId());
+			dto.setItemList(tempList);
 			dto.setCusName(StringUtils.isEmpty(cusName) ? "" : cusName);
 			resultList.add(dto);
 		}
@@ -136,22 +155,6 @@ public class OrderServiceImpl implements OrderService {
 			device.closeDevice();
 		}
 
-	}
-
-	public static void main(String[] args) {
-		Device device = new Device();
-		DeviceParameters params = new DeviceParameters();
-		device.setDeviceParameters(params);
-		device.openDevice();
-		device.selectFontSize(17);
-		String title = paddingWithSuffix(6, "款号", SUFFIX)
-				+ paddingWithSuffix(4, "颜色", SUFFIX)
-				+ paddingWithSuffix(4, "尺码", SUFFIX)
-				+ paddingWithSuffix(5, "数量", SUFFIX)
-				+ paddingWithSuffix(4, "单价", SUFFIX)
-				+ paddingWithSuffix(4, "金额", SUFFIX);
-		device.printString(title);
-		device.closeDevice();
 	}
 
 	private void printOrder(Device device, Store store, Operator op,
@@ -575,6 +578,130 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void modifyOrderRemarkById(String orderId, String remark) {
 		orderDAO.updateOrderRemarkById(orderId, remark);
+	}
+
+	@Override
+	public void printOrder(String orderId, String operatorId, String storeId,
+			boolean isRePrint) {
+		JsonObject data = new JsonObject();
+		OrderDto dto = getOrderDtoById(orderId);
+		data.add("order", (JsonObject) access(dto));
+		Store store = storeService.getStoreById(storeId);
+		JsonObject storeObj = new JsonObject();
+		storeObj.addProperty("name", store.getName());
+		storeObj.addProperty("address", store.getAddress());
+		storeObj.addProperty("telePhone", store.getTelePhone());
+		storeObj.addProperty("mobilePhone", store.getMobilePhone());
+		storeObj.addProperty("reminder", store.getReminder());
+		data.add("store", storeObj);
+		Client client = clientService.getClientById(dto.getCusId());
+		JsonObject clientObj = new JsonObject();
+		clientObj.addProperty("name", client.getName());
+		data.add("client", clientObj);
+		// 目前先配死
+		// TODO 以后能直连之后需要从表里读取店铺对应的url地址
+		String clientUrl = config.getString("remote.url");
+		String privateKey = config.getString("private.key");
+		data.addProperty("privateKey", privateKey);
+		// 组装成json发送
+		logger.info("发送的数据:" + data.toString());
+		String back = HttpClientUtil.sendPost4Json(clientUrl, data.toString());
+		if (!StringUtils.isEmpty(back)) {
+			logger.info("请求返回信息:" + back);
+		}
+	}
+
+	@Override
+	public void printReport(String beginDate, String endDate, String storeId) {
+		OrderSearchEntity orderSearch = new OrderSearchEntity();
+		orderSearch.setBeginDate(beginDate);
+		orderSearch.setEndDate(endDate);
+		// 将结束时间自动加一天
+		Date nextDate = DateUtils
+				.addDays(DateUtils.convert2Date(orderSearch.getEndDate(),
+						"yyyyMMdd"), 1);
+		orderSearch.setEndDate(DateUtils.convert2String(nextDate, "yyyyMMdd"));
+		orderSearch.setStoreId(storeId);
+		List<OrderDto> orderList = getOrderDtoByCondition(orderSearch);
+		if (orderList.size() == 0) {
+			return;
+		}
+		// 组装数据
+		Map<String, List<OrderDto>> day2recordMap = new LinkedHashMap<String, List<OrderDto>>();
+		for (OrderDto orderDto : orderList) {
+			List<OrderDto> records = day2recordMap.get(orderDto
+					.getCreationTime());
+			if (null == records || records.size() == 0) {
+				records = new ArrayList<OrderDto>();
+				day2recordMap.put(orderDto.getCreationTime(), records);
+			}
+			records.add(orderDto);
+		}
+		// 开始数据组装 最终通过post传输
+		JsonArray recordsArr = new JsonArray();
+		for (Map.Entry<String, List<OrderDto>> entry : day2recordMap.entrySet()) {
+			String dateStr = entry.getKey();
+			List<OrderDto> records = entry.getValue();
+			JsonArray orderDtoArr = (JsonArray) access(records
+					.toArray(new OrderDto[0]));
+			JsonObject record = new JsonObject();
+			record.addProperty("dateStr", dateStr);
+			record.add("orders", orderDtoArr);
+			recordsArr.add(record);
+		}
+		String clientUrl = config.getString("remote.url");
+		String privateKey = config.getString("private.key");
+		JsonObject dataObj = new JsonObject();
+		dataObj.addProperty("privateKey", privateKey);
+		dataObj.add("dataArr", recordsArr);
+		logger.info("发送的数据:" + dataObj.toString());
+		String back = HttpClientUtil.sendPost4Json(clientUrl,
+				dataObj.toString());
+		if (!StringUtils.isEmpty(back)) {
+			logger.info("请求返回信息:" + back);
+		}
+
+	}
+
+	private Object access(OrderDto... records) {
+		JsonObject resultObj = new JsonObject();
+		if (null == records) {
+			return resultObj.toString();
+		}
+		JsonArray resultArr = new JsonArray();
+		for (OrderDto dto : records) {
+			JsonObject dtoJson = new JsonObject();
+			dtoJson.addProperty("id", dto.getId());
+			dtoJson.addProperty("creationTime", dto.getCreationTime());
+			List<Item> itemList = dto.getItemList();
+			if (null != itemList && itemList.size() > 0) {
+				JsonArray itemsArr = new JsonArray();
+				for (Item item : itemList) {
+					JsonObject itemObj = new JsonObject();
+					itemObj.addProperty("orderId", item.getOrderId());
+					itemObj.addProperty("id", item.getId());
+					itemObj.addProperty("name", item.getName());
+					itemObj.addProperty("color", item.getColor());
+					itemObj.addProperty("size", item.getSize());
+					itemObj.addProperty("unitPrice", item.getUnitPrice());
+					itemObj.addProperty("amount", item.getAmount());
+					itemObj.addProperty("price", item.getPrice());
+					itemsArr.add(itemObj);
+				}
+				dtoJson.add("itemList", itemsArr);
+			}
+			dtoJson.addProperty("smallCount", dto.getSmallCount());
+			dtoJson.addProperty("totalAmount", dto.getTotalAmount());
+			dtoJson.addProperty("payType", dto.getPayType());
+			dtoJson.addProperty("address", dto.getAddress());
+			dtoJson.addProperty("remark", dto.getRemark());
+			if (records.length == 1) {
+				return dtoJson;
+			} else {
+				resultArr.add(dtoJson);
+			}
+		}
+		return resultArr;
 	}
 
 }
