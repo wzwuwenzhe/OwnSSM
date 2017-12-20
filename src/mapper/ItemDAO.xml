@@ -20,7 +20,7 @@
 		
 		<select id="findItemsByOrderId" resultType="Item">
 			SELECT * from item
-			WHERE order_id=#{orderId} order by name ,color ,size
+			WHERE order_id=#{orderId} order by name ,color ,locate(`size`,'s,S,m,M,l,L,xl,XL,xxl,XXL');
 		</select>
 		
 		<delete id="deleItemsByOrderId" >
