@@ -1,8 +1,12 @@
 package com.deady.entity.bill;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.deady.entity.BasicEntityField;
+import com.deady.enums.SizeEnum;
 
 /**
  * 订单中的每一条项目
@@ -10,7 +14,7 @@ import com.deady.entity.BasicEntityField;
  * @author wzwuw
  * 
  */
-public class Item implements Serializable {
+public class Item implements Serializable, Comparable {
 
 	private static final long serialVersionUID = -6471236486831014861L;
 
@@ -30,6 +34,25 @@ public class Item implements Serializable {
 	private String amount;// 数量
 	@BasicEntityField(length = 32, testValue = "1250.00")
 	private String price;// 金额
+
+	@Override
+	public int compareTo(Object o) {
+		Item item = (Item) o;
+		if (item.getColor().equals(color)) {
+			return 0;
+		}
+		if (!item.getSize().equals(size)) {// 先款号排序
+			int result = 0;
+			try {
+				result = SizeEnum.valueOf(item.getSize()).getSize()
+						- SizeEnum.valueOf(size).getSize();
+			} catch (Exception e) {
+				return 0;
+			}
+			return result;
+		}
+		return 0;
+	}
 
 	public String getOrderId() {
 		return orderId;
