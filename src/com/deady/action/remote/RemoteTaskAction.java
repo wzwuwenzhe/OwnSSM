@@ -109,9 +109,9 @@ public class RemoteTaskAction {
 	public Object doRemoteBillReport(HttpServletRequest req,
 			HttpServletResponse res) throws Exception {
 		FormResponse response = new FormResponse(req);
-		String dataArrJsonStr = req.getParameter("dataArr");
+		String dataArr = req.getParameter("dataArr");
 		String privateKey = req.getParameter("privateKey");
-		logger.info("dataArrJsonStr:" + dataArrJsonStr);
+		logger.info("dataArr:" + dataArr);
 		logger.info("privateKey:" + privateKey);
 		String localeKey = config.getString("private.key");
 		if (!localeKey.equals(privateKey)) {
@@ -120,7 +120,7 @@ public class RemoteTaskAction {
 			return response;
 		}
 		JsonParser parser = new JsonParser();
-		JsonElement el = parser.parse(dataArrJsonStr);
+		JsonElement el = parser.parse(dataArr);
 		JsonArray jsonArray = null;
 		if (!el.isJsonArray()) {
 			response.setSuccess(false);
