@@ -482,8 +482,8 @@ public class OrderServiceImpl implements OrderService {
 		dataMap.put("privateKey", privateKey);
 		dataMap.put("dataArr", recordsArr);
 		logger.info("报表发送的数据:" + dataMap.toString());
-		String back = HttpClientUtil.sendPost4Json(clientUrl + "/remoteReport",
-				dataMap.toString());
+		String back = HttpClientUtil.sendPost(clientUrl + "/remoteReport",
+				dataMap, "UTF-8");
 		if (!StringUtils.isEmpty(back)) {
 			logger.info("请求返回信息:" + back);
 		}
