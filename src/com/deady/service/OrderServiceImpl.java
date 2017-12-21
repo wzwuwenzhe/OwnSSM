@@ -586,6 +586,7 @@ public class OrderServiceImpl implements OrderService {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		OrderDto dto = getOrderDtoById(orderId);
 		dataMap.put("order", (String) access(dto).toString());
+		dataMap.put("isRePrint", isRePrint ? "1" : "0");
 		Store store = storeService.getStoreById(storeId);
 		JsonObject storeObj = new JsonObject();
 		storeObj.addProperty("name", store.getName());
@@ -672,6 +673,8 @@ public class OrderServiceImpl implements OrderService {
 		for (OrderDto dto : records) {
 			JsonObject dtoJson = new JsonObject();
 			dtoJson.addProperty("id", dto.getId());
+			dtoJson.addProperty("operatorId", dto.getOperatorId());
+			dtoJson.addProperty("storeId", dto.getStoreId());
 			dtoJson.addProperty("creationTime", dto.getCreationTime());
 			List<Item> itemList = dto.getItemList();
 			if (null != itemList && itemList.size() > 0) {
