@@ -56,11 +56,9 @@ public class PrinterServiceImpl implements PrinterService {
 		}
 		device.selectAlignType(0);// 左对齐
 		if (storeSide.getSide() == 2) {
-			device.selectFontBoldAndFontSize(0, true, 0, 4);
 			device.selectFontSize(68);
 			device.printString(store.getName());
 			device.selectFontSize(0);
-			device.selectFontBoldAndFontSize(0, false, 0, 1);
 			device.printString("");
 			device.printString("");
 			device.printString("地址:" + store.getAddress());

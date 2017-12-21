@@ -50,7 +50,7 @@ public class RemoteTaskAction {
 		String storeJsonStr = req.getParameter("store");
 		String clientJsonStr = req.getParameter("client");
 		String privateKey = req.getParameter("privateKey");
-		String isReprint = req.getParameter("isReprint");
+		String isReprint = req.getParameter("isRePrint");
 		logger.info("orderJsonStr:" + orderJsonStr);
 		logger.info("storeJsonStr:" + storeJsonStr);
 		logger.info("clientJsonStr:" + clientJsonStr);
@@ -75,13 +75,15 @@ public class RemoteTaskAction {
 			// 打印店铺联
 			printerService.printOrder(device, store, client, orderDto,
 					ORDERSIDE.STORE_SIDE, currentTime,
-					isReprint.equals("1") ? true : false);
+					isReprint == null ? false : isReprint.equals("1") ? true
+							: false);
 			device.printString("");
 			device.printString("");
 			// // 打印客户联
 			printerService.printOrder(device, store, client, orderDto,
 					ORDERSIDE.CUSTOMER_SIDE, currentTime,
-					isReprint.equals("1") ? true : false);
+					isReprint == null ? false : isReprint.equals("1") ? true
+							: false);
 
 		} catch (Exception e) {
 			response.setSuccess(false);
