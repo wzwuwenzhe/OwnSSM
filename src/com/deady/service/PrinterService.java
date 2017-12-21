@@ -1,6 +1,7 @@
 package com.deady.service;
 
 import java.util.Date;
+import java.util.List;
 
 import com.deady.dto.OrderDto;
 import com.deady.entity.client.Client;
@@ -25,5 +26,15 @@ public interface PrinterService {
 	void printOrder(Device device, Store store, Client client,
 			OrderDto orderDto, ORDERSIDE storeSide, Date currentTime,
 			boolean isReprint);
+
+	/**
+	 * 打印一天的报表
+	 * 
+	 * @param device
+	 * @param dateStr
+	 * @param records
+	 */
+	void printRecordForOneDay(Device device, String dateStr,
+			List<OrderDto> records) throws Exception;
 
 }
