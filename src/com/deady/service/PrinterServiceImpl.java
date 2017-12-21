@@ -1,9 +1,11 @@
 package com.deady.service;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -167,7 +169,16 @@ public class PrinterServiceImpl implements PrinterService {
 		double monthPay = 0;
 		double dayTotalPrice = 0;
 		// 款号和单价对应数量的散列表
-		Map<String, Integer> nameAndPrice2AmountMap = new HashMap<String, Integer>();
+		// 对map的key进行排序
+		Map<String, Integer> nameAndPrice2AmountMap = new TreeMap<String, Integer>(
+				new Comparator<String>() {
+
+					@Override
+					public int compare(String o1, String o2) {
+						return o1.compareTo(o2);
+					}
+				});
+
 		for (OrderDto record : records) {
 			// 过滤未付款订单
 			if (record.getPayType().equals(PayTypeEnum.NOTPAY.getType() + "")) {
@@ -193,6 +204,7 @@ public class PrinterServiceImpl implements PrinterService {
 			printRecord(device, record, nameAndPrice2AmountMap);
 		}
 		device.selectAlignType(1);// 居中
+
 		for (Map.Entry<String, Integer> entry : nameAndPrice2AmountMap
 				.entrySet()) {
 			String[] nameAndPriceArr = entry.getKey().split(",");
@@ -221,8 +233,8 @@ public class PrinterServiceImpl implements PrinterService {
 		String title = Device.paddingWithSuffix(10, "款号", SUFFIX)
 				+ Device.paddingWithSuffix(8, "颜色", SUFFIX)
 				+ Device.paddingWithSuffix(8, "尺码", SUFFIX)
-				+ Device.paddingWithSuffix(6, "数量", SUFFIX)
-				+ Device.paddingWithSuffix(8, "单价", SUFFIX)
+				+ Device.paddingWithSuffix(8, "数量", SUFFIX)
+				+ Device.paddingWithSuffix(6, "单价", SUFFIX)
 				+ Device.paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = record.getItemList();

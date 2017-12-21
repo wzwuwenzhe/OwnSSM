@@ -157,8 +157,10 @@ public class RemoteTaskAction {
 		} finally {
 			// 关闭设备 释放内存
 			device.closeDevice();
-			return response;
 		}
+		response.setSuccess(true);
+		response.setMessage("报表打印成功!");
+		return response;
 	}
 
 }
