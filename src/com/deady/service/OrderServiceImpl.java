@@ -124,181 +124,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	/**
-	 * 打印订单
-	 */
-	@Override
-	public void printOrder(String orderId, Operator op, boolean isRePrint)
-			throws Exception {
-		OrderDto dto = getOrderDtoById(orderId);
-		Store store = storeService.getStoreById(op.getStoreId());
-		Client client = clientService.getClientById(dto.getCusId());
-		Device device = null;
-		try {
-			device = new Device();
-			DeviceParameters params = new DeviceParameters();
-			device.setDeviceParameters(params);
-			device.openDevice();
-			Date currentTime = new Date();
-			// 打印店铺联
-			printOrder(device, store, op, client, dto, ORDERSIDE.STORE_SIDE,
-					currentTime, isRePrint);
-			device.printString("");
-			device.printString("");
-			// // 打印客户联
-			printOrder(device, store, op, client, dto, ORDERSIDE.CUSTOMER_SIDE,
-					currentTime, isRePrint);
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			// 关闭设备 释放内存
-			device.closeDevice();
-		}
-
-	}
-
-	private void printOrder(Device device, Store store, Operator op,
-			Client client, OrderDto dto, ORDERSIDE storeSide, Date currentTime,
-			boolean isRePrint) {
-
-		// TODO logo
-		// device.selectAlignment(ALIGNMENT.CENTER);// 居中
-		// device.setImageParameters(BITDEPTH.GRAYSCALE,
-		// IMAGEPROCESSING.SHARPENING,
-		// 0);
-		// device.scanCheck(true, 200);
-		// byte[] receivedBytes = device.getImageDataBytes();
-		// device.ejectCheck();
-		// device.selectImageFormat(IMAGEFORMAT.JPEG_HIGH);
-
-		device.selectAlignType(2);// 右对齐
-		switch (storeSide.getSide()) {
-		case 1:
-			if (isRePrint) {
-				device.printString("店铺联(重新打印!)");
-			} else {
-				device.printString("店铺联");
-			}
-			break;
-		case 2:
-			if (isRePrint) {
-				device.printString("客户联(重新打印!)");
-			} else {
-				device.printString("客户联");
-			}
-			break;
-		default:
-			throw new RuntimeException("未知票联");
-		}
-		device.selectAlignType(0);// 左对齐
-		if (storeSide.getSide() == 2) {
-			device.selectFontBoldAndFontSize(0, true, 0, 4);
-			device.selectFontSize(68);
-			device.printString(store.getName());
-			device.selectFontSize(0);
-			device.selectFontBoldAndFontSize(0, false, 0, 1);
-			device.printString("");
-			device.printString("");
-			device.printString("地址:" + store.getAddress());
-			device.printString("电话:" + store.getTelePhone());
-			device.printString("手机:" + store.getMobilePhone());
-			device.printString("------------------------------------------------");
-		}
-		device.printString("交易号:" + dto.getId());
-		device.printString("收款员:" + op.getId());
-		Date creatTime = DateUtils.convert2Date(dto.getCreationTime(),
-				"yyyy-MM-dd HH:mm:ss");
-		String dateString = DateUtils.convert2String(creatTime,
-				"yyyy-MM-dd HH:mm:ss");
-		device.printString("日期:" + dateString);
-		// device.printString("客户名称:"
-		// + client.getName()
-		// + "    客户电话:"
-		// + (StringUtils.isEmpty(client.getPhone()) ? "" : client
-		// .getPhone()));
-		if (storeSide.getSide() == 1) {
-			device.selectFontSize(17);
-		}
-		device.printString("客户名称:" + client.getName());
-		device.selectFontSize(0);
-		device.printString("================================================");
-		String title = paddingWithSuffix(10, "款号", SUFFIX)
-				+ paddingWithSuffix(8, "颜色", SUFFIX)
-				+ paddingWithSuffix(8, "尺码", SUFFIX)
-				+ paddingWithSuffix(6, "数量", SUFFIX)
-				+ paddingWithSuffix(8, "单价", SUFFIX)
-				+ paddingWithSuffix(8, "金额", SUFFIX);
-		device.printString(title);
-		List<Item> itemList = dto.getItemList();
-		if (storeSide.getSide() == 1) {
-			device.selectFontSize(17);
-			for (Item item : itemList) {
-				device.printString(paddingWithSuffix(10, item.getName(), SUFFIX)
-						+ paddingWithSuffix(8, item.getColor(), SUFFIX)
-						+ paddingWithSuffix(8, item.getSize(), SUFFIX)
-						+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
-						+ paddingWithSuffix(8, item.getUnitPrice(), SUFFIX)
-						+ paddingWithSuffix(8, item.getPrice(), SUFFIX));
-				device.selectFontSize(0);
-				device.printString("------------------------------------------------");
-				device.selectFontSize(17);
-			}
-		} else {
-			for (Item item : itemList) {
-				device.printString(paddingWithSuffix(10, item.getName(), SUFFIX)
-						+ paddingWithSuffix(8, item.getColor(), SUFFIX)
-						+ paddingWithSuffix(8, item.getSize(), SUFFIX)
-						+ paddingWithSuffix(6, item.getAmount(), SUFFIX)
-						+ paddingWithSuffix(8, item.getUnitPrice(), SUFFIX)
-						+ paddingWithSuffix(8, item.getPrice(), SUFFIX));
-			}
-		}
-		device.selectFontSize(0);
-		device.printString("");
-		device.printString("");
-		device.printString("================================================");
-		device.selectAlignType(2);// 右对齐
-		device.printString("小计:" + dto.getSmallCount() + "元");
-		// device.printString("折扣金额:" + dto.getDiscount() + "元");
-		device.printString("应付金额:" + dto.getTotalAmount() + "元");
-		device.printString("付款方式:  "
-				+ PayTypeEnum.typeOf(Integer.parseInt(dto.getPayType()))
-						.getPayTypeInfo());
-		if (storeSide.getSide() == 1) {
-			device.selectFontSize(17);
-		}
-		device.printString("送货地址:"
-				+ (StringUtils.isEmpty(dto.getAddress()) ? "" : dto
-						.getAddress()));
-		device.printString("备注:"
-				+ (StringUtils.isEmpty(dto.getRemark()) ? "" : dto.getRemark()));
-		device.selectFontSize(0);
-		switch (storeSide.getSide()) {
-		case 1:
-
-			break;
-		case 2:
-			// 打印店铺信息
-			device.printString("温馨提示:" + store.getReminder());
-			// String qrcode = paddingWithSuffix(16, "微信付款", SUFFIX)
-			// + paddingWithSuffix(16, "支付宝付款", SUFFIX)
-			// + paddingWithSuffix(16, "微信加好友", SUFFIX);
-			// device.printString(qrcode);
-			// TODO 打印二维码
-			device.printString("");
-			device.printString("");
-			device.printString("");
-			device.printString("");
-			break;
-		default:
-			throw new RuntimeException("未知票联");
-		}
-		// 裁剪纸张
-		device.cutPaper();
-
-	}
-
-	/**
 	 * 
 	 * @param length
 	 *            限定字符串长度
@@ -652,12 +477,12 @@ public class OrderServiceImpl implements OrderService {
 		}
 		String clientUrl = config.getString("remote.url");
 		String privateKey = config.getString("private.key");
-		JsonObject dataObj = new JsonObject();
-		dataObj.addProperty("privateKey", privateKey);
-		dataObj.add("dataArr", recordsArr);
-		logger.info("发送的数据:" + dataObj.toString());
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("privateKey", privateKey);
+		dataMap.put("dataArr", recordsArr);
+		logger.info("报表发送的数据:" + dataMap.toString());
 		String back = HttpClientUtil.sendPost4Json(clientUrl,
-				dataObj.toString());
+				dataMap.toString());
 		if (!StringUtils.isEmpty(back)) {
 			logger.info("请求返回信息:" + back);
 		}

@@ -35,7 +35,6 @@ import com.deady.service.StockService;
 import com.deady.service.StoreService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
-import com.deady.utils.task.BillTask;
 import com.deady.utils.task.RemoteBillTask;
 import com.deady.utils.task.Task;
 
