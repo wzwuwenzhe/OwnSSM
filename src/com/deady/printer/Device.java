@@ -353,4 +353,72 @@ public class Device {
 		// 先试着打一张看看
 		return excuseCommand("'FS p'");
 	}
+
+	/**
+	 * 
+	 * @param length
+	 *            限定字符串长度
+	 * @param text
+	 *            输入的字符
+	 * @param suffix
+	 *            如果长度不足,用suffix来补足,如果超了就截取指定长度
+	 * @return
+	 */
+	public static String paddingWithSuffix(int length, String text,
+			String suffix) {
+		// 获取text的按照Byte计算的实际长度 一个中文两个字符 英文数字一个字符
+		int realLength = getChineseLength(text);
+		StringBuffer sb = new StringBuffer(text);
+		if (realLength < length) {
+			for (int i = 0; i < (length - realLength); i++) {
+				sb.append(" ");
+			}
+		} else if (realLength > length) {// 太长就截掉
+			StringBuffer tempSb = new StringBuffer();
+			String chinese = "[\u0391-\uFFE5]";
+			int valueLength = 0;
+			for (int i = 0; i < text.length(); i++) {
+				String temp = text.substring(i, i + 1);
+				if (temp.matches(chinese)) {
+					valueLength += 2;
+				} else {
+					valueLength += 1;
+				}
+				if (valueLength <= length) {
+					tempSb.append(temp);
+				} else {
+					break;
+				}
+			}
+			return paddingWithSuffix(length, tempSb.toString(), suffix);
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 获取字符串的长度，如果有中文，则每个中文字符计为2位
+	 * 
+	 * @param validateStr
+	 *            指定的字符串
+	 * @return 字符串的长度
+	 */
+	public static int getChineseLength(String validateStr) {
+		int valueLength = 0;
+		String chinese = "[\u0391-\uFFE5]";
+		/* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+		for (int i = 0; i < validateStr.length(); i++) {
+			/* 获取一个字符 */
+			String temp = validateStr.substring(i, i + 1);
+			/* 判断是否为中文字符 */
+			if (temp.matches(chinese)) {
+				/* 中文字符长度为2 */
+				valueLength += 2;
+			} else {
+				/* 其他字符长度为1 */
+				valueLength += 1;
+			}
+		}
+		return valueLength;
+	}
+
 }
