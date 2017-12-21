@@ -583,9 +583,9 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void printOrder(String orderId, String operatorId, String storeId,
 			boolean isRePrint) {
-		JsonObject data = new JsonObject();
+		Map<String, Object> dataMap = new HashMap<String, Object>();
 		OrderDto dto = getOrderDtoById(orderId);
-		data.add("order", (JsonObject) access(dto));
+		dataMap.put("order", (String) access(dto).toString());
 		Store store = storeService.getStoreById(storeId);
 		JsonObject storeObj = new JsonObject();
 		storeObj.addProperty("name", store.getName());
@@ -593,19 +593,19 @@ public class OrderServiceImpl implements OrderService {
 		storeObj.addProperty("telePhone", store.getTelePhone());
 		storeObj.addProperty("mobilePhone", store.getMobilePhone());
 		storeObj.addProperty("reminder", store.getReminder());
-		data.add("store", storeObj);
+		dataMap.put("store", storeObj.toString());
 		Client client = clientService.getClientById(dto.getCusId());
 		JsonObject clientObj = new JsonObject();
 		clientObj.addProperty("name", client.getName());
-		data.add("client", clientObj);
+		dataMap.put("client", clientObj.toString());
 		// 目前先配死
 		// TODO 以后能直连之后需要从表里读取店铺对应的url地址
 		String clientUrl = config.getString("remote.url");
 		String privateKey = config.getString("private.key");
-		data.addProperty("privateKey", privateKey);
+		dataMap.put("privateKey", privateKey);
 		// 组装成json发送
-		logger.info("发送的数据:" + data.toString());
-		String back = HttpClientUtil.sendPost4Json(clientUrl, data.toString());
+		logger.info("发送的数据:" + dataMap.toString());
+		String back = HttpClientUtil.sendPost(clientUrl, dataMap, "UTF-8");
 		if (!StringUtils.isEmpty(back)) {
 			logger.info("请求返回信息:" + back);
 		}

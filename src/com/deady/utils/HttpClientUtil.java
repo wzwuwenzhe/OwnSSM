@@ -19,11 +19,13 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HttpClientUtil {
 
-	private static Logger transLogger = Logger.getLogger(HttpClientUtil.class);
+	private static Logger transLogger = LoggerFactory
+			.getLogger(HttpClientUtil.class);
 	private static HttpClientUtil httpClientUtil;
 
 	public static HttpClientUtil getInstantce() {
@@ -334,7 +336,7 @@ public class HttpClientUtil {
 			}
 
 		} catch (Exception e) {
-
+			transLogger.error(e.getMessage());
 		}
 
 		return sb.toString();
