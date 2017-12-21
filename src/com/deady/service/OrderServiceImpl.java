@@ -469,8 +469,14 @@ public class OrderServiceImpl implements OrderService {
 		for (Map.Entry<String, List<OrderDto>> entry : day2recordMap.entrySet()) {
 			String dateStr = entry.getKey();
 			List<OrderDto> records = entry.getValue();
-			JsonArray orderDtoArr = (JsonArray) access(records
-					.toArray(new OrderDto[0]));
+			JsonArray orderDtoArr = new JsonArray();
+			if (records.size() == 1) {// 为了防止出现 jsonArray无法转换成JSOnObj的错误
+				orderDtoArr.add((JsonObject) access(records
+						.toArray(new OrderDto[0])));
+			} else {
+				orderDtoArr = (JsonArray) access(records
+						.toArray(new OrderDto[0]));
+			}
 			JsonObject record = new JsonObject();
 			record.addProperty("dateStr", dateStr);
 			record.add("orders", orderDtoArr);
