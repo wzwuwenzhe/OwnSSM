@@ -42,7 +42,7 @@ public class OrderAction {
 	OperatorService operatorService;
 
 	@RequestMapping(value = "/order", method = RequestMethod.GET)
-	@DeadyAction(createToken = true, checkLogin = true)
+	@DeadyAction(createToken = true)
 	public Object showOrder(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		Operator operator = OperatorSessionInfo.getOperator(req);
@@ -51,7 +51,7 @@ public class OrderAction {
 	}
 
 	@RequestMapping(value = "/orderSearch", method = RequestMethod.POST)
-	@DeadyAction(createToken = true, checkLogin = true)
+	@DeadyAction(createToken = true)
 	public Object searchOrder(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		OrderSearchEntity orderSearch = new OrderSearchEntity();

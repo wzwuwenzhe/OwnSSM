@@ -94,14 +94,14 @@ public class LoginAction {
 	}
 
 	@RequestMapping(value = "/changePWD", method = RequestMethod.GET)
-	@DeadyAction(checkLogin = true, createToken = true)
+	@DeadyAction(createToken = true)
 	public Object changePWD(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		return new ModelAndView("/operator/changePwd");
 	}
 
 	@RequestMapping(value = "/changePWD", method = RequestMethod.POST)
-	@DeadyAction(checkLogin = true, checkToken = true, createToken = true)
+	@DeadyAction(checkToken = true, createToken = true)
 	@ResponseBody
 	public Object doChangePWD(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {

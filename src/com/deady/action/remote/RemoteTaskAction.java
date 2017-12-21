@@ -16,8 +16,8 @@ import com.google.gson.Gson;
 @Controller
 public class RemoteTaskAction {
 
-	@RequestMapping(value = "/remoteBillPrint", method = RequestMethod.POST)
-	@DeadyAction(checkReferer = true)
+	@RequestMapping(value = "/remotePrint", method = RequestMethod.POST)
+	@DeadyAction(checkReferer = true, checkLogin = false)
 	@ResponseBody
 	public Object doRemoteBillPrint(HttpServletRequest req,
 			HttpServletResponse res) throws Exception {
