@@ -2,11 +2,13 @@ package com.deady.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -488,8 +490,18 @@ public class OrderServiceImpl implements OrderService {
 				printRecord(device, record, nameAndPrice2AmountMap);
 			}
 			device.selectAlignType(1);// 居中
-			for (Map.Entry<String, Integer> entry : nameAndPrice2AmountMap
-					.entrySet()) {
+			// Map进行排序
+			Map<String, Integer> sortMap = new TreeMap<String, Integer>(
+					new Comparator<String>() {
+
+						@Override
+						public int compare(String o1, String o2) {
+
+							return o1.compareTo(o2);
+						}
+					});
+
+			for (Map.Entry<String, Integer> entry : sortMap.entrySet()) {
 				String[] nameAndPriceArr = entry.getKey().split(",");
 				Integer amount = entry.getValue();
 				String name = nameAndPriceArr[0];
@@ -523,8 +535,8 @@ public class OrderServiceImpl implements OrderService {
 		String title = paddingWithSuffix(10, "款号", SUFFIX)
 				+ paddingWithSuffix(8, "颜色", SUFFIX)
 				+ paddingWithSuffix(8, "尺码", SUFFIX)
-				+ paddingWithSuffix(6, "数量", SUFFIX)
-				+ paddingWithSuffix(8, "单价", SUFFIX)
+				+ paddingWithSuffix(8, "数量", SUFFIX)
+				+ paddingWithSuffix(6, "单价", SUFFIX)
 				+ paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = record.getItemList();

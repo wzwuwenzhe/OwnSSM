@@ -130,7 +130,10 @@ public class PrinterServiceImpl implements PrinterService {
 		device.selectFontSize(0);
 		switch (storeSide.getSide()) {
 		case 1:
-
+			device.printString("");
+			device.printString("");
+			device.printString("");
+			device.printString("");
 			break;
 		case 2:
 			// 打印店铺信息

@@ -81,8 +81,6 @@ public class RemoteTaskAction {
 					ORDERSIDE.STORE_SIDE, currentTime,
 					isReprint == null ? false : isReprint.equals("1") ? true
 							: false);
-			device.printString("");
-			device.printString("");
 			// // 打印客户联
 			printerService.printOrder(device, store, client, orderDto,
 					ORDERSIDE.CUSTOMER_SIDE, currentTime,
