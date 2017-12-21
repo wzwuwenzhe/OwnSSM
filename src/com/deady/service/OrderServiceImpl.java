@@ -431,7 +431,8 @@ public class OrderServiceImpl implements OrderService {
 		dataMap.put("privateKey", privateKey);
 		// 组装成json发送
 		logger.info("发送的数据:" + dataMap.toString());
-		String back = HttpClientUtil.sendPost(clientUrl, dataMap, "UTF-8");
+		String back = HttpClientUtil.sendPost(clientUrl + "/remotePrint",
+				dataMap, "UTF-8");
 		if (!StringUtils.isEmpty(back)) {
 			logger.info("请求返回信息:" + back);
 		}
@@ -481,7 +482,7 @@ public class OrderServiceImpl implements OrderService {
 		dataMap.put("privateKey", privateKey);
 		dataMap.put("dataArr", recordsArr);
 		logger.info("报表发送的数据:" + dataMap.toString());
-		String back = HttpClientUtil.sendPost4Json(clientUrl,
+		String back = HttpClientUtil.sendPost4Json(clientUrl + "/remoteReport",
 				dataMap.toString());
 		if (!StringUtils.isEmpty(back)) {
 			logger.info("请求返回信息:" + back);
@@ -501,6 +502,13 @@ public class OrderServiceImpl implements OrderService {
 			dtoJson.addProperty("operatorId", dto.getOperatorId());
 			dtoJson.addProperty("storeId", dto.getStoreId());
 			dtoJson.addProperty("creationTime", dto.getCreationTime());
+			dtoJson.addProperty(
+					"cusName",
+					StringUtils.isEmpty(dto.getCusName()) ? "" : dto
+							.getCusName());
+			dtoJson.addProperty("remark",
+					StringUtils.isEmpty(dto.getRemark()) ? "" : dto.getRemark());
+			dtoJson.addProperty("state", dto.getState());
 			List<Item> itemList = dto.getItemList();
 			if (null != itemList && itemList.size() > 0) {
 				JsonArray itemsArr = new JsonArray();

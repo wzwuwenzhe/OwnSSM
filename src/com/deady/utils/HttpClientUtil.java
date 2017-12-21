@@ -181,8 +181,8 @@ public class HttpClientUtil {
 			con.setDoOutput(true);
 			con.setDoInput(true);
 			con.setUseCaches(false);
-			con.setConnectTimeout(5000);
-			con.setReadTimeout(3000);
+			con.setConnectTimeout(35000);
+			con.setReadTimeout(30000);
 			con.setRequestProperty("Content-Type",
 					"application/x-www-form-urlencoded");
 			if (sbParams != null && sbParams.length() > 0) {
