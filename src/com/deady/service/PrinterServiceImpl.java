@@ -119,7 +119,12 @@ public class PrinterServiceImpl implements PrinterService {
 				String count = countAndIndex[0].trim();
 				int index = Integer.parseInt(countAndIndex[1].trim());
 				if (index == i) {
-					device.printString("款号:" + _name + ",共计:" + count);
+					device.printString("款号:" + _name + ",共计:" + count + "件");
+					device.selectFontSize(0);
+					device.printString("------------------------------------------------");
+					if (storeSide.getSide() == 1) {
+						device.selectFontSize(17);
+					}
 				}
 			}
 		}
@@ -308,9 +313,9 @@ public class PrinterServiceImpl implements PrinterService {
 		device.printString("发货状态:"
 				+ OrderStateEnum.typeOf(Integer.parseInt(record.getState()))
 						.getOrderStateInfo()
-				+ "  付款方式:"
+				+ " 付款方式:"
 				+ PayTypeEnum.typeOf(Integer.parseInt(record.getPayType()))
-						.getPayTypeInfo() + "  金额:" + record.getTotalAmount()
+						.getPayTypeInfo() + " 金额:" + record.getTotalAmount()
 				+ "元");
 		device.printString("================================================");
 	}

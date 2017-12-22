@@ -1,5 +1,9 @@
 package com.deady.printer;
 
+import net.shunpay.util.ConfigUtil;
+
+import org.apache.commons.configuration.PropertiesConfiguration;
+
 public class DeviceParameters {
 
 	public String PortName;
@@ -7,11 +11,13 @@ public class DeviceParameters {
 	public String IPAddress;
 	public char DeviceID;
 	public String DeviceName;
+	private static PropertiesConfiguration conf = ConfigUtil
+			.getProperties("deady");
 
 	public DeviceParameters() {
 		this.PortName = "";
-		this.PortNumber = 9100;
-		this.IPAddress = "192.168.31.201";
+		this.PortNumber = Integer.parseInt(conf.getString("printer.port"));
+		this.IPAddress = conf.getString("printer.ip");
 		this.DeviceID = '\000';
 		this.DeviceName = "";
 	}

@@ -104,10 +104,10 @@ public class EthernetPort extends Port {
 								EthernetPort.this.m_OutStream.flush();
 								EthernetPort.this.m_SendFlag = Boolean
 										.valueOf(false);
-								logger.info("EthernetPort  Sending data: "
-										+ Integer
-												.toString(EthernetPort.this.m_SendData.length)
-										+ " bytes");
+								// logger.info("EthernetPort  Sending data: "
+								// + Integer
+								// .toString(EthernetPort.this.m_SendData.length)
+								// + " bytes");
 								// logger.info("EthernetPort  Finished sending data");
 							}
 
