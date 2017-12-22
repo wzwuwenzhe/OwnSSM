@@ -2,7 +2,6 @@ package com.deady.service;
 
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,11 +13,11 @@ import com.deady.dto.OrderDto;
 import com.deady.entity.bill.Item;
 import com.deady.entity.client.Client;
 import com.deady.entity.store.Store;
+import com.deady.enums.OrderSideEnum;
 import com.deady.enums.OrderStateEnum;
 import com.deady.enums.PayTypeEnum;
 import com.deady.printer.Device;
 import com.deady.utils.DateUtils;
-import com.deady.utils.printer.ORDERSIDE;
 
 @Service
 public class PrinterServiceImpl implements PrinterService {
@@ -27,7 +26,7 @@ public class PrinterServiceImpl implements PrinterService {
 
 	@Override
 	public void printOrder(Device device, Store store, Client client,
-			OrderDto dto, ORDERSIDE storeSide, Date currentTime,
+			OrderDto dto, OrderSideEnum storeSide, Date currentTime,
 			boolean isRePrint) {
 
 		// TODO logo

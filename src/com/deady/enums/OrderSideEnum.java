@@ -1,6 +1,6 @@
-package com.deady.utils.printer;
+package com.deady.enums;
 
-public enum ORDERSIDE {
+public enum OrderSideEnum {
 
 	STORE_SIDE(1, "店铺联"), CUSTOMER_SIDE(2, "客户联");
 
@@ -8,7 +8,7 @@ public enum ORDERSIDE {
 
 	private String sideInfo;
 
-	private ORDERSIDE(int side, String sideInfo) {
+	private OrderSideEnum(int side, String sideInfo) {
 		this.side = side;
 		this.sideInfo = sideInfo;
 	}

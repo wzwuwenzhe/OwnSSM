@@ -24,10 +24,10 @@ import com.deady.dto.OrderDto;
 import com.deady.entity.client.Client;
 import com.deady.entity.print.Report;
 import com.deady.entity.store.Store;
+import com.deady.enums.OrderSideEnum;
 import com.deady.printer.Device;
 import com.deady.printer.DeviceParameters;
 import com.deady.service.PrinterService;
-import com.deady.utils.printer.ORDERSIDE;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -78,12 +78,12 @@ public class RemoteTaskAction {
 			Date currentTime = new Date();
 			// 打印店铺联
 			printerService.printOrder(device, store, client, orderDto,
-					ORDERSIDE.STORE_SIDE, currentTime,
+					OrderSideEnum.STORE_SIDE, currentTime,
 					isReprint == null ? false : isReprint.equals("1") ? true
 							: false);
 			// // 打印客户联
 			printerService.printOrder(device, store, client, orderDto,
-					ORDERSIDE.CUSTOMER_SIDE, currentTime,
+					OrderSideEnum.CUSTOMER_SIDE, currentTime,
 					isReprint == null ? false : isReprint.equals("1") ? true
 							: false);
 

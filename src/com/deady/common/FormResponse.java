@@ -26,8 +26,6 @@ public class FormResponse {
 	@SuppressWarnings("unused")
 	private String token = null;
 
-	private int authType = AuthType.None.getValue();
-
 	@SuppressWarnings("unused")
 	private boolean updateAgentBalance = false;
 	@SuppressWarnings("unused")
@@ -63,14 +61,6 @@ public class FormResponse {
 
 	public String getToken() {
 		return (String) this.request.getAttribute(FormResponse.tokenAttrKey);
-	}
-
-	public int getAuthType() {
-		return this.authType;
-	}
-
-	public void setAuthType(int authType) {
-		this.authType = authType;
 	}
 
 	public boolean isUpdateAgentBalance() {

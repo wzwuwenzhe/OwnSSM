@@ -6,8 +6,8 @@ import java.util.List;
 import com.deady.dto.OrderDto;
 import com.deady.entity.client.Client;
 import com.deady.entity.store.Store;
+import com.deady.enums.OrderSideEnum;
 import com.deady.printer.Device;
-import com.deady.utils.printer.ORDERSIDE;
 
 public interface PrinterService {
 
@@ -24,7 +24,7 @@ public interface PrinterService {
 	 *            是否重新打印
 	 */
 	void printOrder(Device device, Store store, Client client,
-			OrderDto orderDto, ORDERSIDE storeSide, Date currentTime,
+			OrderDto orderDto, OrderSideEnum storeSide, Date currentTime,
 			boolean isReprint);
 
 	/**
