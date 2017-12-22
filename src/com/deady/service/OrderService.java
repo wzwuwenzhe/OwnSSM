@@ -19,7 +19,7 @@ public interface OrderService {
 	List<OrderDto> getOrderDtoByCondition(OrderSearchEntity orderSearch);
 
 	/**
-	 * 删除订单的同时 需要把库存加回来
+	 * 删除订单的同时 需要把库存加回来 不真正删除数据 只是做状态标记 已删除 state=9
 	 * 
 	 * @param orderId
 	 */

@@ -220,8 +220,9 @@ public class OrderServiceImpl implements OrderService {
 					+ amount + "");
 			stockDAO.updateStorage(storage);
 		}
+		// 把状态标记为9 不去真正的删除它
 		orderDAO.deleteOrderById(orderId);
-		itemDAO.deleItemsByOrderId(orderId);
+		// itemDAO.deleItemsByOrderId(orderId);
 	}
 
 	@Override

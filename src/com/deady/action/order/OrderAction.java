@@ -42,7 +42,7 @@ public class OrderAction {
 	@Autowired
 	OperatorService operatorService;
 
-	@RequestMapping(value = "/order", method = RequestMethod.GET)
+	@RequestMapping(value = "/orderSearch", method = RequestMethod.GET)
 	@DeadyAction(createToken = true, checkLogin = true)
 	public Object showOrder(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
@@ -53,7 +53,7 @@ public class OrderAction {
 
 	@RequestMapping(value = "/orderSearch", method = RequestMethod.POST)
 	@DeadyAction(createToken = true, checkLogin = true)
-	public Object searchOrder(HttpServletRequest req, HttpServletResponse res)
+	public Object doSearchOrder(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		OrderSearchEntity orderSearch = new OrderSearchEntity();
 		ActionUtil.assObjByRequest(req, orderSearch);
@@ -227,7 +227,7 @@ public class OrderAction {
 			response.setMessage("订单编号不能为空!");
 			return response;
 		}
-
+		// 删除订单不能真正的把订单删除 而是把订单做一个状态修改 改成不可见
 		orderService.removeOrder(orderId);
 		response.setSuccess(true);
 		response.setMessage("订单删除成功!");
