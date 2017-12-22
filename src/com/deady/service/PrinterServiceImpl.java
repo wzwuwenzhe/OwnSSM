@@ -2,6 +2,7 @@ package com.deady.service;
 
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -91,11 +92,13 @@ public class PrinterServiceImpl implements PrinterService {
 				+ Device.paddingWithSuffix(8, "金额", SUFFIX);
 		device.printString(title);
 		List<Item> itemList = dto.getItemList();
-
+		// 对每个款式的总数量进行统计
+		Map<String, String> name2CountAndIndexMap = count(dto.getItemList());
 		if (storeSide.getSide() == 1) {
 			device.selectFontSize(17);
 		}
-		for (Item item : itemList) {
+		for (int i = 0; i < itemList.size(); i++) {
+			Item item = itemList.get(i);
 			device.printString(Device.paddingWithSuffix(10, item.getName(),
 					SUFFIX)
 					+ Device.paddingWithSuffix(8, item.getColor(), SUFFIX)
@@ -107,6 +110,17 @@ public class PrinterServiceImpl implements PrinterService {
 				device.selectFontSize(0);
 				device.printString("------------------------------------------------");
 				device.selectFontSize(17);
+			}
+			// 根据款式打印 统计信息
+			String _name = item.getName();
+			String _value = name2CountAndIndexMap.get(_name);
+			if (_value != null) {
+				String[] countAndIndex = _value.split(",");
+				String count = countAndIndex[0].trim();
+				int index = Integer.parseInt(countAndIndex[1].trim());
+				if (index == i) {
+					device.printString("款号:" + _name + ",共计:" + count);
+				}
 			}
 		}
 		device.selectFontSize(0);
@@ -153,6 +167,35 @@ public class PrinterServiceImpl implements PrinterService {
 		// 裁剪纸张
 		device.cutPaper();
 
+	}
+
+	/**
+	 * 调用这个方法的前提是 传入的list必须是根据款号有序的
+	 * 
+	 * @param itemList
+	 * @return key:款号 value:数量,index
+	 */
+	private Map<String, String> count(List<Item> itemList) {
+		if (null == itemList || itemList.size() == 0) {
+			return new HashMap<String, String>();
+		}
+		Map<String, String> resultMap = new HashMap<String, String>();
+		for (int i = 0; i < itemList.size(); i++) {
+			Item item = itemList.get(i);
+			String name = item.getName();
+			int count = Integer.parseInt(item.getAmount());
+			String value = resultMap.get(name);
+			if (null == value) {
+				resultMap.put(name, count + "," + i);
+			} else {
+				String[] countAndIndex = value.split(",");
+				int _count = Integer.parseInt(countAndIndex[0].trim());
+				_count += count;
+				resultMap.put(name, _count + "," + i);
+			}
+
+		}
+		return resultMap;
 	}
 
 	@Override
