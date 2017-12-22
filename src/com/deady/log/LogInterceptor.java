@@ -1,6 +1,8 @@
 package com.deady.log;
 
 import java.util.Enumeration;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,10 +30,15 @@ public class LogInterceptor {
 							+ operator.getStoreId() + " requestURL:"
 							+ req.getRequestURL());
 					Enumeration em = req.getParameterNames();
+					// 保存请求参数和值
+					Map<String, String> paramMap = new TreeMap<String, String>();
 					while (em.hasMoreElements()) {
 						String name = (String) em.nextElement();
 						String value = req.getParameter(name);
-						logger.info(name + " : " + value);
+						paramMap.put(name, value);
+					}
+					if (paramMap.size() > 0) {
+						logger.info("请求参数:" + paramMap.toString());
 					}
 
 				}
