@@ -181,6 +181,11 @@
 			</div>
 		</div>
     </@form>
+	<div id="report" style="display:none">
+		<table id="reportTable" class="layui-table" lay-filter="parse-table-demo">
+			<tbody></tbody>
+		</table>
+	</div>
 		
 	<script type="text/javascript">
 	//欠货登记  显示备注信息栏
@@ -261,7 +266,33 @@
 		        dataType:"json",
 		        data:{"beginDate":beginDate,"endDate":endDate,"storeId":storeId},
 		        success:function(response){
-		            alert(response.message)
+		            if(response.success==false){
+		            	alert(response.message);
+		            	return;
+		            }
+		            $("#reportTable tbody").empty();
+		            var length = 0;
+		            //写入数据
+		            for(var n = 0 ; n<response.data.length;n++){
+		            	$("#reportTable tbody").append("<tr style='background-color:yellow'><td >"+response.data[n].dateStr+"报表</td></tr>");
+		            	var sellsArr = response.data[n].sellsStr;
+			            for(var index = 0;index < sellsArr.length; index++){
+				            $("#reportTable tbody").append("<tr><td>"+sellsArr[index]+"</td></tr>");
+				            length++;
+			            }
+		            }
+		            //打开弹框
+		            layer.open({
+		                type:1,
+		                shift:-1,
+		                title: '报表查询结果',
+		                closeBtn:0,
+		                area: ['300px','500px'],
+		                content: $("#report"),
+		                btn:["关闭"],
+		                cancel:function(){
+		                }
+		            });
 		        },
 		        error:function(){
 		            alert("出错了,请联系管理员");

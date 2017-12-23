@@ -259,15 +259,16 @@ public class OrderAction {
 			return response;
 		}
 		Operator op = OperatorSessionInfo.getOperator(req);
-		Map<String, Object> resultMap = orderService.printReport(startDateStr,
-				endDateStr, op.getStoreId());
-		if (resultMap.size() == 0) {
+		List<Map<String, Object>> resultList = orderService.searchReport(
+				startDateStr, endDateStr, op.getStoreId());
+		if (resultList.size() == 0) {
 			response.setSuccess(false);
 			response.setMessage("没有报表信息");
 			return response;
 		}
-		logger.info("resultMap:" + resultMap);
-
+		logger.info(resultList.toString());
+		response.setSuccess(true);
+		response.setData(resultList);
 		return response;
 	}
 

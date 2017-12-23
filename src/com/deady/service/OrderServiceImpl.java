@@ -2,12 +2,13 @@ package com.deady.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cnblogs.zxub.utils2.configuration.ConfigUtil;
-import com.cnblogs.zxub.utils2.http.config.Configuration;
 import com.deady.dao.ItemDAO;
 import com.deady.dao.OrderDAO;
 import com.deady.dao.StockDAO;
@@ -39,9 +39,6 @@ import com.deady.utils.ActionUtil;
 import com.deady.utils.DateUtils;
 import com.deady.utils.HttpClientUtil;
 import com.deady.utils.OperatorSessionInfo;
-import com.deady.utils.printer.ORDERSIDE;
-import com.deady.utils.task.RemoteBillTask;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -540,6 +537,131 @@ public class OrderServiceImpl implements OrderService {
 			}
 		}
 		return resultArr;
+	}
+
+	@Override
+	public List<Map<String, Object>> searchReport(String beginDate,
+			String endDate, String storeId) {
+		OrderSearchEntity orderSearch = new OrderSearchEntity();
+		orderSearch.setBeginDate(beginDate);
+		orderSearch.setEndDate(endDate);
+		// 将结束时间自动加一天
+		Date nextDate = DateUtils
+				.addDays(DateUtils.convert2Date(orderSearch.getEndDate(),
+						"yyyyMMdd"), 1);
+		orderSearch.setEndDate(DateUtils.convert2String(nextDate, "yyyyMMdd"));
+		orderSearch.setStoreId(storeId);
+		List<OrderDto> orderList = getOrderDtoByCondition(orderSearch);
+		if (orderList.size() == 0) {
+			return new ArrayList<Map<String, Object>>();
+		}
+		// 组装数据
+		Map<String, List<OrderDto>> day2recordMap = new LinkedHashMap<String, List<OrderDto>>();
+		for (OrderDto orderDto : orderList) {
+			List<OrderDto> records = day2recordMap.get(orderDto
+					.getCreationTime());
+			if (null == records || records.size() == 0) {
+				records = new ArrayList<OrderDto>();
+				day2recordMap.put(orderDto.getCreationTime(), records);
+			}
+			records.add(orderDto);
+		}
+		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+		for (Map.Entry<String, List<OrderDto>> entry : day2recordMap.entrySet()) {
+			Map<String, Object> dataMap = new TreeMap<String, Object>();
+			String dateStr = entry.getKey();
+			dataMap.put("dateStr", dateStr);
+			double cash = 0;
+			double card = 0;
+			double zfb = 0;
+			double weixin = 0;
+			double monthPay = 0;
+			double dayTotalPrice = 0;
+			List<OrderDto> records = entry.getValue();
+			// 对map的key进行排序
+			Map<String, Integer> nameAndPrice2AmountMap = new TreeMap<String, Integer>(
+					new Comparator<String>() {
+
+						@Override
+						public int compare(String o1, String o2) {
+							return o1.compareTo(o2);
+						}
+					});
+			for (OrderDto record : records) {
+				// 过滤未付款订单
+				if (record.getPayType().equals(
+						PayTypeEnum.NOTPAY.getType() + "")) {
+					continue;
+				}
+				if (record.getPayType().equals(PayTypeEnum.CASH.getType() + "")) {
+					cash += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(PayTypeEnum.CARD.getType() + "")) {
+					card += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(PayTypeEnum.ZFB.getType() + "")) {
+					zfb += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(
+						PayTypeEnum.WEIXIN.getType() + "")) {
+					weixin += Double.parseDouble(record.getTotalAmount());
+				}
+				if (record.getPayType().equals(
+						PayTypeEnum.MONTHPAY.getType() + "")) {
+					monthPay += Double.parseDouble(record.getTotalAmount());
+				}
+				dayTotalPrice += Double.parseDouble(record.getTotalAmount());
+				calculateCount(record, nameAndPrice2AmountMap);
+			}
+			List<String> sellsStr = new ArrayList<String>();
+			for (Map.Entry<String, Integer> _entry : nameAndPrice2AmountMap
+					.entrySet()) {
+				String[] nameAndPriceArr = _entry.getKey().split(",");
+				Integer amount = _entry.getValue();
+				String name = nameAndPriceArr[0];
+				String price = nameAndPriceArr[1];
+				logger.info("当天款式:" + name + " 单价:" + price + " 共卖出:" + amount
+						+ "件");
+				sellsStr.add("当天款式:" + name + " 单价:" + price + " 共卖出:" + amount
+						+ "件");
+			}
+			sellsStr.add("当天现金:" + cash + "元");
+			sellsStr.add("当天刷卡:" + card + "元");
+			sellsStr.add("当天支付宝:" + zfb + "元");
+			sellsStr.add("当天微信:" + weixin + "元");
+			sellsStr.add("当天月结:" + monthPay + "元");
+			sellsStr.add("当天销售额:" + dayTotalPrice + "元");
+			logger.info("当天现金:" + cash + "元");
+			logger.info("当天刷卡:" + card + "元");
+			logger.info("当天支付宝:" + zfb + "元");
+			logger.info("当天微信:" + weixin + "元");
+			logger.info("当天月结:" + monthPay + "元");
+			logger.info("当天销售额:" + dayTotalPrice + "元");
+			dataMap.put("sellsStr", sellsStr);
+			resultList.add(dataMap);
+		}
+
+		return resultList;
+
+	}
+
+	private void calculateCount(OrderDto record,
+			Map<String, Integer> nameAndPrice2AmountMap) {
+		List<Item> itemList = record.getItemList();
+		for (Item item : itemList) {
+			// 统计款式售出数量
+			String name = item.getName();
+			String price = item.getUnitPrice();
+			String key = name + "," + price;
+			String amount = item.getAmount();
+			if (null == nameAndPrice2AmountMap.get(key)) {
+				nameAndPrice2AmountMap.put(key, Integer.parseInt(amount));
+			} else {
+				int lastAmount = nameAndPrice2AmountMap.get(key);
+				lastAmount += Integer.parseInt(amount);
+				nameAndPrice2AmountMap.put(key, lastAmount);
+			}
+		}
 	}
 
 }

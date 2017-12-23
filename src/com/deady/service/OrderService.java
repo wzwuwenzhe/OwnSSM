@@ -82,4 +82,15 @@ public interface OrderService {
 	Map<String, Object> printReport(String beginDate, String endDate,
 			String storeId);
 
+	/**
+	 * 查询当天的报表
+	 * 
+	 * @param startDateStr
+	 * @param endDateStr
+	 * @param storeId
+	 * @return
+	 */
+	List<Map<String, Object>> searchReport(String startDateStr,
+			String endDateStr, String storeId);
+
 }
