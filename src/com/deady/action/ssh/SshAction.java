@@ -33,7 +33,7 @@ public class SshAction {
 		String url = conf.getString("remote.url");
 
 		log.info("---------------调用远程关机--------------");
-		String back = HttpClientUtil.sendGet(url + "/shutdownPC",
+		String back = HttpClientUtil.sendPost(url + "/shutdownPC",
 				new HashMap<String, Object>(), "UTF-8");
 		if (StringUtils.isEmpty(back)) {
 			log.info("back:" + back);

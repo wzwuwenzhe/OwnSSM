@@ -2,12 +2,12 @@ package com.deady.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.deady.dto.OrderDto;
 import com.deady.entity.bill.Order;
-import com.deady.entity.operator.Operator;
 import com.deady.entity.order.OrderSearchEntity;
 
 public interface OrderService {
@@ -79,6 +79,7 @@ public interface OrderService {
 	 * @param storeId
 	 */
 
-	void printReport(String beginDate, String endDate, String storeId);
+	Map<String, Object> printReport(String beginDate, String endDate,
+			String storeId);
 
 }

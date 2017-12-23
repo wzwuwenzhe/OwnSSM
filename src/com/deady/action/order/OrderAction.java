@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,12 +31,13 @@ import com.deady.utils.DateUtils;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.task.RemoteBillTask;
 import com.deady.utils.task.RemoteReportTask;
-import com.deady.utils.task.ReportTask;
 import com.deady.utils.task.Task;
-import com.jcraft.jsch.Logger;
 
 @Controller
 public class OrderAction {
+
+	private static Logger logger = org.slf4j.LoggerFactory
+			.getLogger(OrderAction.class);
 
 	@Autowired
 	OrderService orderService;
@@ -231,6 +233,41 @@ public class OrderAction {
 		orderService.removeOrder(orderId);
 		response.setSuccess(true);
 		response.setMessage("订单删除成功!");
+		return response;
+	}
+
+	@RequestMapping(value = "/searchReport", method = RequestMethod.POST)
+	@DeadyAction(createToken = true)
+	@ResponseBody
+	public Object searchReport(HttpServletRequest req, HttpServletResponse res)
+			throws Exception {
+		String startDateStr = req.getParameter("beginDate");
+		String endDateStr = req.getParameter("endDate");
+		FormResponse response = new FormResponse(req);
+		if (StringUtils.isEmpty(startDateStr)
+				|| StringUtils.isEmpty(endDateStr)) {
+			response.setSuccess(false);
+			response.setMessage("开始时间或者结束时间不能为空");
+			return response;
+		}
+		Date startDate = DateUtils.convert2Date(startDateStr, "yyyyMMdd");
+		Date endDate = DateUtils.addDays(
+				DateUtils.convert2Date(endDateStr, "yyyyMMdd"), 1);
+		if (startDate.getTime() >= endDate.getTime()) {
+			response.setSuccess(false);
+			response.setMessage("结束时间不能早于开始时间!");
+			return response;
+		}
+		Operator op = OperatorSessionInfo.getOperator(req);
+		Map<String, Object> resultMap = orderService.printReport(startDateStr,
+				endDateStr, op.getStoreId());
+		if (resultMap.size() == 0) {
+			response.setSuccess(false);
+			response.setMessage("没有报表信息");
+			return response;
+		}
+		logger.info("resultMap:" + resultMap);
+
 		return response;
 	}
 

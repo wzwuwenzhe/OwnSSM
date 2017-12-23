@@ -11,6 +11,8 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.deady.action.ssh.SshAction;
 import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
 import com.deady.entity.bill.Item;
@@ -41,7 +44,7 @@ import com.deady.utils.task.Task;
 @Controller
 public class BillingAction {
 
-	private static final String SUFFIX = " ";
+	private static Logger logger = LoggerFactory.getLogger(SshAction.class);
 
 	@Autowired
 	private ClientService clientService;
@@ -96,30 +99,38 @@ public class BillingAction {
 		}
 		// 如果为新客户 就需要先添加客户
 		String cusId = null;
+		String newDeliverAddress = req.getParameter("address");
+		String cusName = req.getParameter("cusName");
+		String storeId = op.getStoreId();
+		Client c = null;
 		if (StringUtils.isEmpty(req.getParameter("cusId"))) {
-			Client c = null;
+			c = new Client();
+			cusId = UUID.randomUUID().toString().replaceAll("-", "");
+			c.setId(cusId);
+			c.setName(req.getParameter("cusName"));
+			c.setStoreId(op.getStoreId());
+			c.setDeliverAddress(newDeliverAddress);
+			clientService.addClient(c);
+		} else {
 			// 根据客户名称找一下客户 如果存在就使用之前的客户 如果不存在就新建
 			List<Client> existsClients = clientService
-					.getClientsByNameAndStoreId(req.getParameter("cusName"),
-							op.getStoreId());
-			String newDeliverAddress = req.getParameter("address");
+					.getClientsByNameAndStoreId(cusName, storeId);
 			if (null != existsClients && existsClients.size() > 0) {
 				c = existsClients.get(0);
 				cusId = c.getId();
 				// 如果送货地址有变动 则更新送货地址
 				String oldDeliverAddress = c.getDeliverAddress();
-				if (!oldDeliverAddress.equals(newDeliverAddress)) {
+				logger.info("oldDeliverAddress:" + oldDeliverAddress);
+				logger.info("newDeliverAddress:" + newDeliverAddress);
+				// 老地址不存在就直接用新地址替换
+				// 老地址存在的话 比较是否相当
+				if ((null != oldDeliverAddress && !oldDeliverAddress
+						.equals(newDeliverAddress))
+						|| null == oldDeliverAddress) {
 					clientService.updateClientAddressById(c.getId(),
 							newDeliverAddress);
+					logger.info("updateOldAddress!!");
 				}
-			} else {
-				c = new Client();
-				cusId = UUID.randomUUID().toString().replaceAll("-", "");
-				c.setId(cusId);
-				c.setName(req.getParameter("cusName"));
-				c.setStoreId(op.getStoreId());
-				c.setDeliverAddress(newDeliverAddress);
-				clientService.addClient(c);
 			}
 		}
 

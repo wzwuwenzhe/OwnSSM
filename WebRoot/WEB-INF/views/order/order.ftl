@@ -54,6 +54,7 @@
 			<div class="form-group">
 				<input class="layui-btn layui-btn-radius" type="submit" value="查询"/>
 				<input class="layui-btn layui-btn-warm layui-btn-radius" type="button" value="报表打印" onclick="printReport()" />
+				<input class="layui-btn layui-btn-normal layui-btn-radius" type="button" value="报表查看" onclick="searchReport()" />
 				<input class="layui-btn layui-btn-primary layui-btn-radius" type="button" value="返回"   onclick="location.href='./index'" />
 			</div>
 			</form>
@@ -249,6 +250,24 @@
     		});
 		}
 		
+		//查询报表
+		function searchReport(){
+			var beginDate = $("#beginDate").val();
+			var endDate = $("#endDate").val();
+			var storeId = $("#storeId").val();
+			$.ajax({
+		        url:"./searchReport",
+		        type:"POST",
+		        dataType:"json",
+		        data:{"beginDate":beginDate,"endDate":endDate,"storeId":storeId},
+		        success:function(response){
+		            alert(response.message)
+		        },
+		        error:function(){
+		            alert("出错了,请联系管理员");
+		        }
+    		});
+		}
 		
 		//付款按钮
 		function showPayMoneyDiv(payBtn,orderId){

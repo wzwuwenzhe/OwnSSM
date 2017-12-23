@@ -440,7 +440,8 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public void printReport(String beginDate, String endDate, String storeId) {
+	public Map<String, Object> printReport(String beginDate, String endDate,
+			String storeId) {
 		OrderSearchEntity orderSearch = new OrderSearchEntity();
 		orderSearch.setBeginDate(beginDate);
 		orderSearch.setEndDate(endDate);
@@ -452,7 +453,7 @@ public class OrderServiceImpl implements OrderService {
 		orderSearch.setStoreId(storeId);
 		List<OrderDto> orderList = getOrderDtoByCondition(orderSearch);
 		if (orderList.size() == 0) {
-			return;
+			return new HashMap<String, Object>();
 		}
 		// 组装数据
 		Map<String, List<OrderDto>> day2recordMap = new LinkedHashMap<String, List<OrderDto>>();
@@ -483,17 +484,11 @@ public class OrderServiceImpl implements OrderService {
 			record.add("orders", orderDtoArr);
 			recordsArr.add(record);
 		}
-		String clientUrl = config.getString("remote.url");
 		String privateKey = config.getString("private.key");
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("privateKey", privateKey);
 		dataMap.put("dataArr", recordsArr);
-		logger.info("报表发送的数据:" + dataMap.toString());
-		String back = HttpClientUtil.sendPost(clientUrl + "/remoteReport",
-				dataMap, "UTF-8");
-		if (!StringUtils.isEmpty(back)) {
-			logger.info("请求返回信息:" + back);
-		}
+		return dataMap;
 
 	}
 
