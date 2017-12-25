@@ -5,6 +5,18 @@
 	<@css path="/css/billing/normalize.css" />
 	<@js path="/js/awesomplete.js" />
 	<@js path="/js/map.js" />
+<style>
+	ul.color,
+	ul.size{
+	    padding-left: 0px;
+	    margin-left: 0px;
+	    margin-bottom: 0px;
+		list-style:none;
+	}
+	ul li.selected{
+		background-color:yellow;
+	}
+</style>
 </@htmlHeader>
 <@htmlBody>
 	<@form action="/billing" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="开单">
@@ -16,12 +28,12 @@
 		<table class="billtable">
 			<thead>
 				<tr>
-					<td style="width:20%">款号</td>
-					<td style="width:12%">颜色</td>
-					<td style="width:12%">尺码</td>
-					<td style="width:12%">数量</td>
-					<td style="width:12%">单价</td>
-					<td style="width:17%">金额</td>
+					<td style="width:18%">款号</td>
+					<td style="width:20%">颜色</td>
+					<td style="width:13%">尺码</td>
+					<td style="width:13%">数量</td>
+					<td style="width:13%">单价</td>
+					<td style="width:18%">金额</td>
 					<td style="width:5%">操作</td>
 				</tr>
 			</thead>
@@ -125,14 +137,33 @@
 		$(btn).parent().parent().remove();
 		calculateTotal();
 	}
+	
+	function clickLi(li){
+		$(li).parent().find("li").each(function(){
+			$(this).removeClass();
+		});
+		$(li).addClass("selected")
+		//判断是颜色还是尺寸
+		var ulClass = $(li).parent().attr("class");
+		if(ulClass && ulClass=="color"){
+			var _color = $(li).html();
+			$(li).parent().parent().find("input[name='color']").val(_color);
+		}else if(ulClass && ulClass=="size"){
+			var _size = $(li).html();
+			$(li).parent().parent().prev().find("input[name='size']").val(_size);			
+		}
+		
+	}
+	
+	
 	//新增新款
 	function addRecord(btn){
 		$(btn).parent().parent().before("<tr class='first'>"+
 		"<td rowspan='2'><input  dataType='Require' msg='商品名称不能为空' class='form-control' style='border-bottom:0px;' type='text' onblur='findColorsAndSizes(this)'/></td>"+
-		"<td><select name='color'></select></td>"+
-		"<td><select name='size'></select></td>"+
-		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' /></td>"+
-		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
+		"<td><ul class='color'></td>"+
+		"<td><ul class='size'></td>"+
+		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;' /></td>"+
+		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
 		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
 		"<td><a href='javascript:void(0)' onclick='removeRecord(this)'>删</a></td>"+
 		"</tr><tr>"+
@@ -172,8 +203,8 @@
 		$(btn).parent().parent().before("<tr>"+
 		"<td>"+prevTd2+"</td>"+
 		"<td>"+prevTd3+"</td>"+
-		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' /></td>"+
-		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)'/></td>"+
+		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
+		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
 		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
 		"<td><a href='javascript:void(0)' onclick='removeRecordForOne(this)'>删</a></td>"+
 		"</tr>");
@@ -258,8 +289,14 @@
 			return;
 		}
 		//添加隐藏的name选项  以便数据添加
-		if($(item).parent().next().find('input').eq(0)){
-			$(item).parent().next().find('input').eq(0).remove();
+		if($(item).parent().next().find("input[name='name']")){
+			$(item).parent().next().find("input[name='name']").remove();
+		}
+		if($(item).parent().next().find("input[name='color']")){
+			$(item).parent().next().find("input[name='color']").remove();
+		}
+		if($(item).parent().next().find("input[name='size']")){
+			$(item).parent().next().find("input[name='size']").remove();
 		}
 		$(item).parent().next().append("<input type='hidden' value='"+$(item).val()+"' name='name'/>");
 		$.ajax({
@@ -292,16 +329,18 @@
 	
 	function appendSelector(sizeArr,colorArr,item){
 		//添加多选框
-		var colorSelector = $(item).parent().next().find("select").eq(0);
-		colorSelector.empty();
+		var colorUl = $(item).parent().next().find("ul").eq(0);
+		colorUl.empty();
 		for(var i =0;i<colorArr.length;i++){
-			colorSelector.append("<option value='"+colorArr[i]+"'>"+colorArr[i]+"</option>");
+			colorUl.append("<li onclick='clickLi(this)'>"+colorArr[i]+"</li>");
 		}
-		var sizeSelector = $(item).parent().next().next().find("select").eq(0);
-		sizeSelector.empty();
+		colorUl.parent().append("<input type='hidden' name='color' />");
+		var sizeUl = $(item).parent().next().next().find("ul").eq(0);
+		sizeUl.empty();
 		for(var i =0;i<sizeArr.length;i++){
-			sizeSelector.append("<option value='"+sizeArr[i]+"'>"+sizeArr[i]+"</option>");
+			sizeUl.append("<li onclick='clickLi(this)'>"+sizeArr[i]+"</li>");
 		}
+		colorUl.parent().append("<input type='hidden' name='size' />");
 	}
 	
 	</script>

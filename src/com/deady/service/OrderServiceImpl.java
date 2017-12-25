@@ -541,7 +541,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public List<Map<String, Object>> searchReport(String beginDate,
-			String endDate, String storeId) {
+			String endDate, String storeId) throws Exception {
 		OrderSearchEntity orderSearch = new OrderSearchEntity();
 		orderSearch.setBeginDate(beginDate);
 		orderSearch.setEndDate(endDate);
@@ -579,14 +579,7 @@ public class OrderServiceImpl implements OrderService {
 			double dayTotalPrice = 0;
 			List<OrderDto> records = entry.getValue();
 			// 对map的key进行排序
-			Map<String, Integer> nameAndPrice2AmountMap = new TreeMap<String, Integer>(
-					new Comparator<String>() {
-
-						@Override
-						public int compare(String o1, String o2) {
-							return o1.compareTo(o2);
-						}
-					});
+			Map<String, Integer> nameAndPrice2AmountMap = new TreeMap<String, Integer>();
 			for (OrderDto record : records) {
 				// 过滤未付款订单
 				if (record.getPayType().equals(
@@ -620,8 +613,6 @@ public class OrderServiceImpl implements OrderService {
 				Integer amount = _entry.getValue();
 				String name = nameAndPriceArr[0];
 				String price = nameAndPriceArr[1];
-				logger.info("当天款式:" + name + " 单价:" + price + " 共卖出:" + amount
-						+ "件");
 				sellsStr.add("当天款式:" + name + " 单价:" + price + " 共卖出:" + amount
 						+ "件");
 			}
@@ -631,12 +622,6 @@ public class OrderServiceImpl implements OrderService {
 			sellsStr.add("当天微信:" + weixin + "元");
 			sellsStr.add("当天月结:" + monthPay + "元");
 			sellsStr.add("当天销售额:" + dayTotalPrice + "元");
-			logger.info("当天现金:" + cash + "元");
-			logger.info("当天刷卡:" + card + "元");
-			logger.info("当天支付宝:" + zfb + "元");
-			logger.info("当天微信:" + weixin + "元");
-			logger.info("当天月结:" + monthPay + "元");
-			logger.info("当天销售额:" + dayTotalPrice + "元");
 			dataMap.put("sellsStr", sellsStr);
 			resultList.add(dataMap);
 		}

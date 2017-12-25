@@ -259,8 +259,17 @@ public class OrderAction {
 			return response;
 		}
 		Operator op = OperatorSessionInfo.getOperator(req);
-		List<Map<String, Object>> resultList = orderService.searchReport(
-				startDateStr, endDateStr, op.getStoreId());
+		List<Map<String, Object>> resultList = null;
+		try {
+			resultList = orderService.searchReport(startDateStr, endDateStr,
+					op.getStoreId());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+			response.setSuccess(false);
+			response.setMessage(e.getMessage());
+			return response;
+		}
 		if (resultList.size() == 0) {
 			response.setSuccess(false);
 			response.setMessage("没有报表信息");

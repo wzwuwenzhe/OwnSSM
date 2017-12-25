@@ -91,6 +91,6 @@ public interface OrderService {
 	 * @return
 	 */
 	List<Map<String, Object>> searchReport(String startDateStr,
-			String endDateStr, String storeId);
+			String endDateStr, String storeId) throws Exception;
 
 }
