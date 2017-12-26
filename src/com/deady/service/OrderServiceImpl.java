@@ -649,4 +649,11 @@ public class OrderServiceImpl implements OrderService {
 		}
 	}
 
+	@Override
+	public List<String> getSalesVolumeTopByCondition(String storeId,
+			String startDate, String endDate, int top) {
+		return orderDAO.findSalesVolumeTopByCondition(storeId, startDate,
+				endDate, top);
+	}
+
 }

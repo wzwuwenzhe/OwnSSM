@@ -93,4 +93,16 @@ public interface OrderService {
 	List<Map<String, Object>> searchReport(String startDateStr,
 			String endDateStr, String storeId) throws Exception;
 
+	/**
+	 * 
+	 * @param startDate
+	 *            开始时间
+	 * @param endDate
+	 *            结束时间
+	 * @param top
+	 *            销量前几
+	 * @return
+	 */
+	List<String> getSalesVolumeTopByCondition(String storeId, String startDate,
+			String endDate, int top);
 }

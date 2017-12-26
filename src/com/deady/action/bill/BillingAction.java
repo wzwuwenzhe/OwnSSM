@@ -11,6 +11,9 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.shunpay.util.ConfigUtil;
+
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ import com.deady.service.OrderService;
 import com.deady.service.StockService;
 import com.deady.service.StoreService;
 import com.deady.utils.ActionUtil;
+import com.deady.utils.DateUtils;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.task.RemoteBillTask;
 import com.deady.utils.task.Task;
@@ -45,6 +49,8 @@ import com.deady.utils.task.Task;
 public class BillingAction {
 
 	private static Logger logger = LoggerFactory.getLogger(SshAction.class);
+	private static PropertiesConfiguration conf = ConfigUtil
+			.getProperties("deady");
 
 	@Autowired
 	private ClientService clientService;
@@ -64,7 +70,16 @@ public class BillingAction {
 		Operator op = OperatorSessionInfo.getOperator(req);
 		List<Client> clientList = clientService.getClientListByStoreId(op
 				.getStoreId());
+		// 获取7天内销量前三的款号
+		String nowDateStr = DateUtils.convert2String(
+				DateUtils.addDays(new Date(), 1), "yyyyMMdd");
+		String startDate = DateUtils.convert2String(
+				DateUtils.addDays(new Date(), -6), "yyyyMMdd");
+		int top = conf.getInt("top");
+		List<String> nameList = orderService.getSalesVolumeTopByCondition(
+				op.getStoreId(), startDate, nowDateStr, top);
 		req.setAttribute("clientList", clientList);
+		req.setAttribute("nameList", nameList);
 		return new ModelAndView("/bill/billing");
 	}
 

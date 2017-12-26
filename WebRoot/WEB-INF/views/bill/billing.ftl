@@ -7,7 +7,8 @@
 	<@js path="/js/map.js" />
 <style>
 	ul.color,
-	ul.size{
+	ul.size,
+	ul.name{
 	    padding-left: 0px;
 	    margin-left: 0px;
 	    margin-bottom: 0px;
@@ -156,10 +157,11 @@
 	}
 	
 	
+	var btnIndex = 0;
 	//新增新款
 	function addRecord(btn){
 		$(btn).parent().parent().before("<tr class='first'>"+
-		"<td rowspan='2'><input  dataType='Require' msg='商品名称不能为空' class='form-control' style='border-bottom:0px;' type='text' onblur='findColorsAndSizes(this)'/></td>"+
+		"<td rowspan='2'><ul id='" + btnIndex + "nameUl' class='name'></ul><div><input onclick='removeLiClass(this)'  class='form-control' style='border-bottom:0px;' type='text' onblur='findColorsAndSizes(this)'/></div></td>"+
 		"<td><ul class='color'></td>"+
 		"<td><ul class='size'></td>"+
 		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;' /></td>"+
@@ -169,7 +171,18 @@
 		"</tr><tr>"+
 		"<td colspan='6'><input class='form-control' type='button' value='新增同款' onclick='addSameRecord(this)'/></td>"+
 		"</tr>");
+		<#list nameList as name>
+			$("#"+btnIndex+"nameUl").append("<li onclick='findColorsAndSizes(this,true)' >"+${name}+"</li>");
+		</#list>
+		btnIndex++;
 	}
+	//去掉li的样式
+	function removeLiClass(item){
+		$(item).parent().prev().find("li").each(function(){
+			$(this).removeClass();
+		});
+	}
+	
 	//新增同款
 	function addSameRecord(btn){
 		//修改第一列的rowspan
@@ -181,9 +194,18 @@
 		    if(flag){
 		    	//如果款号没有输入  就不能新增
 		    	var _name = $(prev).find("td").eq(0).find("input").eq(0).val();
+		    	var selectedName = "";
+		    	$(prev).find("li").each(function(){
+		    		if($(this).hasClass("selected")){
+		    			selectedName = $(this).html();
+		    		}
+		    	});
 		    	if(!_name || _name==""){
-		    		alert("请先填写款号!");
-		    		return;
+		    		_name = selectedName;
+		    		if(!_name || _name==""){
+			    		alert("请先填写款号!");
+			    		return;
+		    		}
 		    	}
 		    	var lastrowspan = $(prev).find("td").eq(0).attr("rowspan");
 		    	$(prev).find("td").eq(0).attr("rowspan",(parseInt(lastrowspan)+1));
@@ -282,23 +304,31 @@
 		}
 	
 	//根据款号找到颜色和尺码
-	function findColorsAndSizes(item){
+	function findColorsAndSizes(item,isLi){
+		if(isLi){
+			clickLi(item);
+			$(item).parent().next().find("input").eq(0).val('');
+		}
 		var _name = $(item).val();
-		if("" ==_name || null == _name){
-			alert("款号不能为空");
-			return;
+		var selectedName = $(item).html();
+		if("" ==_name || null == _name ){
+			_name = selectedName;
+			if("" ==_name || null == _name ){
+				alert("款号不能为空");
+				return;
+			}
 		}
 		//添加隐藏的name选项  以便数据添加
-		if($(item).parent().next().find("input[name='name']")){
-			$(item).parent().next().find("input[name='name']").remove();
+		if($(item).parent().parent().next().find("input[name='name']")){
+			$(item).parent().parent().next().find("input[name='name']").remove();
 		}
-		if($(item).parent().next().find("input[name='color']")){
-			$(item).parent().next().find("input[name='color']").remove();
+		if($(item).parent().parent().next().find("input[name='color']")){
+			$(item).parent().parent().next().find("input[name='color']").remove();
 		}
-		if($(item).parent().next().find("input[name='size']")){
-			$(item).parent().next().find("input[name='size']").remove();
+		if($(item).parent().parent().next().find("input[name='size']")){
+			$(item).parent().parent().next().find("input[name='size']").remove();
 		}
-		$(item).parent().next().append("<input type='hidden' value='"+$(item).val()+"' name='name'/>");
+		$(item).parent().parent().next().append("<input type='hidden' value='"+_name+"' name='name'/>");
 		$.ajax({
 				url:"./getCorlorAndSizeByName.htm",
 				type:"POST",
@@ -329,13 +359,13 @@
 	
 	function appendSelector(sizeArr,colorArr,item){
 		//添加多选框
-		var colorUl = $(item).parent().next().find("ul").eq(0);
+		var colorUl = $(item).parent().parent().next().find("ul").eq(0);
 		colorUl.empty();
 		for(var i =0;i<colorArr.length;i++){
 			colorUl.append("<li onclick='clickLi(this)'>"+colorArr[i]+"</li>");
 		}
 		colorUl.parent().append("<input type='hidden' name='color' />");
-		var sizeUl = $(item).parent().next().next().find("ul").eq(0);
+		var sizeUl = $(item).parent().parent().next().next().find("ul").eq(0);
 		sizeUl.empty();
 		for(var i =0;i<sizeArr.length;i++){
 			sizeUl.append("<li onclick='clickLi(this)'>"+sizeArr[i]+"</li>");

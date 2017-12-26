@@ -27,4 +27,9 @@ public interface OrderDAO {
 	void updateOrderRemarkById(@Param("orderId") String orderId,
 			@Param("remark") String remark);
 
+	List<String> findSalesVolumeTopByCondition(
+			@Param("storeId") String storeId,
+			@Param("startDate") String startDate,
+			@Param("endDate") String endDate, @Param("top") int top);
+
 }

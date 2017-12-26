@@ -53,5 +53,12 @@
    			update store_order set remark=#{remark} 
    			where id=#{orderId} 
    		</update>
+   		<select id="findSalesVolumeTopByCondition" resultType="String">
+   		select name from (
+   			select sum(amount) total ,name from item where order_id in(select id from store_order where state &lt;&gt; '9' and state &lt;&gt; '1' and store_id=#{storeId}
+			and creation_time &gt;= #{startDate} and creation_time &lt;= #{endDate})
+			group by name order by total desc limit #{top} 
+			) a;
+   		</select>
    		
 </mapper>
