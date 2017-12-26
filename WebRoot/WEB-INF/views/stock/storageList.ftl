@@ -40,9 +40,9 @@
 					<td rowspan="${stockSize}">${storage.stockLeft}</td>
 					<td rowspan="${stockSize}">${storage.total}</td> 
 					<td rowspan="${stockSize}">
-						<a href="javascript:void(0)" onclick="putInStock('${storage.name}')">入库</a> | 
+						<input type="button" value="入库" onclick="putInStock('${storage.name}')"/>
 						<#if userType=="1" || userType=="3">
-							<a href="javascript:void(0)" onclick="deleteStorage('${storage.name}');" >删除订单</a>
+							<input type="button" value="删除订单" onclick="deleteStorage('${storage.name}');" />
 						</#if>
 					</td>
 				</tr>

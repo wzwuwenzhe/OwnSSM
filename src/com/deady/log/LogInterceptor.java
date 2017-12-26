@@ -11,7 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.deady.entity.operator.Operator;
+import com.deady.entity.operatorlog.OperatorLog;
+import com.deady.service.OperatorLogService;
+import com.deady.utils.DateUtils;
 import com.deady.utils.OperatorSessionInfo;
+import com.deady.utils.SpringContextUtil;
 
 public class LogInterceptor {
 
@@ -38,9 +42,16 @@ public class LogInterceptor {
 						paramMap.put(name, value);
 					}
 					if (paramMap.size() > 0) {
-						logger.info("请求参数:" + paramMap.toString());
+						// logger.info("请求参数:" + paramMap.toString());
 					}
-
+					OperatorLogService logService = (OperatorLogService) SpringContextUtil
+							.getBeanByClass(OperatorLogService.class);
+					String dateStr = DateUtils.getCurrentDate("yyyyMMddHHmmss");
+					OperatorLog log = new OperatorLog(operator.getStoreId(),
+							operator.getId(), operator.getUserType(),
+							operator.getName(), req.getRequestURL().toString(),
+							paramMap.toString(), dateStr);
+					logService.addLog(log);
 				}
 			}
 		}
