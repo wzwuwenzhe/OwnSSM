@@ -11,6 +11,9 @@
 				<@project name="店铺注册" href="/storeRegister" imgName="shop.png"/>
 				<@project name="新增操作员" href="/operatorRegister" imgName="operator.png"/>
 			</#if>
+			<#if (userType=="1" )>
+				<@project name="操作日志" href="/logSearch" imgName="log.png"/>
+			</#if>
 			<@project name="用户中心" href="/operatorInfo" imgName="operatorInfo.png"/>
 			<div class="col-lg-3 col-md-6 col-sm-6 work"> 
 				<a href="javascript:void(0)" onclick="shutdownPC()" class="work-box"> <img src="${img("/image/main/power.png")}" alt="">

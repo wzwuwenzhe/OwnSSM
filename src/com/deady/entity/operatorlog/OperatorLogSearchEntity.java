@@ -5,15 +5,15 @@ import com.deady.entity.BasicEntityField;
 public class OperatorLogSearchEntity {
 
 	@BasicEntityField(length = 10, testValue = "0571888822")
-	private String operatorid;// 操作员姓名
+	private String operatorId;// 操作员姓名
 	@BasicEntityField(length = 50, testValue = "333")
 	private String operatorName;// 操作员姓名
 	@BasicEntityField(length = 8, testValue = "05718888")
 	private String storeId;// 店铺Id
 	@BasicEntityField(length = 14, testValue = "20171221201543")
-	private String startTime;// 搜索开始时间
+	private String beginDate;// 搜索开始时间
 	@BasicEntityField(length = 14, testValue = "20171221201550")
-	private String endTime;// 搜索结束时间
+	private String endDate;// 搜索结束时间
 	private int start;// 分页开始
 	private int pagesize;// 每页显示的数量
 
@@ -33,22 +33,6 @@ public class OperatorLogSearchEntity {
 		this.storeId = storeId;
 	}
 
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-
 	public int getStart() {
 		return start;
 	}
@@ -65,12 +49,28 @@ public class OperatorLogSearchEntity {
 		this.pagesize = pagesize;
 	}
 
-	public String getOperatorid() {
-		return operatorid;
+	public String getOperatorId() {
+		return operatorId;
 	}
 
-	public void setOperatorid(String operatorid) {
-		this.operatorid = operatorid;
+	public void setOperatorId(String operatorId) {
+		this.operatorId = operatorId;
+	}
+
+	public String getBeginDate() {
+		return beginDate;
+	}
+
+	public void setBeginDate(String beginDate) {
+		this.beginDate = beginDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 }

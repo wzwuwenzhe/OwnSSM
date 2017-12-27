@@ -8,7 +8,7 @@
 	parameterType="com.deady.entity.operatorlog.OperatorLogSearchEntity">
 	
 		SELECT * FROM operator_log WHERE 
-		operate_time   &gt;= #{startTime} and creation_time &lt;= #{endTime} 
+		operate_time   &gt;= #{beginDate} and operate_time &lt;= #{endDate} 
 		<if test="storeId !=null and storeId!=''">
 		and store_id = #{storeId}
 		</if>
@@ -18,7 +18,9 @@
 		<if test="operatorId != null and operatorId != ''">
 		and operator_id = '${operatorId}'   
 		</if>
+		<if test="  pagesize !=null and pagesize !=0  ">
         limit #{start}, #{pagesize}
+		</if>
 	</select>
 	
 	<insert id="insertLog" parameterType="com.deady.entity.operatorlog.OperatorLog">

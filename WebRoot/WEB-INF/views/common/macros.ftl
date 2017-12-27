@@ -76,10 +76,10 @@ table,table tr th, table tr td { border:1px solid #000000; }
 
 
 <#assign _today=jodaTime.now().toString("yyyyMMdd")/>
-<#macro DateFields begin=_today end=_today beginValue="" endValue="">
-    <input type="text" <#if beginValue!="">value="${beginValue}"<#else>value="${begin}"</#if> class="Wdate" name="beginDate" id="beginDate" style="cursor:pointer;width:120px;" onclick="WdatePicker()" readonly="readonly" dataType="Require" msg="开始日期不能为空"/>
+<#macro DateFields begin=_today end=_today beginValue="" endValue="" style="" needHour=false>
+    <input type="text" <#if style!="">style="${style}"</#if> <#if beginValue!="">value="${beginValue}"<#else>value="${begin}"</#if> class="Wdate" name="beginDate" id="beginDate" style="cursor:pointer;width:120px;" <#if needHour==true>onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"<#else>onclick="WdatePicker({dateFmt:'yyyyMMdd'})"</#if> readonly="readonly" dataType="Require" msg="开始日期不能为空"/>
     </span>至</span>
-    <input type="text" <#if beginValue!="">value="${endValue}"<#else>value="${end}"</#if> class="Wdate" name="endDate" id="endDate" style="cursor:pointer;width:120px;" onclick="WdatePicker()" readonly="readonly" dataType="Require" msg="结束日期不能为空"/>
+    <input type="text" <#if style!="">style="${style}"</#if> <#if beginValue!="">value="${endValue}"<#else>value="${end}"</#if> class="Wdate" name="endDate" id="endDate" style="cursor:pointer;width:120px;" <#if needHour==true>onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"<#else>onclick="WdatePicker({dateFmt:'yyyyMMdd'})"</#if> readonly="readonly" dataType="Require" msg="结束日期不能为空"/>
 </#macro>
 
 <#macro htmlBody>

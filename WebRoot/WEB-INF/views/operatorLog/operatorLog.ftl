@@ -4,9 +4,13 @@
 			<form id="searchForm" action="${url("/logSearch")}" method="post" >
 			<input type="hidden" name="_token" value="${_token}"/>
 			
-			<@form_input value="${(entity.storeId)!''}" id="storeId" desc="店铺Id" name="storeId" dataType="Chinese" msg="" type="text" style="width:100px;"/>
 			<div class="layui-fluid">
 			  <div class="layui-row">
+			    <div class="layui-col-sm3">
+			      <div class="grid-demo">
+					<@form_input value="${(entity.storeId)!''}" id="storeId" desc="店铺Id" name="storeId" dataType="Chinese" msg="" type="text" style="width:100px;"/>
+				  </div>
+			    </div>
 			    <div class="layui-col-sm3">
 			      <div class="grid-demo">
 					<@form_input value="${(entity.operatorId)!''}" id="operatorId" desc="操作员ID" name="operatorId" dataType="Chinese" msg="客户名称必须全部为中文" type="text" style="width:100px;"/>
@@ -20,8 +24,8 @@
 			  </div>
 			</div>
 			<div style="margin: 10px;">
-				<#assign _today=jodaTime.now().toString("yyyyMMddHHmmss")/>
-				操作时间:<@DateFields begin=_today beginValue="${(entity.startTime)!''}" endValue="${(entity.endTime)!''}"/>
+				<#assign _today=jodaTime.now().toString("yyyy-MM-dd HH:mm:ss")/>
+				操作时间:<@DateFields style="width:155px;" needHour=true begin=_today beginValue="${(entity.beginDate)!''}" endValue="${(entity.endDate)!''}"/>
 			</div>
 			
 			<div class="form-group">
@@ -31,54 +35,61 @@
 			</form>
 		</div>
 	<div class="container">
-		<div id="page" >
+		<div  >
 		  <table id="table" class="layui-table" lay-filter="parse-table-demo">
   		  	<thead>
 		  		<tr>
-					<th>店铺ID</th>
-				  	<th>操作员ID</th>
-					<th>操作员姓名</th>
-					<th>请求地址</th>
-					<th>请求参数</th>
+					<th style="width:80px">店铺ID</th>
+				  	<th style="width:80px">操作员ID</th>
+					<th style="width:65px">操作员姓名</th>
+					<th style="width:65px">请求时间</th>
+					<th style="width:100px">请求地址</th>
+					<th style="width:200px">请求参数</th>
 				  </tr>
 		  	</thead>
 			<tbody>
+				<#list logList as log>
+					<tr>
+						<td>${log.storeId}</td>
+						<td>${log.operatorId}</td>
+						<td>${log.operatorName}</td>
+						<td>${log.operateTime}</td>
+						<td>${log.requestUrl}</td>
+						<td>${log.params}</td>
+					</tr>
+				</#list>
 			</tbody>
 			</table>
 		</div>
 	</div>
-		
-	<@form id="payform" action="/payForTheMoney" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="" style="display:none">
-		<div style="margin:10px;">
-			付款方式：</br>
-			<input type="radio" id="payType1" name="payType" value="1" checked="checked" /><label for="payType1">现金</label>
-			<input type="radio" id="payType2" name="payType" value="2" /><label for="payType2">刷卡</label>
-			<input type="radio" id="payType3" name="payType" value="3" /><label for="payType3">支付宝</label>
-			<input type="radio" id="payType4" name="payType" value="4" /><label for="payType4">微信</label>
-			<input type="radio" id="payType6" name="payType" value="6" /><label for="payType6">月结</label>
-		</div>
-    </@form>
+	<br/>
+	<div id="page"></div>
 
-	<@form id="deliverform" action="/deliverGoods" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="" style="display:none">
-		<div style="margin:10px;" id="deliverformDiv">
-			<table id="table" class="layui-table" lay-filter="parse-table-demo">
-  		  	<thead>
-		  		<tr>
-					<th>商品名称</th>
-					<th>颜色</th>
-					<th>尺码</th>
-					<th>单价</th>
-					<th>数量</th>
-					<th>金额(元)</th>
-			  	</tr>
-		  	</thead>
-			<tbody></tbody>
-			</table>
-		</div>
-    </@form>
 		
 	<script type="text/javascript">
-	
+	 //分页功能
+	  layui.use(['laypage', 'layer'], function(){
+	  var laypage = layui.laypage
+	  ,layer = layui.layer;
+	  laypage.render({
+	    elem: 'page'
+	    ,count: '${page.total}'
+	    ,curr :'${page.start}'
+	    ,layout: ['count', 'prev', 'page', 'next']
+	    ,jump: function(obj,first){
+	    if(!first){
+		    var start = obj.curr;
+		    console.log(start);
+		    var storeId = $("#storeId").val();
+		    var operatorId = $("#operatorId").val();
+		    var operatorName = $("#operatorName").val();
+		    var beginDate = $("#beginDate").val();
+		    var endDate = $("#endDate").val();
+		    location.href="./logSearch?start="+start+"&storeId="+storeId+"&operatorId="+operatorId+"&operatorName="+operatorName+"&beginDate="+beginDate+"&endDate="+endDate;
+	    }
+	    }
+	  });
+	  });
 	</script>
 </body>
 </@htmlHeader4Order>
