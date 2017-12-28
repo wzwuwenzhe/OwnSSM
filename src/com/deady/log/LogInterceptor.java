@@ -29,10 +29,10 @@ public class LogInterceptor {
 				HttpServletRequest req = (HttpServletRequest) object;
 				Operator operator = OperatorSessionInfo.getOperator(req);
 				if (null != operator) {
-					logger.info("操作员ID:" + operator.getId() + " 姓名:"
-							+ operator.getName() + " 店铺ID:"
-							+ operator.getStoreId() + " requestURL:"
-							+ req.getRequestURL());
+					// logger.info("操作员ID:" + operator.getId() + " 姓名:"
+					// + operator.getName() + " 店铺ID:"
+					// + operator.getStoreId() + " requestURL:"
+					// + req.getRequestURL());
 					Enumeration em = req.getParameterNames();
 					// 保存请求参数和值
 					Map<String, String> paramMap = new TreeMap<String, String>();

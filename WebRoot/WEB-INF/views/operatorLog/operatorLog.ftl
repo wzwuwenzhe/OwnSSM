@@ -18,7 +18,7 @@
 			    </div>
 				<div class="layui-col-sm3">
 			      <div class="grid-demo">
-					<@form_input value="${(entity.OperatorName)!''}" id="operatorName" desc="操作员姓名" name="operatorName" dataType="Chinese" msg="客户名称必须全部为中文" type="text" style="width:100px;"/>
+					<@form_input value="${(entity.operatorName)!''}" id="operatorName" desc="操作员姓名" name="operatorName" dataType="Chinese" msg="客户名称必须全部为中文" type="text" style="width:100px;"/>
 				  </div>
 			    </div>
 			  </div>

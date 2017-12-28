@@ -95,6 +95,20 @@ public class BillingAction {
 			response.setMessage("请先填写客户姓名");
 			return response;
 		}
+		for (String _size : size) {
+			if (StringUtils.isEmpty(_size)) {
+				response.setSuccess(false);
+				response.setMessage("请选择尺码");
+				return response;
+			}
+		}
+		for (String _color : color) {
+			if (StringUtils.isEmpty(_color)) {
+				response.setSuccess(false);
+				response.setMessage("请选择颜色");
+				return response;
+			}
+		}
 		Operator op = OperatorSessionInfo.getOperator(req);
 		Order order = new Order();
 		Date now = new Date();

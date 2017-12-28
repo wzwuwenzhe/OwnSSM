@@ -258,11 +258,15 @@ public class OrderAction {
 			response.setMessage("结束时间不能早于开始时间!");
 			return response;
 		}
-		Operator op = OperatorSessionInfo.getOperator(req);
+		String storeId = req.getParameter("storeId");
+		if (StringUtils.isEmpty(storeId)) {
+			Operator op = OperatorSessionInfo.getOperator(req);
+			storeId = op.getStoreId();
+		}
 		List<Map<String, Object>> resultList = null;
 		try {
 			resultList = orderService.searchReport(startDateStr, endDateStr,
-					op.getStoreId());
+					storeId);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();

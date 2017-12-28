@@ -1,3 +1,5 @@
 /com
 /test
 /mapper
+/log4j.properties
+/logback.xml

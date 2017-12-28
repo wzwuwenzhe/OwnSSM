@@ -19,7 +19,9 @@
    		parameterType="com.deady.entity.order.OrderSearchEntity">
    			SELECT * FROM store_order WHERE 
    			creation_time   &gt;= #{beginDate} and creation_time &lt;= #{endDate} 
-   			and state &lt;&gt;'9' 
+   			<if test='state != "9" '>
+	   			and state &lt;&gt;'9' 
+   			</if>
    			<if test="storeId !=null and storeId!=''">
    			and store_id = #{storeId}
    			</if>

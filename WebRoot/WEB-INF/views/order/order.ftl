@@ -42,6 +42,9 @@
 						<option value="2" <#if state=="2">selected</#if>>---待发货---</option>
 						<option value="3" <#if state=="3">selected</#if>>----欠货----</option>
 						<option value="4" <#if state=="4">selected</#if>>----完成----</option>
+						<#if userType=="1">
+							<option value="9" <#if state=="9">selected</#if>>----已删除----</option>
+						</#if>
 					</select>
 				  </div>
 			    </div>

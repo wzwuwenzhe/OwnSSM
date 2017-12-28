@@ -27,6 +27,9 @@
         <property name="checkoutTimeout" value="${jdbc.checkoutTimeout}" />
         <!-- 当获取连接失败重试次数 -->
         <property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
+        <!-- 为解决数据库8小时无连接自动断开的问题 -->
+        <property name="testConnectionOnCheckin" value="false"/>
+    	<property name="testConnectionOnCheckout" value="true"/>
     </bean>
 
     <!-- 3.配置SqlSessionFactory对象 -->

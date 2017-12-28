@@ -90,6 +90,8 @@ public class OrderDto extends Order {
 			return "欠货";
 		case 4:
 			return "完成";
+		case 9:
+			return "已删除";
 		default:
 			return "未知";
 		}
