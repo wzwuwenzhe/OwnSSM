@@ -5,9 +5,11 @@
 <mapper namespace="com.deady.dao.OrderDAO">
 		 <insert id="insertOrder"  parameterType="com.deady.entity.bill.Order">
          	insert into store_order 
-         	(id,cus_id,operator_id,store_id,small_count,discount,total_amount,remark,pay_type,address,state) 
+         	(id,cus_id,operator_id,store_id,small_count,discount,total_amount,remark,
+         	pay_type,address,state,return_money,return_order_id) 
          	values(#{id},#{cusId},#{operatorId},#{storeId},#{smallCount},
-         	#{discount},#{totalAmount},#{remark},#{payType},#{address},#{state})  
+         	#{discount},#{totalAmount},#{remark},#{payType},#{address},#{state},
+         	#{returnMoney},#{returnOrderId})  
    		</insert>
    		
    		<select id="findOrderById" resultType="Order">

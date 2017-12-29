@@ -26,16 +26,16 @@ public class OrderDto extends Order {
 
 	private String cusName;// 客户名称
 	private String creationTime;// 订单创建时间
-	private String payTypeDesc;// 付款方式说明
-	private String orderStateDesc;// 订单状态说明
 
 	public OrderDto() {
 
 	}
 
 	private static final long serialVersionUID = 6802401416029548385L;
-
+	// 订单项目详情
 	private List<Item> itemList = new ArrayList<Item>();
+	// 退货项目详情
+	private List<Item> returnItemList = new ArrayList<Item>();
 
 	public String getPayTypeDesc() {
 		switch (Integer.parseInt(payType)) {
@@ -51,6 +51,25 @@ public class OrderDto extends Order {
 			return "未付";
 		case 6:
 			return "月结";
+		default:
+			return "未知";
+		}
+	}
+
+	public String getOrderStateDesc() {
+		switch (Integer.parseInt(state)) {
+		case 1:
+			return "未付款";
+		case 2:
+			return "待发货";
+		case 3:
+			return "欠货";
+		case 4:
+			return "完成";
+		case 5:
+			return "退换货";
+		case 9:
+			return "已删除";
 		default:
 			return "未知";
 		}
@@ -80,21 +99,12 @@ public class OrderDto extends Order {
 		this.creationTime = creationTime;
 	}
 
-	public String getOrderStateDesc() {
-		switch (Integer.parseInt(state)) {
-		case 1:
-			return "未付款";
-		case 2:
-			return "待发货";
-		case 3:
-			return "欠货";
-		case 4:
-			return "完成";
-		case 9:
-			return "已删除";
-		default:
-			return "未知";
-		}
+	public List<Item> getReturnItemList() {
+		return returnItemList;
+	}
+
+	public void setReturnItemList(List<Item> returnItemList) {
+		this.returnItemList = returnItemList;
 	}
 
 }

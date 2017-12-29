@@ -15,6 +15,8 @@ public class Order implements Serializable {
 	private static final long serialVersionUID = -8301945175397999355L;
 	@BasicEntityField(length = 20, testValue = "20170719165012XXXXXX")
 	protected String id;// 订单号
+	@BasicEntityField(length = 20, testValue = "20170719165012XXXXXX")
+	protected String returnOrderId;// 退货订单号
 	@BasicEntityField(length = 32, testValue = "3629b32d820d44b9ba5b43704018988e")
 	protected String cusId;// 客户id
 	@BasicEntityField(length = 32, testValue = "ec409db7f6aa41feab30d134afaeecb0")
@@ -36,6 +38,8 @@ public class Order implements Serializable {
 	// 新增属性 付款方式 1:现金 2:刷卡 3:支付宝 4:微信5:未付 6:月结
 	@BasicEntityField(length = 1, testValue = "1")
 	protected String payType;// 付款方式
+	@BasicEntityField(length = 20, testValue = "100.00")
+	protected String returnMoney;// 退款金额
 	protected String creationTime;// 创建时间
 
 	public String getId() {
@@ -132,6 +136,22 @@ public class Order implements Serializable {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getReturnMoney() {
+		return returnMoney;
+	}
+
+	public void setReturnMoney(String returnMoney) {
+		this.returnMoney = returnMoney;
+	}
+
+	public String getReturnOrderId() {
+		return returnOrderId;
+	}
+
+	public void setReturnOrderId(String returnOrderId) {
+		this.returnOrderId = returnOrderId;
 	}
 
 }

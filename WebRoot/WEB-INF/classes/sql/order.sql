@@ -21,3 +21,9 @@ ALTER TABLE
 	deady.store_order ADD (address VARCHAR(100))
 ALTER TABLE
 	deady.store_order ADD (state CHAR(1) DEFAULT '2' NOT NULL)
+	
+/* 20171229 添加退款金额 以及退款订单号*/
+	ALTER TABLE
+    deady.store_order ADD (return_money VARCHAR(20))
+    ALTER TABLE
+    deady.store_order ADD (return_order_id CHAR(20))

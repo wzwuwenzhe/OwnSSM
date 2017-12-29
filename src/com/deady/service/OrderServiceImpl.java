@@ -72,7 +72,10 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public OrderDto getOrderDtoById(String orderId) {
 		Order order = orderDAO.findOrderById(orderId);
+		String cusId = order.getCusId();
+		Client client = clientService.getClientById(cusId);
 		OrderDto dto = new OrderDto(order);
+		dto.setCusName(client.getName());
 		List<Item> itemList = itemDAO.findItemsByOrderId(orderId);
 		dto.setItemList(itemList);
 		return dto;
@@ -113,7 +116,10 @@ public class OrderServiceImpl implements OrderService {
 				continue;
 			}
 			List<Item> tempList = itemDAO.findItemsByOrderId(order.getId());
+			List<Item> returnTempList = itemDAO.findReturnItemsByOrderId(order
+					.getReturnOrderId());
 			dto.setItemList(tempList);
+			dto.setReturnItemList(returnTempList);
 			dto.setCusName(StringUtils.isEmpty(cusName) ? "" : cusName);
 			resultList.add(dto);
 		}
@@ -650,8 +656,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public List<String> getSalesVolumeTopByCondition(String storeId,
-			String startDate, String endDate, int top) {
+	public List<String> getSalesVolumeTopByCondition(String storeId) {
+		// 获取7天内销量前三的款号
+		String endDate = DateUtils.convert2String(
+				DateUtils.addDays(new Date(), 1), "yyyyMMdd");
+		String startDate = DateUtils.convert2String(
+				DateUtils.addDays(new Date(), -6), "yyyyMMdd");
+		int top = config.getInt("top");
 		return orderDAO.findSalesVolumeTopByCondition(storeId, startDate,
 				endDate, top);
 	}

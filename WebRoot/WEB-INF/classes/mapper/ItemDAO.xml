@@ -18,8 +18,29 @@
 		</insert>
 		
 		
+		<insert id="insertReturnItems" parameterType="java.util.List">
+		   insert into return_item (id,order_id,name,color,size,unit_price,amount,price) values
+		   <foreach collection="list" item="item" index="index"
+		       separator=",">
+		       (#{item.id},
+		       #{item.orderId},
+		       #{item.name} ,
+		       #{item.color},
+		       #{item.size} ,
+		       #{item.unitPrice} ,
+		       #{item.amount} ,
+		       #{item.price}   )
+		   </foreach>
+		</insert>
+		
+		
 		<select id="findItemsByOrderId" resultType="Item">
 			SELECT * from item
+			WHERE order_id=#{orderId} order by name ,color ,locate(`size`,'s,S,m,M,l,L,xl,XL,xxl,XXL');
+		</select>
+		
+		<select id="findReturnItemsByOrderId" resultType="Item">
+			SELECT * from return_item
 			WHERE order_id=#{orderId} order by name ,color ,locate(`size`,'s,S,m,M,l,L,xl,XL,xxl,XXL');
 		</select>
 		

@@ -31,6 +31,22 @@ public class Item implements Serializable {
 	@BasicEntityField(length = 32, testValue = "1250.00")
 	private String price;// 金额
 
+	public Item() {
+
+	}
+
+	public Item(String orderId, String id, String name, String color,
+			String size, String unitPrice, String amount, String price) {
+		this.orderId = orderId;
+		this.id = id;
+		this.name = name;
+		this.color = color;
+		this.size = size;
+		this.unitPrice = unitPrice;
+		this.amount = amount;
+		this.price = price;
+	}
+
 	public String getOrderId() {
 		return orderId;
 	}

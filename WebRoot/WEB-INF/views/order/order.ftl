@@ -42,6 +42,7 @@
 						<option value="2" <#if state=="2">selected</#if>>---待发货---</option>
 						<option value="3" <#if state=="3">selected</#if>>----欠货----</option>
 						<option value="4" <#if state=="4">selected</#if>>----完成----</option>
+						<option value="5" <#if state=="5">selected</#if>>---退换货---</option>
 						<#if userType=="1">
 							<option value="9" <#if state=="9">selected</#if>>----已删除----</option>
 						</#if>
@@ -58,7 +59,7 @@
 				<input class="layui-btn layui-btn-radius" type="submit" value="查询"/>
 				<input class="layui-btn layui-btn-warm layui-btn-radius" type="button" value="报表打印" onclick="printReport()" />
 				<input class="layui-btn layui-btn-normal layui-btn-radius" type="button" value="报表查看" onclick="searchReport()" />
-				<input class="layui-btn layui-btn-primary layui-btn-radius" type="button" value="返回"   onclick="location.href='./index'" />
+				<input class="layui-btn layui-btn-primary layui-btn-radius" type="button" value="返回"   onclick="window.history.back()"; />
 			</div>
 			</form>
 		</div>
@@ -87,7 +88,8 @@
 			<#list orderList as order>
 				<tr>
 					<#assign itemSize = order.itemList?size >
-					<td rowspan="${itemSize}">${order_index+1}</td>
+					<#assign returnItemSize = order.returnItemList?size >
+					<td rowspan="${itemSize+returnItemSize}">${order_index+1}</td>
 					<#if (order.itemList?size > 0 ) >
 						<#assign itemList = order.itemList >
 						<#list itemList as item>
@@ -101,23 +103,28 @@
 							</#if>
 						</#list>
 					</#if>
-					<td rowspan="${itemSize}">${order.totalAmount}</td>
-					<td rowspan="${itemSize}">${order.payTypeDesc}</td>
-					<td rowspan="${itemSize}">${order.address}</td>
-					<td rowspan="${itemSize}">${order.remark}</td>
-					<td rowspan="${itemSize}">${order.cusName}</td> 
+					<td rowspan="${itemSize+returnItemSize}">${order.totalAmount}</td>
+					<td rowspan="${itemSize+returnItemSize}">${order.payTypeDesc}</td>
+					<td rowspan="${itemSize+returnItemSize}">${order.address}</td>
+					<td rowspan="${itemSize+returnItemSize}">${order.remark}</td>
+					<td rowspan="${itemSize+returnItemSize}">${order.cusName}</td> 
 					<#assign orderState="${order.state}">
-					<td rowspan="${itemSize}" <#if orderState=="1">style="color:red;font-weight:bold"</#if>
+					<td rowspan="${itemSize+returnItemSize}" <#if orderState=="1">style="color:red;font-weight:bold"</#if>
 						<#if orderState=="4">style="color:green;font-weight:bold"</#if>
-						<#if orderState=="3">style="color:blue;font-weight:bold"</#if>>${order.orderStateDesc}</td> 
-					<td rowspan="${itemSize}">
+						<#if orderState=="3">style="color:blue;font-weight:bold"</#if>
+							<#if orderState=="5">style="font-weight:bold"</#if>>${order.orderStateDesc}</td> 
+					<td rowspan="${itemSize+returnItemSize}">
 						<#if orderState=="1">
 							<input type="button" value="付款" onclick="showPayMoneyDiv(this,'${order.id}')"/>
-						<#elseif orderState=="2">
+						<#elseif orderState=="2" || orderState=="5">
 							<input type="button" value="发货" onclick="showDeliverDiv(this,'${order.id}')"/>
 						<#elseif orderState=="3">
 							<input type="button" value="欠货发货" onclick="showDeliverDiv(this,'${order.id}')"/>
 						</#if>
+						<#if  (orderState=="4" ||  orderState=="3") >
+							<input  type="button" value="退换货" onclick="showReturn('${order.id}')"/>
+						</#if>
+						
 						</br>
 							<input type="button" value="重新打印" onclick="rePrint('${order.id}');"/>
 						</br> 
@@ -127,7 +134,7 @@
 						
 					</td>
 				</tr>
-				<#if (order.itemList?size > 1 ) >
+				<#if (order.itemList?size > 0 ) >
 					<#assign _itemList = order.itemList >
 					<#list _itemList as item>
 						<#if (item_index>0)>
@@ -140,7 +147,21 @@
 								<td>${item.price}</td>
 							</tr>
 						</#if>
-						
+					</#list>
+				</#if>
+				<#if (order.returnItemList?size > 1 ) >
+					<#assign _returnItemList = order.returnItemList >
+					<#list _returnItemList as item>
+						<#if (item_index>0)>
+							<tr bgcolor="#FFB90F">
+								<td>${item.name}</td>
+								<td>${item.unitPrice}</td>
+								<td>${item.amount}</td>
+								<td>${item.size}</td>
+								<td>${item.color}</td>
+								<td>${item.price}</td>
+							</tr>
+						</#if>
 					</#list>
 				</#if>
 		    </#list>
@@ -342,6 +363,25 @@
             });
 		}
 		
+		//退换货按钮
+		function showReturn(_orderId){
+			$.ajax({
+				url:"./getOrderById.htm",
+				type:"POST",
+				dataType:"json",
+				data:{orderId:_orderId},
+				success:function(response){
+					if(response.success == true){
+						location.href="./returnGoods.htm?orderId="+_orderId;
+					}else{
+						alert(response.message);
+					}
+				},
+				error:function(){
+					alert("系统错误,请联系管理员");
+				}
+			});
+		}
 		
 		//发货按钮
 		function  showDeliverDiv(deliverBtn ,_orderId){

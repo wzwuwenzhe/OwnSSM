@@ -7,7 +7,7 @@
 <!-- For professional support please see -->
 <!-- http://www.qos.ch/shop/products/professionalSupport -->
 <!-- -->
-<configuration  scan="true" scanPeriod="60 seconds" debug="false">
+<configuration  scan="true" scanPeriod="60 seconds" debug="true">
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d [%t] %-5p %c:%L - %m%n</pattern>

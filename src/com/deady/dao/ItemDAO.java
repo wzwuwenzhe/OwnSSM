@@ -12,4 +12,8 @@ public interface ItemDAO {
 
 	void deleItemsByOrderId(String orderId);
 
+	void insertReturnItems(List<Item> returnItemList);
+
+	List<Item> findReturnItemsByOrderId(String orderId);
+
 }

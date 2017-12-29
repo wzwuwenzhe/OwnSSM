@@ -103,6 +103,5 @@ public interface OrderService {
 	 *            销量前几
 	 * @return
 	 */
-	List<String> getSalesVolumeTopByCondition(String storeId, String startDate,
-			String endDate, int top);
+	List<String> getSalesVolumeTopByCondition(String storeId);
 }

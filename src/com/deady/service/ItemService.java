@@ -8,4 +8,6 @@ public interface ItemService {
 
 	void addItem(List<Item> itemList);
 
+	void addReturnItem(List<Item> returnItemList);
+
 }

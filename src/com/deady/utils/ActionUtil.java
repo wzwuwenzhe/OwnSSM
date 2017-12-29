@@ -2,11 +2,14 @@ package com.deady.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -206,6 +209,14 @@ public class ActionUtil {
 			}
 		}
 
+	}
+
+	public static String newOrderId() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		String dateString = formatter.format(new Date());
+		return dateString
+				+ UUID.randomUUID().toString().replaceAll("-", "")
+						.substring(0, 6).toUpperCase();
 	}
 
 }

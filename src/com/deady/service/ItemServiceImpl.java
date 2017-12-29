@@ -19,4 +19,9 @@ public class ItemServiceImpl implements ItemService {
 		itemDAO.insertItems(items);
 	}
 
+	@Override
+	public void addReturnItem(List<Item> returnItemList) {
+		itemDAO.insertReturnItems(returnItemList);
+	}
+
 }
