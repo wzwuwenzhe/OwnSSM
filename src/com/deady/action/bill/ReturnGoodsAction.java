@@ -39,7 +39,6 @@ import com.deady.service.StockService;
 import com.deady.utils.ActionUtil;
 import com.deady.utils.OperatorSessionInfo;
 import com.deady.utils.task.RemoteBillTask;
-import com.deady.utils.task.RemoteReturnGoodsTask;
 import com.deady.utils.task.Task;
 
 @Controller
@@ -139,9 +138,8 @@ public class ReturnGoodsAction {
 					* Double.parseDouble(_oldUnitPrice);
 			String _id = UUID.randomUUID().toString().replaceAll("-", "");
 			Item _item = new Item(returnOrderId, _id, _oldName, _oldColor,
-					_oldSize,
-					new DecimalFormat("#.00").format(returnUnitPrice),
-					_returnNumber, _oldUnitPrice);
+					_oldSize, _oldUnitPrice, _returnNumber, new DecimalFormat(
+							"#.00").format(returnUnitPrice));
 			returnItemList.add(_item);
 		}
 		// 换货又重新生成订单
@@ -285,8 +283,8 @@ public class ReturnGoodsAction {
 
 		// 发送打印订单请求
 		try {
-			Task task = new RemoteReturnGoodsTask(returnOrderId, orderId,
-					op.getId(), op.getStoreId(), false);
+			Task task = new RemoteBillTask(orderId, op.getId(),
+					op.getStoreId(), false);
 			Thread thread = new Thread(task);
 			thread.start();
 		} catch (Exception e) {

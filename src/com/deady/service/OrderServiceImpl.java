@@ -518,6 +518,8 @@ public class OrderServiceImpl implements OrderService {
 			dtoJson.addProperty("remark",
 					StringUtils.isEmpty(dto.getRemark()) ? "" : dto.getRemark());
 			dtoJson.addProperty("state", dto.getState());
+			dtoJson.addProperty("returnMoney", StringUtils.isEmpty(dto
+					.getReturnMoney()) ? "" : dto.getReturnMoney());
 			List<Item> itemList = dto.getItemList();
 			if (null != itemList && itemList.size() > 0) {
 				JsonArray itemsArr = new JsonArray();
