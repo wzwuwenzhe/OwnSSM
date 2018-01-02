@@ -78,6 +78,10 @@ public class OrderServiceImpl implements OrderService {
 		dto.setCusName(client.getName());
 		List<Item> itemList = itemDAO.findItemsByOrderId(orderId);
 		dto.setItemList(itemList);
+		String returnOrderId = order.getReturnOrderId();
+		List<Item> returnItemList = itemDAO
+				.findReturnItemsByOrderId(returnOrderId);
+		dto.setReturnItemList(returnItemList);
 		return dto;
 	}
 
@@ -536,6 +540,24 @@ public class OrderServiceImpl implements OrderService {
 			dtoJson.addProperty("payType", dto.getPayType());
 			dtoJson.addProperty("address", dto.getAddress());
 			dtoJson.addProperty("remark", dto.getRemark());
+			// 退款订单详情
+			List<Item> returnItemList = dto.getReturnItemList();
+			if (null != returnItemList && returnItemList.size() > 0) {
+				JsonArray itemsArr = new JsonArray();
+				for (Item item : returnItemList) {
+					JsonObject itemObj = new JsonObject();
+					itemObj.addProperty("orderId", item.getOrderId());
+					itemObj.addProperty("id", item.getId());
+					itemObj.addProperty("name", item.getName());
+					itemObj.addProperty("color", item.getColor());
+					itemObj.addProperty("size", item.getSize());
+					itemObj.addProperty("unitPrice", item.getUnitPrice());
+					itemObj.addProperty("amount", item.getAmount());
+					itemObj.addProperty("price", item.getPrice());
+					itemsArr.add(itemObj);
+				}
+				dtoJson.add("returnItemList", itemsArr);
+			}
 			if (records.length == 1) {
 				return dtoJson;
 			} else {
