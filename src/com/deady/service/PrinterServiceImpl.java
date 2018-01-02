@@ -82,52 +82,23 @@ public class PrinterServiceImpl implements PrinterService {
 			device.selectFontSize(17);
 		}
 		device.printString("客户名称:" + client.getName());
-		device.selectFontSize(0);
-		device.printString("================================================");
-		String title = Device.paddingWithSuffix(10, "款号", SUFFIX)
-				+ Device.paddingWithSuffix(8, "颜色", SUFFIX)
-				+ Device.paddingWithSuffix(8, "尺码", SUFFIX)
-				+ Device.paddingWithSuffix(6, "数量", SUFFIX)
-				+ Device.paddingWithSuffix(8, "单价", SUFFIX)
-				+ Device.paddingWithSuffix(8, "金额", SUFFIX);
-		device.printString(title);
-		List<Item> itemList = dto.getItemList();
-		// 对每个款式的总数量进行统计
-		Map<String, String> name2CountAndIndexMap = count(dto.getItemList());
-		if (storeSide.getSide() == 1) {
+		device.selectAlignType(1);// 居中
+		printList(device, dto, dto.getItemList(), storeSide);
+		// 打印退货清单
+		if (null != dto.getReturnItemList()
+				&& dto.getReturnItemList().size() > 0) {
+			device.printString("");
+			device.printString("");
 			device.selectFontSize(17);
-		}
-		for (int i = 0; i < itemList.size(); i++) {
-			Item item = itemList.get(i);
-			device.printString(Device.paddingWithSuffix(10, item.getName(),
-					SUFFIX)
-					+ Device.paddingWithSuffix(8, item.getColor(), SUFFIX)
-					+ Device.paddingWithSuffix(8, item.getSize(), SUFFIX)
-					+ Device.paddingWithSuffix(6, item.getAmount(), SUFFIX)
-					+ Device.paddingWithSuffix(8, item.getUnitPrice(), SUFFIX)
-					+ Device.paddingWithSuffix(8, item.getPrice(), SUFFIX));
-			if (storeSide.getSide() == 1) {
+			device.printString("---退货信息如下---");
+			printList(device, dto, dto.getReturnItemList(), storeSide);
+			device.selectAlignType(2);// 右对齐
+			if (storeSide.getSide() == OrderSideEnum.CUSTOMER_SIDE.getSide()) {
 				device.selectFontSize(0);
-				device.printString("------------------------------------------------");
-				device.selectFontSize(17);
 			}
-			// 根据款式打印 统计信息
-			String _name = item.getName();
-			String _value = name2CountAndIndexMap.get(_name);
-			if (_value != null) {
-				String[] countAndIndex = _value.split(",");
-				String count = countAndIndex[0].trim();
-				int index = Integer.parseInt(countAndIndex[1].trim());
-				if (index == i) {
-					device.printString("款号:" + _name + ",共计:" + count + "件");
-					device.selectFontSize(0);
-					device.printString("------------------------------------------------");
-					if (storeSide.getSide() == 1) {
-						device.selectFontSize(17);
-					}
-				}
-			}
+			device.printString("退货金额:" + dto.getReturnMoney() + "元");
 		}
+
 		device.selectFontSize(0);
 		device.printString("");
 		device.printString("");
@@ -171,6 +142,59 @@ public class PrinterServiceImpl implements PrinterService {
 		}
 		// 裁剪纸张
 		device.cutPaper();
+
+	}
+
+	private void printList(Device device, OrderDto dto, List<Item> itemList,
+			OrderSideEnum storeSide) {
+		if (null == itemList || itemList.size() == 0) {
+			return;
+		}
+		device.selectFontSize(0);
+		device.printString("================================================");
+		String title = Device.paddingWithSuffix(10, "款号", SUFFIX)
+				+ Device.paddingWithSuffix(8, "颜色", SUFFIX)
+				+ Device.paddingWithSuffix(8, "尺码", SUFFIX)
+				+ Device.paddingWithSuffix(6, "数量", SUFFIX)
+				+ Device.paddingWithSuffix(8, "单价", SUFFIX)
+				+ Device.paddingWithSuffix(8, "金额", SUFFIX);
+		device.printString(title);
+		// 对每个款式的总数量进行统计
+		Map<String, String> name2CountAndIndexMap = count(itemList);
+		if (storeSide.getSide() == 1) {
+			device.selectFontSize(17);
+		}
+		for (int i = 0; i < itemList.size(); i++) {
+			Item item = itemList.get(i);
+			device.printString(Device.paddingWithSuffix(10, item.getName(),
+					SUFFIX)
+					+ Device.paddingWithSuffix(8, item.getColor(), SUFFIX)
+					+ Device.paddingWithSuffix(8, item.getSize(), SUFFIX)
+					+ Device.paddingWithSuffix(6, item.getAmount(), SUFFIX)
+					+ Device.paddingWithSuffix(8, item.getUnitPrice(), SUFFIX)
+					+ Device.paddingWithSuffix(8, item.getPrice(), SUFFIX));
+			if (storeSide.getSide() == 1) {
+				device.selectFontSize(0);
+				device.printString("------------------------------------------------");
+				device.selectFontSize(17);
+			}
+			// 根据款式打印 统计信息
+			String _name = item.getName();
+			String _value = name2CountAndIndexMap.get(_name);
+			if (_value != null) {
+				String[] countAndIndex = _value.split(",");
+				String count = countAndIndex[0].trim();
+				int index = Integer.parseInt(countAndIndex[1].trim());
+				if (index == i) {
+					device.printString("款号:" + _name + ",共计:" + count + "件");
+					device.selectFontSize(0);
+					device.printString("------------------------------------------------");
+					if (storeSide.getSide() == 1) {
+						device.selectFontSize(17);
+					}
+				}
+			}
+		}
 
 	}
 

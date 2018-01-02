@@ -33,6 +33,8 @@ public class Order implements Serializable {
 	protected String address;// 送货地址
 	@BasicEntityField(length = 1, testValue = "1")
 	protected String state;// 订单状态 1:未付款 2:待发货 3:欠货 4:完成
+	@BasicEntityField(length = 20, testValue = "0")
+	protected String returnMoney;// 退款金额
 	// 新增属性 付款方式 1:现金 2:刷卡 3:支付宝 4:微信5:未付 6:月结
 	@BasicEntityField(length = 1, testValue = "1")
 	protected String payType;// 付款方式
@@ -132,6 +134,14 @@ public class Order implements Serializable {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getReturnMoney() {
+		return returnMoney;
+	}
+
+	public void setReturnMoney(String returnMoney) {
+		this.returnMoney = returnMoney;
 	}
 
 }

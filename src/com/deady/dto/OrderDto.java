@@ -36,6 +36,7 @@ public class OrderDto extends Order {
 	private static final long serialVersionUID = 6802401416029548385L;
 
 	private List<Item> itemList = new ArrayList<Item>();
+	private List<Item> returnItemList = new ArrayList<Item>();
 
 	public String getPayTypeDesc() {
 		switch (Integer.parseInt(payType)) {
@@ -93,6 +94,14 @@ public class OrderDto extends Order {
 		default:
 			return "未知";
 		}
+	}
+
+	public List<Item> getReturnItemList() {
+		return returnItemList;
+	}
+
+	public void setReturnItemList(List<Item> returnItemList) {
+		this.returnItemList = returnItemList;
 	}
 
 }
