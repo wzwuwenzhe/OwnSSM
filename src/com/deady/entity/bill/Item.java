@@ -30,6 +30,7 @@ public class Item implements Serializable {
 	private String amount;// 数量
 	@BasicEntityField(length = 32, testValue = "1250.00")
 	private String price;// 金额
+	private String creationTime;// 创建时间
 
 	public Item() {
 
@@ -109,6 +110,14 @@ public class Item implements Serializable {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public String getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(String creationTime) {
+		this.creationTime = creationTime;
 	}
 
 }

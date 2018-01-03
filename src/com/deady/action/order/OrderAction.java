@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
+import com.deady.dao.ItemDAO;
 import com.deady.dto.OrderDto;
 import com.deady.entity.bill.Item;
 import com.deady.entity.operator.Operator;
@@ -43,6 +44,8 @@ public class OrderAction {
 	OrderService orderService;
 	@Autowired
 	OperatorService operatorService;
+	@Autowired
+	ItemDAO itemDAO;
 
 	@RequestMapping(value = "/orderSearch", method = RequestMethod.GET)
 	@DeadyAction(createToken = true, checkLogin = true)
@@ -134,6 +137,14 @@ public class OrderAction {
 		if (null == itemList || itemList.size() == 0) {
 			response.setSuccess(false);
 			response.setMessage("订单查询失败!");
+			return response;
+		}
+		List<Item> returnItemList = itemDAO.findReturnItemsByOrderId(orderId);
+		if (null != returnItemList && returnItemList.size() > 0) {
+			String itemCreationTime = returnItemList.get(0).getCreationTime();
+			response.setSuccess(false);
+			response.setMessage("该订单已经在 " + itemCreationTime
+					+ "进行过退换货！不能重复退换货！");
 			return response;
 		}
 		Map<String, Object> resultMap = new HashMap<String, Object>();
