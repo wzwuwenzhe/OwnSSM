@@ -152,7 +152,7 @@
 				<#if (order.returnItemList?size > 1 ) >
 					<#assign _returnItemList = order.returnItemList >
 					<#list _returnItemList as item>
-						<#if (item_index>0)>
+						<#if (_returnItemList?size>0)>
 							<tr bgcolor="#FFB90F">
 								<td>${item.name}</td>
 								<td>${item.unitPrice}</td>
