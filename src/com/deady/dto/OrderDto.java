@@ -22,6 +22,7 @@ public class OrderDto extends Order {
 		this.payType = order.getPayType();
 		this.address = order.getAddress();
 		this.state = order.getState();
+		this.returnMoney = order.getReturnMoney();
 	}
 
 	private String cusName;// 客户名称
