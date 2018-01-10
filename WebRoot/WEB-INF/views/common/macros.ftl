@@ -282,3 +282,19 @@ table,table tr th, table tr td { border:1px solid #000000; }
 		<div class="alert alert-${type}" role="alert" style="display:none"></div>
 	</div>
 </#macro>
+
+<#macro payForm id action payType="">
+	<@form id="${id}" action="${action}" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="" style="display:none">
+		<div style="margin:10px;">
+			付款方式：</br>
+			<input type="radio" id="payType1" name="payType" value="1" checked="checked" /><label for="payType1">现金</label>
+			<input type="radio" id="payType2" name="payType" value="2" /><label for="payType2">刷卡</label>
+			<input type="radio" id="payType3" name="payType" value="3" /><label for="payType3">支付宝</label>
+			<input type="radio" id="payType4" name="payType" value="4" /><label for="payType4">微信</label>
+			<#if payType!="6">
+				<input type="radio" id="payType6" name="payType" value="6" /><label for="payType6">月结</label>
+			</#if>
+		</div>
+    </@form>
+</#macro>
+

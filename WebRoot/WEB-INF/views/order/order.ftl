@@ -125,6 +125,7 @@
 					<td rowspan="${itemSize+returnItemSize}">${order.remark}</td>
 					<td rowspan="${itemSize+returnItemSize}">${order.cusName}</td> 
 					<#assign orderState="${order.state}">
+					<#assign orderPayType="${order.payType}">
 					<td rowspan="${itemSize+returnItemSize}" <#if orderState=="1">style="color:red;font-weight:bold"</#if>
 						<#if orderState=="4">style="color:green;font-weight:bold"</#if>
 						<#if orderState=="3">style="color:blue;font-weight:bold"</#if>
@@ -136,6 +137,9 @@
 							<input type="button" value="发货" onclick="showDeliverDiv(this,'${order.id}')"/>
 						<#elseif orderState=="3">
 							<input type="button" value="欠货发货" onclick="showDeliverDiv(this,'${order.id}')"/>
+						</#if>
+						<#if orderState=="4" && orderPayType=="6">
+							<input type="button" value="付款" onclick="showPayMoneyDiv(this,'${order.id}','${orderPayType}')"/>
 						</#if>
 						<#if  (orderState=="4" ||  orderState=="3") >
 							<input  type="button" value="退换货" onclick="showReturn('${order.id}')"/>
@@ -186,16 +190,9 @@
 		</div>
 	</div>
 		
-	<@form id="payform" action="/payForTheMoney" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="" style="display:none">
-		<div style="margin:10px;">
-			付款方式：</br>
-			<input type="radio" id="payType1" name="payType" value="1" checked="checked" /><label for="payType1">现金</label>
-			<input type="radio" id="payType2" name="payType" value="2" /><label for="payType2">刷卡</label>
-			<input type="radio" id="payType3" name="payType" value="3" /><label for="payType3">支付宝</label>
-			<input type="radio" id="payType4" name="payType" value="4" /><label for="payType4">微信</label>
-			<input type="radio" id="payType6" name="payType" value="6" /><label for="payType6">月结</label>
-		</div>
-    </@form>
+	<@payForm id="payform" action="/payForTheMoney" payType="" />
+	<@payForm id="_payform" action="/payForTheMoney" payType="6" />
+
 
 	<@form id="deliverform" action="/deliverGoods" onsubmit="return $form.submit(this,_loginCallback);" class="fh5co-form animate-box" h2="" style="display:none">
 		<div style="margin:10px;" id="deliverformDiv">
@@ -247,8 +244,8 @@
 		  	total += parseFloat(_total);
 		  });
 		  $("#table tbody").append("<tr><td colspan='8'></td>"+
-		  "<td  style='color:red;font-weight:bold'>"+total+"元</td>"+
-		  "<td colspan='6'></td></tr>");
+		  "<td colspan='2' style='color:red;font-weight:bold'>"+total+"元</td>"+
+		  "<td colspan='5'></td></tr>");
 		});
 		
 		function rePrint(orderId){
@@ -350,18 +347,22 @@
 		}
 		
 		//付款按钮
-		function showPayMoneyDiv(payBtn,orderId){
+		function showPayMoneyDiv(payBtn,orderId,orderPayType){
+			var content = $("#payform");
+			if(orderPayType=="6"){
+				content = $("#_payform");
+			}
 			layer.open({
                 type:1,
                 shift:-1,
                 title: '选择付款方式',
                 closeBtn:0,
                 area: ['300px'],
-                content: $("#payform"),
+                content: content,
                 btn:["提交","关闭"],
                 yes:function(){
                 	var _payType ="";
-					$("#payform input[name='payType']").each(function(){
+					$(content).find("input[name='payType']").each(function(){
 						if($(this).is(":checked")){
 							_payType = $(this).val();
 						}
