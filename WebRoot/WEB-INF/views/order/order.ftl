@@ -49,6 +49,20 @@
 					</select>
 				  </div>
 			    </div>
+			    <div class="layui-col-sm3">
+			      <div class="grid-demo">
+			      <#assign payType="${(entity.payType)!''}"/>
+					付款方式:<select name="payType" onchange="$('#searchForm').submit();">
+						<option value="">---所有方式---</option>
+						<option value="5" <#if payType=="5">selected</#if>>---未付款---</option>
+						<option value="1" <#if payType=="1">selected</#if>>---现金---</option>
+						<option value="2" <#if payType=="2">selected</#if>>---刷卡---</option>
+						<option value="3" <#if payType=="3">selected</#if>>----支付宝----</option>
+						<option value="4" <#if payType=="4">selected</#if>>----微信----</option>
+						<option value="6" <#if payType=="6">selected</#if>>----月结----</option>
+					</select>
+				  </div>
+			    </div>
 			  </div>
 			</div>
 			<div style="margin: 10px;">
@@ -69,6 +83,7 @@
   		  	<thead>
 		  		<tr>
 				  	<th>序号</th>
+				  	<th>时间</th>
 					<th>商品名称</th>
 					<th>单价</th>
 					<th>数量</th>
@@ -90,6 +105,7 @@
 					<#assign itemSize = order.itemList?size >
 					<#assign returnItemSize = order.returnItemList?size >
 					<td rowspan="${itemSize+returnItemSize}">${order_index+1}</td>
+					<td rowspan="${itemSize+returnItemSize}">${order.creationTime}</td>
 					<#if (order.itemList?size > 0 ) >
 						<#assign itemList = order.itemList >
 						<#list itemList as item>
@@ -103,7 +119,7 @@
 							</#if>
 						</#list>
 					</#if>
-					<td rowspan="${itemSize+returnItemSize}">${order.totalAmount}</td>
+					<td rowspan="${itemSize+returnItemSize}"><input type="hidden" value="${order.totalAmount}" class="totalAmount"/>${order.totalAmount}</td>
 					<td rowspan="${itemSize+returnItemSize}">${order.payTypeDesc}</td>
 					<td rowspan="${itemSize+returnItemSize}">${order.address}</td>
 					<td rowspan="${itemSize+returnItemSize}">${order.remark}</td>
@@ -149,7 +165,7 @@
 						</#if>
 					</#list>
 				</#if>
-				<#if (order.returnItemList?size > 1 ) >
+				<#if (order.returnItemList?size > 0 ) >
 					<#assign _returnItemList = order.returnItemList >
 					<#list _returnItemList as item>
 						<#if (_returnItemList?size>0)>
@@ -224,6 +240,15 @@
 		
 		$(document).ready(function() {
 		  $('#table').basictable();
+		  var total = 0;
+		  //统计查询出来的订单的金额
+		  $(".totalAmount").each(function(){
+		  	var _total = $(this).val();
+		  	total += parseFloat(_total);
+		  });
+		  $("#table tbody").append("<tr><td colspan='8'></td>"+
+		  "<td  style='color:red;font-weight:bold'>"+total+"元</td>"+
+		  "<td colspan='6'></td></tr>");
 		});
 		
 		function rePrint(orderId){

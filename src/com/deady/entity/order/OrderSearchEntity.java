@@ -20,6 +20,8 @@ public class OrderSearchEntity {
 	private String storeId;// 店铺Id 只能查自己店铺的订单
 	@BasicEntityField(length = 1, testValue = "1")
 	private String state;// 订单状态
+	@BasicEntityField(length = 1, testValue = "1")
+	private String payType;// 付款状态
 
 	public String getOrderName() {
 		return orderName;
@@ -83,5 +85,13 @@ public class OrderSearchEntity {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
 	}
 }

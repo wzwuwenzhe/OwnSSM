@@ -39,6 +39,9 @@
    			<if test="state != null and state !=''">
    			and state=#{state}
    			</if>
+   			<if test="payType != null and payType !=''">
+   			and pay_type=#{payType}
+   			</if>
    		</select>
    		
    		<update id="deleteOrderById" >
