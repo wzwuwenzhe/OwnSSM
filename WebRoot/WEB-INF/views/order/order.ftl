@@ -73,7 +73,7 @@
 				<input class="layui-btn layui-btn-radius" type="submit" value="查询"/>
 				<input class="layui-btn layui-btn-warm layui-btn-radius" type="button" value="报表打印" onclick="printReport()" />
 				<input class="layui-btn layui-btn-normal layui-btn-radius" type="button" value="报表查看" onclick="searchReport()" />
-				<input class="layui-btn layui-btn-primary layui-btn-radius" type="button" value="返回"   onclick="window.history.back()"; />
+				<input class="layui-btn layui-btn-primary layui-btn-radius" type="button" value="返回"   onclick="back2Index();"; />
 			</div>
 			</form>
 		</div>
@@ -407,6 +407,10 @@
 					alert("系统错误,请联系管理员");
 				}
 			});
+		}
+		
+		function back2Index(){
+			location.href="./index";
 		}
 		
 		//发货按钮

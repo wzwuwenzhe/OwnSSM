@@ -32,6 +32,7 @@
 				<input class="layui-btn layui-btn-radius" type="submit" value="查询"/>
 				<input class="layui-btn layui-btn-primary layui-btn-radius" type="button" value="返回"   onclick="location.href='./index'" />
 			</div>
+			<input type="hidden" id="start" name="start"/>
 			</form>
 		</div>
 	<div class="container">
@@ -69,25 +70,20 @@
 	<script type="text/javascript">
 	 //分页功能
 	  layui.use(['laypage', 'layer'], function(){
-	  var laypage = layui.laypage
-	  ,layer = layui.layer;
-	  laypage.render({
-	    elem: 'page'
-	    ,count: '${page.total}'
-	    ,curr :'${page.start}'
-	    ,layout: ['count', 'prev', 'page', 'next']
-	    ,jump: function(obj,first){
-	    if(!first){
-		    var start = obj.curr;
-		    console.log(start);
-		    var storeId = $("#storeId").val();
-		    var operatorId = $("#operatorId").val();
-		    var operatorName = $("#operatorName").val();
-		    var beginDate = $("#beginDate").val();
-		    var endDate = $("#endDate").val();
-		    location.href="./logSearch?start="+start+"&storeId="+storeId+"&operatorId="+operatorId+"&operatorName="+operatorName+"&beginDate="+beginDate+"&endDate="+endDate;
-	    }
-	    }
+		  var laypage = layui.laypage
+		  ,layer = layui.layer;
+		  laypage.render({
+		    elem: 'page'
+		    ,count: '${page.total}'
+		    ,curr :'${page.start}'
+		    ,layout: ['count', 'prev', 'page', 'next']
+		    ,jump: function(obj,first){
+			    if(!first){
+				    var start = obj.curr;
+				    $("#start").val(start);
+			    	$("#searchForm").submit();
+			    }
+		    }
 	  });
 	  });
 	</script>

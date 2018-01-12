@@ -35,18 +35,6 @@ public class OperatorLogAction {
 	@DeadyAction(createToken = true)
 	public Object viewLogSearch(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
-		PageUtils page = new PageUtils(req);
-		Operator op = OperatorSessionInfo.getOperator(req);
-		if (!op.getUserType().equals(UserType.Admin.getValue() + "")) {
-			return new ModelAndView("/index/index");
-		}
-		OperatorLogSearchEntity entity = new OperatorLogSearchEntity();
-		ActionUtil.assObjByRequest(req, entity);
-		List<OperatorLog> logList = logService.getOperatorLogByCondition4Page(
-				entity, page);
-		req.setAttribute("logList", logList);
-		req.setAttribute("entity", entity);
-		req.setAttribute("page", page);
 		return new ModelAndView("/operatorLog/operatorLog");
 	}
 
