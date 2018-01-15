@@ -8,7 +8,8 @@
 <style>
 	ul.color,
 	ul.size,
-	ul.name{
+	ul.name,
+	ul.amount{
 	    padding-left: 0px;
 	    margin-left: 0px;
 	    margin-bottom: 0px;
@@ -19,6 +20,13 @@
 	}
 	.returnNumber{
 		width:25px;
+	}
+	.innerInput{
+		width: 24px;
+		height:25px;
+		border :0px;
+		padding-top: 0px;
+		padding-bottom: 0px;
 	}
 </style>
 </@htmlHeader>
@@ -83,6 +91,7 @@
 			</tbody>
 		</table>
 	</div>
+	<@showMsg type="danger"/>
 	<div class="form-group">
 		小计:<label id='smallCount'></label>元 
 		<input type="hidden" name="smallCount"/>
@@ -110,7 +119,6 @@
 		<input type="button" value="返回" class="btn btn-primary back"  onclick="window.history.back()">
 	</div>
 	</@form>
-	<@showMsg type="danger"/>
 	<script type="text/javascript">
 		<#if _token?exists>_token='${_token}';</#if>
 	
@@ -182,21 +190,36 @@
 		calculateTotal();
 	}
 	
-	function clickLi(li){
-		$(li).parent().find("li").each(function(){
-			$(this).removeClass();
-		});
-		$(li).addClass("selected")
+	function clickLi(li,index){
 		//判断是颜色还是尺寸
 		var ulClass = $(li).parent().attr("class");
 		if(ulClass && ulClass=="color"){
+			$(li).parent().find("li").each(function(){
+				$(this).removeClass();
+			});
 			var _color = $(li).html();
-			$(li).parent().parent().find("input[name='color']").val(_color);
+			var _amountTd = $(li).parent().parent().next().next();
+			$(_amountTd).find("li").each(function(){
+				$(this).find("input[name='color']").val(_color);
+			});
+			$(li).addClass("selected");
 		}else if(ulClass && ulClass=="size"){
 			var _size = $(li).html();
-			$(li).parent().parent().prev().find("input[name='size']").val(_size);			
+			var _amountTd = $(li).parent().parent().next();
+			if($(li).attr("class")=="selected"){
+				$(li).removeClass();
+				$(_amountTd).find("li").eq(parseInt(index)).find("input[name='size']").val('');
+				var tempAmount=$(_amountTd).find("li").eq(parseInt(index)).find("input[name='amount']").eq(0);
+				$(tempAmount).val('');
+				$(tempAmount).attr("readonly","readonly");
+				//需要重新计算
+				calculate($(tempAmount),true);
+			}else{
+				$(li).addClass("selected");
+				$(_amountTd).find("li").eq(parseInt(index)).find("input[name='size']").val(_size);
+				$(_amountTd).find("li").eq(parseInt(index)).find("input[name='amount']").removeAttr("readonly");
+			}
 		}
-		
 	}
 	
 	
@@ -207,8 +230,8 @@
 		"<td rowspan='2'><ul id='" + btnIndex + "nameUl' class='name'></ul><div><input onclick='removeLiClass(this)'  class='form-control' style='border-bottom:0px;' type='text' onblur='findColorsAndSizes(this)'/></div></td>"+
 		"<td><ul class='color'></td>"+
 		"<td><ul class='size'></td>"+
-		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;' /></td>"+
-		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
+		"<td><ul class='amount'></ul></td>"+
+		"<td><input  dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
 		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
 		"<td><a href='javascript:void(0)' onclick='removeRecord(this)'>删</a></td>"+
 		"</tr><tr>"+
@@ -261,15 +284,21 @@
 		
 		var prevTd2 =  $(btn).parent().parent().prev().find("td").eq(1).html();
 		var prevTd3 =  $(btn).parent().parent().prev().find("td").eq(2).html();
+		var prevTd4 =  $(btn).parent().parent().prev().find("td").eq(3).html();
 		if(hasMoreThanOneLine){
 			prevTd2 =  $(btn).parent().parent().prev().find("td").eq(0).html();
 			prevTd3 =  $(btn).parent().parent().prev().find("td").eq(1).html();
+			prevTd4 =  $(btn).parent().parent().prev().find("td").eq(2).html();
 		}
+		//去掉每个数量中的值
+		$(prevTd4).find("input").each(function(){
+			$(this).val('');
+		});
 		$(btn).parent().parent().before("<tr>"+
 		"<td>"+prevTd2+"</td>"+
 		"<td>"+prevTd3+"</td>"+
-		"<td><input name='amount' dataType='Number' msg='数量必须为正整数' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
-		"<td><input name='unitPrice' dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
+		"<td>"+prevTd4+"</td>"+
+		"<td><input dataType='Double' msg='单价必须为数字(可包含小数)' class='form-control' type='text' onkeyup='calculate(this)' style='border-bottom:0px;'/></td>"+
 		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
 		"<td><a href='javascript:void(0)' onclick='removeRecordForOne(this)'>删</a></td>"+
 		"</tr>");
@@ -291,6 +320,7 @@
 		}
 		while (flag==false);
 		$(btn).parent().parent().remove();
+		calculateTotal();
 	}
 	
 	
@@ -322,25 +352,41 @@
 		calculateTotal();
 	}
 	
-	function calculate(number){
+	function calculate(number,inner){
 		var tr = $(number).parent().parent();
+		var unitPrice = 0;
+		if(inner && inner==true){
+			tr = $(number).parent().parent().parent().parent();
+			unitPrice = $(number).parent().parent().parent().next().find("input").eq(0).val();
+		}else{
+			unitPrice = $(number).val();
+			$(number).parent().prev().find("li").each(function(){
+				$(this).find("input[name='unitPrice']").val(unitPrice);
+			});
+		}
 		$("#smallCount").html('');
 		$("#totalAmount").html('');
 		tr.find(".price").val('');
 		tr.find(".price").html('');
-		if(Validator.Double.test($(number).val())){
-			var unitPrice = tr.find("input[name='unitPrice']").eq(0).val();
-			var amount = tr.find("input[name='amount']").eq(0).val();
-			if(amount=="" || !Validator.Integer.test(amount) || amount<=0){
-				return;
-			}
-			if(unitPrice=="" || !Validator.Double.test(unitPrice) || unitPrice<0){
-				return;
-			}
-			var prize = parseFloat(unitPrice)*parseFloat(amount);
-			tr.find(".price").val(prize.toFixed(2));
-			tr.find(".price").html(prize.toFixed(2));
+		if($(number).val()!="" && !Validator.Double.test($(number).val())){
+			$(number).val('');
 		}
+		//数量进行累加
+		var amount = 0;
+		tr.find("input[name='amount']").each(function(){
+			if(Validator.Integer.test($(this).val())){
+				amount += parseInt($(this).val());
+			}
+		});
+		if(amount=="" || !Validator.Integer.test(amount) || amount<=0){
+			return;
+		}
+		if(unitPrice=="" || !Validator.Double.test(unitPrice) || unitPrice<0){
+			return;
+		}
+		var prize = parseFloat(unitPrice)*parseFloat(amount);
+		tr.find(".price").val(prize.toFixed(2));
+		tr.find(".price").html(prize.toFixed(2));
 		calculateTotal()
 	}
 	function calculateTotal(){
@@ -385,6 +431,10 @@
 	//根据款号找到颜色和尺码
 	function findColorsAndSizes(item,isLi){
 		if(isLi){
+			$(item).parent().find("li").each(function(){
+				$(this).removeClass("selected");
+			});
+			$(item).addClass("selected");
 			clickLi(item);
 			$(item).parent().next().find("input").eq(0).val('');
 		}
@@ -398,16 +448,18 @@
 			}
 		}
 		//添加隐藏的name选项  以便数据添加
-		if($(item).parent().parent().next().find("input[name='name']")){
-			$(item).parent().parent().next().find("input[name='name']").remove();
-		}
-		if($(item).parent().parent().next().find("input[name='color']")){
-			$(item).parent().parent().next().find("input[name='color']").remove();
-		}
-		if($(item).parent().parent().next().find("input[name='size']")){
-			$(item).parent().parent().next().find("input[name='size']").remove();
-		}
-		$(item).parent().parent().next().append("<input type='hidden' value='"+_name+"' name='name'/>");
+		var _amountTd = $(item).parent().parent().next().next().next();
+		$(_amountTd).find("li").each(function(){
+			if($(this).find("input[name='name']")){
+				$(this).find("input[name='name']").remove();
+			}
+			if($(this).find("input[name='color']")){
+				$(this).find("input[name='color']").remove();
+			}
+			if($(this).find("input[name='size']")){
+				$(this).find("input[name='size']").remove();
+			}
+		});
 		$.ajax({
 				url:"./getCorlorAndSizeByName.htm",
 				type:"POST",
@@ -443,13 +495,29 @@
 		for(var i =0;i<colorArr.length;i++){
 			colorUl.append("<li onclick='clickLi(this)'>"+colorArr[i]+"</li>");
 		}
-		colorUl.parent().append("<input type='hidden' name='color' />");
 		var sizeUl = $(item).parent().parent().next().next().find("ul").eq(0);
 		sizeUl.empty();
 		for(var i =0;i<sizeArr.length;i++){
-			sizeUl.append("<li onclick='clickLi(this)'>"+sizeArr[i]+"</li>");
+			sizeUl.append("<li onclick='clickLi(this,"+i+")'>"+sizeArr[i]+"</li>");
 		}
-		colorUl.parent().append("<input type='hidden' name='size' />");
+		//根据尺码的数量添加数量框
+		var amountUl = $(item).parent().parent().next().next().next().find("ul").eq(0);
+		amountUl.empty();
+		for(var i =0;i<sizeArr.length;i++){
+			amountUl.append("<li ><input name='amount'  readonly='readonly'  class='innerInput' type='text' onkeyup='calculate(this,true)' style='border-bottom:0px;' /></li>");
+		}
+		var _name = $(item).val();
+		var selectedName = $(item).html();
+		if("" ==_name || null == _name ){
+			_name = selectedName;
+		}
+		//添加color和size的name隐藏属性
+		$(amountUl).find("li").each(function(){
+			$(this).append("<input type='hidden' value='' name='color'/>");
+			$(this).append("<input type='hidden' value='' name='size'/>");
+			$(this).append("<input type='hidden' value='' name='unitPrice'/>");
+			$(this).append("<input type='hidden' value='"+_name+"' name='name'/>");
+		});
 	}
 	
 	</script>

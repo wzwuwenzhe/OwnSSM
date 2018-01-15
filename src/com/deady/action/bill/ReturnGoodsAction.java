@@ -154,13 +154,6 @@ public class ReturnGoodsAction {
 			response.setMessage("请点击\"新增新款\"来加单!");
 			return response;
 		}
-		for (String _size : size) {
-			if (StringUtils.isEmpty(_size)) {
-				response.setSuccess(false);
-				response.setMessage("请选择尺码");
-				return response;
-			}
-		}
 		for (String _color : color) {
 			if (StringUtils.isEmpty(_color)) {
 				response.setSuccess(false);
@@ -213,6 +206,12 @@ public class ReturnGoodsAction {
 		// 下单的订单中 款号对应数量map
 		Map<String, String> name2AmountMap = new HashMap<String, String>();
 		for (int i = 0; i < name.length; i++) {
+			if (StringUtils.isEmpty(size[i])) {
+				continue;
+			}
+			if (amount[i].equals("")) {
+				continue;
+			}
 			String tampAmount = name2AmountMap.get(name[i]);
 			if (null == tampAmount) {
 				name2AmountMap.put(name[i], amount[i]);
@@ -229,7 +228,9 @@ public class ReturnGoodsAction {
 			item.setSize(size[i]);
 			item.setUnitPrice(unitPrice[i]);
 			item.setAmount(amount[i]);
-			item.setPrice(price[i]);
+			double _unitPrice = Double.parseDouble(unitPrice[i]);
+			int _amount = Integer.parseInt(amount[i]);
+			item.setPrice((_unitPrice * _amount) + "");
 			item.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 			item.setOrderId(orderId);
 			itemList.add(item);
