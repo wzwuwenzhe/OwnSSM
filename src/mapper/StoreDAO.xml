@@ -2,14 +2,14 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.deady.dao.StoreDAO">
-    <insert id="insertStore">
+<mapper namespace="com.deady.dao.StoreDAO" >
+    <insert id="insertStore" parameterType="com.deady.entity.store.Store">
         INSERT  INTO store (id,name, address,
 		telephone,mobilephone,  reminder,
-		logo_img,wx_add_img,wx_pay_img,zfb_pay_img)
+		logo_img,wx_add_img,wx_pay_img,zfb_pay_img,remote_http_address,private_key)
         VALUES (#{id},#{name}, #{address},
 		#{telePhone},#{mobilePhone}, #{reminder},
-		#{logoImg},#{wxAddImg},#{wxPayImg},#{zfbPayImg})
+		#{logoImg},#{wxAddImg},#{wxPayImg},#{zfbPayImg},#{remoteHttpAddress},#{privateKey})
     </insert>
     
     <select id="findStoreById" resultType="Store" parameterType="string">
@@ -21,11 +21,11 @@
             id = #{storeId}
     </select>
     
-    <update id="updateStore">
+    <update id="updateStore" parameterType="com.deady.entity.store.Store">
     	UPDATE store 
     		set name=#{name},address=#{address},telephone=#{telePhone},mobilephone=#{mobilePhone},
     		reminder= #{reminder},logo_img=#{logoImg},wx_add_img=#{wxAddImg},wx_pay_img=#{wxPayImg},
-    		zfb_pay_img=#{zfbPayImg},status=#{status}
+    		zfb_pay_img=#{zfbPayImg},status=#{status},remote_http_address=#{remoteHttpAddress},private_key=#{privateKey}
     	WHERE id=#{id}
     </update>
 

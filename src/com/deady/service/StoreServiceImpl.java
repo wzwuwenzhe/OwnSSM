@@ -20,11 +20,7 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public void addStore(Store store) {
-		storeDAO.insertStore(store.getId(), store.getName(),
-				store.getAddress(), store.getTelePhone(),
-				store.getMobilePhone(), store.getReminder(),
-				store.getLogoImg(), store.getWxAddImg(), store.getWxPayImg(),
-				store.getZfbPayImg());
+		storeDAO.insertStore(store);
 	}
 
 	@Override
@@ -34,11 +30,7 @@ public class StoreServiceImpl implements StoreService {
 
 	@Override
 	public void modifyStore(Store store) {
-		storeDAO.updateStore(store.getId(), store.getName(),
-				store.getAddress(), store.getTelePhone(),
-				store.getMobilePhone(), store.getReminder(),
-				store.getLogoImg(), store.getWxAddImg(), store.getWxPayImg(),
-				store.getZfbPayImg(), Integer.parseInt(store.getStatus()));
+		storeDAO.updateStore(store);
 	}
 
 	@Override

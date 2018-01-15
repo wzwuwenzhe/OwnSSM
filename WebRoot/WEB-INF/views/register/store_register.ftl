@@ -23,6 +23,10 @@
 		<@form_group id="telephone" value="${(store.telePhone)!''}" desc="电话" type="text" name="telePhone" dataType="" msg="请输入正确的固话号码" onkeyup="validate('LTGH',this)" />
 		<@form_group id="mobilephone" value="${(store.mobilePhone)!''}" desc="手机" type="text" name="mobilePhone" dataType="" msg="请输入正确的手机号码" onkeyup="validate('Phone',this)" />
 		<@form_group id="reminder" value="${(store.reminder)!''}" desc="提醒(小票上的温馨提示)" type="text" name="reminder" dataType="" msg="输入的提醒不合法" />
+		<#if userType=="1">
+			<@form_group id="remoteHttpAddress" value="${(store.remoteHttpAddress)!''}" desc="远程打印地址" type="text" name="remoteHttpAddress" dataType="" msg="输入的提醒不合法" />
+			<@form_group id="privateKey" value="${(store.privateKey)!''}" desc="密钥" type="text" name="privateKey" dataType="" msg="输入的提醒不合法" />
+		</#if>
 		<#assign status="${(store.status)!''}"/>
 		<#if userType=="1" && !isAdd>
 			<div class="form-group">

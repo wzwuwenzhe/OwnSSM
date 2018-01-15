@@ -433,9 +433,8 @@ public class OrderServiceImpl implements OrderService {
 		clientObj.addProperty("name", client.getName());
 		dataMap.put("client", clientObj.toString());
 		// 目前先配死
-		// TODO 以后能直连之后需要从表里读取店铺对应的url地址
-		String clientUrl = config.getString("remote.url");
-		String privateKey = config.getString("private.key");
+		String clientUrl = store.getRemoteHttpAddress();
+		String privateKey = store.getPrivateKey();
 		dataMap.put("privateKey", privateKey);
 		// 组装成json发送
 		logger.info("发送的数据:" + dataMap.toString());
@@ -448,7 +447,7 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public Map<String, Object> printReport(String beginDate, String endDate,
-			String storeId) {
+			String storeId, String privateKey) {
 		OrderSearchEntity orderSearch = new OrderSearchEntity();
 		orderSearch.setBeginDate(beginDate);
 		orderSearch.setEndDate(endDate);
@@ -491,7 +490,6 @@ public class OrderServiceImpl implements OrderService {
 			record.add("orders", orderDtoArr);
 			recordsArr.add(record);
 		}
-		String privateKey = config.getString("private.key");
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("privateKey", privateKey);
 		dataMap.put("dataArr", recordsArr);

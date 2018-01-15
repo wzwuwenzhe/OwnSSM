@@ -1,8 +1,5 @@
 package com.deady.action.login;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
 import com.deady.entity.operator.Operator;
+import com.deady.entity.store.Store;
 import com.deady.service.OperatorService;
+import com.deady.service.StoreService;
 import com.deady.utils.MD5Utils;
 import com.deady.utils.OperatorSessionInfo;
 
@@ -27,6 +26,8 @@ public class LoginAction {
 
 	@Autowired
 	private OperatorService operatorService;
+	@Autowired
+	private StoreService storeService;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	@DeadyAction(checkLogin = false, createToken = true)
@@ -84,9 +85,12 @@ public class LoginAction {
 			response.setMessage("用户名或密码错误");
 			return response;
 		}
+		Store store = storeService.getStoreById(op.getStoreId());
 		// 把用户信息存到Session中
 		OperatorSessionInfo.save(req, OperatorSessionInfo.OPERATOR_SESSION_ID,
 				op);
+		OperatorSessionInfo.save(req, OperatorSessionInfo.STORE_SESSION_ID,
+				store);
 		// 如果选择记住就将用户名和密码存到Cookie中否则就删掉
 		OperatorSessionInfo.saveCookie(req, res);
 		response.setSuccess(true);

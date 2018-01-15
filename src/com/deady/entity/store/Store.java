@@ -30,6 +30,10 @@ public class Store implements Serializable {
 	private String zfbPayImg;// 支付宝付款二维码路径
 	@BasicEntityField(length = 1, testValue = "1")
 	private String status;// 店铺状态(1:开通,0关闭)
+	@BasicEntityField(length = 200, testValue = "http://www.deady.tech")
+	private String remoteHttpAddress;// 远程打印地址
+	@BasicEntityField(length = 32, testValue = "weR6kjg7naD8d56foijw75ET12daS3t7")
+	private String privateKey;// 远程打印地址
 
 	public String getId() {
 		return id;
@@ -117,6 +121,22 @@ public class Store implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getRemoteHttpAddress() {
+		return remoteHttpAddress;
+	}
+
+	public void setRemoteHttpAddress(String remoteHttpAddress) {
+		this.remoteHttpAddress = remoteHttpAddress;
+	}
+
+	public String getPrivateKey() {
+		return privateKey;
+	}
+
+	public void setPrivateKey(String privateKey) {
+		this.privateKey = privateKey;
 	}
 
 }

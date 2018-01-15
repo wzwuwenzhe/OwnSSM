@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.cnblogs.zxub.utils2.configuration.ConfigUtil;
 import com.deady.annotation.DeadyAction;
 import com.deady.common.FormResponse;
+import com.deady.entity.store.Store;
 import com.deady.utils.HttpClientUtil;
+import com.deady.utils.OperatorSessionInfo;
 
 @Controller
 public class SshAction {
 
-	private static PropertiesConfiguration conf = ConfigUtil
-			.getProperties("deady");
 	private static Logger log = LoggerFactory.getLogger(SshAction.class);
 
 	@RequestMapping(value = "/shutdownPC", method = RequestMethod.POST)
@@ -30,8 +30,8 @@ public class SshAction {
 	public Object clientRegister(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		FormResponse response = new FormResponse(req);
-		String url = conf.getString("remote.url");
-
+		Store store = OperatorSessionInfo.getStore(req);
+		String url = store.getRemoteHttpAddress();
 		log.info("---------------调用远程关机--------------");
 		String back = HttpClientUtil.sendPost(url + "/shutdownPC",
 				new HashMap<String, Object>(), "UTF-8");

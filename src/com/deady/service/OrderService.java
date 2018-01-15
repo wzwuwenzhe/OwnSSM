@@ -80,7 +80,7 @@ public interface OrderService {
 	 */
 
 	Map<String, Object> printReport(String beginDate, String endDate,
-			String storeId);
+			String storeId, String privateKey);
 
 	/**
 	 * 查询当天的报表

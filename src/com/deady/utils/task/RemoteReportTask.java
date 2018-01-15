@@ -1,6 +1,5 @@
 package com.deady.utils.task;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -9,7 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cnblogs.zxub.utils2.configuration.ConfigUtil;
+import com.deady.entity.store.Store;
 import com.deady.service.OrderService;
+import com.deady.service.StoreService;
 import com.deady.utils.HttpClientUtil;
 import com.deady.utils.SpringContextUtil;
 
@@ -34,9 +35,12 @@ public class RemoteReportTask extends Task {
 		try {
 			OrderService orderService = (OrderService) SpringContextUtil
 					.getBeanByClass(OrderService.class);
+			StoreService storeService = (StoreService) SpringContextUtil
+					.getBeanByClass(StoreService.class);
+			Store store = storeService.getStoreById(storeId);
 			Map<String, Object> dataMap = orderService.printReport(beginDate,
-					endDate, storeId);
-			String clientUrl = config.getString("remote.url");
+					endDate, storeId, store.getPrivateKey());
+			String clientUrl = store.getRemoteHttpAddress();
 			logger.info("报表发送的数据:" + dataMap.toString());
 			String back = HttpClientUtil.sendPost(clientUrl + "/remoteReport",
 					dataMap, "UTF-8");

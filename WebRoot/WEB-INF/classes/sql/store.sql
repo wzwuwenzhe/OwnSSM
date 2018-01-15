@@ -15,3 +15,9 @@ CREATE TABLE `store` (
   `modify_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间' ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='店铺信息表'
+
+--20180115添加  远程转发机地址、密钥
+ALTER TABLE
+    deady.store ADD (remote_http_address VARCHAR(200));
+ALTER TABLE
+    deady.store ADD (private_key CHAR(32))

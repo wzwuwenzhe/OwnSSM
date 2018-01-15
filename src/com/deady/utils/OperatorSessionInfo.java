@@ -9,10 +9,12 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 
 import com.cnblogs.zxub.utils2.configuration.ConfigUtil;
 import com.deady.entity.operator.Operator;
+import com.deady.entity.store.Store;
 
 public class OperatorSessionInfo {
 
 	public static final String OPERATOR_SESSION_ID = "DEADY_OPERATOR";
+	public static final String STORE_SESSION_ID = "DEADY_STORE";
 
 	public static final PropertiesConfiguration cacheConfig = ConfigUtil
 			.getProperties("memcache");
@@ -57,6 +59,10 @@ public class OperatorSessionInfo {
 
 	public static Operator getOperator(HttpServletRequest request) {
 		return (Operator) get(request, OPERATOR_SESSION_ID);
+	}
+
+	public static Store getStore(HttpServletRequest request) {
+		return (Store) get(request, STORE_SESSION_ID);
 	}
 
 	public static void remove(HttpServletRequest request, String key) {
