@@ -29,8 +29,8 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public void modifyStore(Store store) {
-		storeDAO.updateStore(store);
+	public void modifyStore4Admin(Store store) {
+		storeDAO.updateStore4Admin(store);
 	}
 
 	@Override
@@ -47,5 +47,10 @@ public class StoreServiceImpl implements StoreService {
 		dev.openDevice();
 		dev.savePics(logoImgPath);
 		dev.closeDevice();
+	}
+
+	@Override
+	public void modifyStore4Owner(Store store) {
+		storeDAO.updateStore4Owner(store);
 	}
 }

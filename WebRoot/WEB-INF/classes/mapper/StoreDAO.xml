@@ -21,11 +21,19 @@
             id = #{storeId}
     </select>
     
-    <update id="updateStore" parameterType="com.deady.entity.store.Store">
+    <update id="updateStore4Admin" parameterType="com.deady.entity.store.Store">
     	UPDATE store 
     		set name=#{name},address=#{address},telephone=#{telePhone},mobilephone=#{mobilePhone},
     		reminder= #{reminder},logo_img=#{logoImg},wx_add_img=#{wxAddImg},wx_pay_img=#{wxPayImg},
     		zfb_pay_img=#{zfbPayImg},status=#{status},remote_http_address=#{remoteHttpAddress},private_key=#{privateKey}
+    	WHERE id=#{id}
+    </update>
+    
+    <update id="updateStore4Owner" parameterType="com.deady.entity.store.Store">
+    	UPDATE store 
+    		set name=#{name},address=#{address},telephone=#{telePhone},mobilephone=#{mobilePhone},
+    		reminder= #{reminder},logo_img=#{logoImg},wx_add_img=#{wxAddImg},wx_pay_img=#{wxPayImg},
+    		zfb_pay_img=#{zfbPayImg}
     	WHERE id=#{id}
     </update>
 

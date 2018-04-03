@@ -70,6 +70,11 @@ public class OperatorSessionInfo {
 		session.removeAttribute(key);
 	}
 
+	public static void logout(HttpServletRequest request) {
+		remove(request, OPERATOR_SESSION_ID);
+		remove(request, STORE_SESSION_ID);
+	}
+
 	private static Object get(HttpServletRequest request, String key) {
 		return request.getSession().getAttribute(key);
 	}

@@ -8,6 +8,8 @@ public interface StoreDAO {
 
 	Store findStoreById(String storeId);
 
-	void updateStore(Store store);
+	void updateStore4Admin(Store store);
+
+	void updateStore4Owner(Store store);
 
 }

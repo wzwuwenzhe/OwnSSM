@@ -8,7 +8,7 @@ public interface StoreService {
 
 	Store getStoreById(String storeId);
 
-	void modifyStore(Store store);
+	void modifyStore4Admin(Store store);
 
 	/**
 	 * 向打印机中写入图片信息
@@ -16,5 +16,7 @@ public interface StoreService {
 	 * @param store
 	 */
 	void uploadPic4Printer(Store store);
+
+	void modifyStore4Owner(Store store);
 
 }

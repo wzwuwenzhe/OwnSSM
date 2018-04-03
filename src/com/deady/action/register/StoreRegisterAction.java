@@ -86,10 +86,14 @@ public class StoreRegisterAction {
 	public Object doStoreModify(HttpServletRequest req, HttpServletResponse res)
 			throws Exception {
 		FormResponse response = new FormResponse(req);
+		Operator op = OperatorSessionInfo.getOperator(req);
 		try {
 			Store store = validateStore(req, res, response);
-			storeService.modifyStore(store);
-			// storeService.uploadPic4Printer(store);
+			if (op.getUserType().equals("1")) {// 超管可以改秘钥和回调地址
+				storeService.modifyStore4Admin(store);
+			} else {
+				storeService.modifyStore4Owner(store);
+			}
 		} catch (Exception e) {
 			response.setSuccess(false);
 			response.setMessage(e.getMessage());

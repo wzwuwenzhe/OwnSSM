@@ -19,7 +19,7 @@
 		background-color:yellow;
 	}
 	.innerInput{
-		width: 24px;
+		width: 43px;
 		height:25px;
 		border :0px;
 		padding-top: 0px;
@@ -37,11 +37,11 @@
 		<table class="billtable">
 			<thead>
 				<tr>
-					<td style="width:18%">款号</td>
-					<td style="width:20%">颜色</td>
+					<td style="width:16%">款号</td>
+					<td style="width:18%">颜色</td>
 					<td style="width:13%">尺码</td>
-					<td style="width:13%">数量</td>
-					<td style="width:13%">单价</td>
+					<td style="width:15%">数量</td>
+					<td style="width:15%">单价</td>
 					<td style="width:18%">金额</td>
 					<td style="width:5%">操作</td>
 				</tr>
@@ -107,6 +107,7 @@
 		if(null != _client){
 			$("#address").val(_client.address);
 			$("#cusId").val(_client.id);
+			//TODO 发起ajax  查出这个客户当前店铺下的所有价格 组成一个map 
 		}else{
 			$("#address").val('');
 			$("#cusId").val('');
@@ -192,10 +193,10 @@
 		"<td><input name='price' class='price' type='hidden'  /> <label class='price' ></label></td>"+
 		"<td><a href='javascript:void(0)' onclick='removeRecord(this)'>删</a></td>"+
 		"</tr><tr>"+
-		"<td colspan='6'><input class='form-control' type='button' value='新增同款' onclick='addSameRecord(this)'/></td>"+
+		"<td colspan='6'><input class='form-control' style='border-bottom:0px;' type='button' value='新增同款' onclick='addSameRecord(this)'/></td>"+
 		"</tr>");
 		<#list nameList as name>
-			$("#"+btnIndex+"nameUl").append("<li onclick='findColorsAndSizes(this,true)' >"+${name}+"</li>");
+			$("#"+btnIndex+"nameUl").append("<li onclick='findColorsAndSizes(this,true)' >"+'${name}'+"</li>");
 		</#list>
 		btnIndex++;
 	}

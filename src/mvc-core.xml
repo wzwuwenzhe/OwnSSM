@@ -12,8 +12,10 @@
 	http://www.springframework.org/schema/aop
 	http://www.springframework.org/schema/aop/spring-aop.xsd ">
 
+	<mvc:annotation-driven />
 	<context:annotation-config />
 	<context:component-scan base-package="com.deady.action" />
+	<context:component-scan base-package="com.deady.api" />
 	
 	<!-- 日志拦截器 -->
 	<bean id="logInterceptor" class="com.deady.log.LogInterceptor"></bean> <!--将日志类注入到bean中。-->  
@@ -24,6 +26,7 @@
 		    <aop:after pointcut-ref="log" method="after"/><!--在log包下面所有的类的所有方法被调用之前都调用MyLog中的after方法-->  
     	</aop:aspect>  
     </aop:config>
+	
 	
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">		

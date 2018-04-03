@@ -22,7 +22,6 @@ public class EncodeInterceptor extends HandlerInterceptorAdapter {
 			HttpServletResponse response, Object handler) throws Exception {
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		Method method = handlerMethod.getMethod();
-		String encode = request.getCharacterEncoding();
 		DeadyAction interceptor = method.getAnnotation(DeadyAction.class);
 		if (interceptor != null) {
 			request.setCharacterEncoding((interceptor == null) ? "UTF-8"

@@ -48,7 +48,7 @@ import com.deady.utils.task.Task;
 @Controller
 public class BillingAction {
 
-	private static Logger logger = LoggerFactory.getLogger(SshAction.class);
+	private static Logger logger = LoggerFactory.getLogger(BillingAction.class);
 	private static PropertiesConfiguration conf = ConfigUtil
 			.getProperties("deady");
 
